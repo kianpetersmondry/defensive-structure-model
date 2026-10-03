@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PPDA Timeline</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ============================================================
+   PPDA Timeline -- companion analysis view for Pressure Read
+   Morocco vs Spain, 2022 World Cup Round of 16 (PFF FC event data)
+
+   Same single deliberate dark "tactics monitor" theme as the main
+   Pressure Read piece (Barlow Condensed / IBM Plex Sans / IBM Plex
+   Mono, dark pitch-adjacent surfaces). Spain's chart accent is a
+   deepened teal (#249e97) validated separately for this chart's
+   scatter/all-pairs use -- the parent piece's #4fd8d0 stays as-is.
+   ============================================================ */
+
+:root {
+  --bg: #0c1512;
+  --panel: #131f1a;
+  --panel-raised: #17251f;
+  --border: #253830;
+  --ink: #eef3ee;
+  --ink-dim: #93a89c;
+  --ink-faint: #5e7268;
+
+  --morocco: #e8323a;
+  --morocco-dim: rgba(232, 50, 58, 0.16);
+  --spain: #249e97;
+  --spain-dim: rgba(36, 158, 151, 0.16);
+
+  --amber: #ffb020;
+  --grid: #21322b;
+  --grid-strong: #2c4139;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { min-height: 100vh; padding: 20px 20px 40px; }
+
+.wrap { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+/* ---------- header ---------- */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.masthead .title-block { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+
+.masthead h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.masthead .eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.masthead .matchup {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-dim);
+  text-align: right;
+  line-height: 1.5;
+}
+.masthead .matchup b.mar { color: var(--morocco); }
+.masthead .matchup b.esp { color: var(--spain); }
+
+/* ---------- panels ---------- */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px 14px;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.panel-head h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: 0 0 2px;
+  color: var(--ink);
+}
+
+.panel-head p.sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-dim);
+  max-width: 62ch;
+}
+
+/* legend */
+.legend { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-dim); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; box-shadow: 0 0 0 2px var(--panel); }
+.legend-dot.mar { background: var(--morocco); }
+.legend-dot.esp { background: var(--spain); }
+
+/* chart svg */
+.chart-scroll { overflow-x: auto; }
+svg.chart { display: block; width: 100%; height: auto; min-width: 640px; }
+
+.axis-label { fill: var(--ink-faint); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+.axis-title { fill: var(--ink-dim); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.period-sep { stroke: var(--grid-strong); stroke-width: 1; }
+.period-label { fill: var(--ink-faint); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+circle.mark { stroke: var(--panel); stroke-width: 2; cursor: pointer; }
+circle.mark.mar { fill: var(--morocco); }
+circle.mark.esp { fill: var(--spain); }
+circle.mark.dim { opacity: 0.38; }
+circle.hit { fill: transparent; cursor: pointer; }
+circle.hit:focus { outline: none; }
+circle.hit:focus + circle.mark,
+circle.mark.hover { stroke: var(--amber); filter: brightness(1.25); }
+
+.row-label { fill: var(--ink-dim); font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* tooltip */
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--panel-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  max-width: 240px;
+}
+.tooltip.show { opacity: 1; transform: translateY(0); }
+.tooltip .row { display: flex; align-items: baseline; gap: 7px; margin: 2px 0; }
+.tooltip .key { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.tooltip .key.mar { background: var(--morocco); }
+.tooltip .key.esp { background: var(--spain); }
+.tooltip .val { color: var(--ink); font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.tooltip .lbl { color: var(--ink-faint); font-size: 11.5px; }
+.tooltip .head { color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip { transition: none; }
+}
+
+/* table view */
+details.table-toggle { margin-top: 4px; }
+details.table-toggle > summary {
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 6px 0;
+  list-style: none;
+}
+details.table-toggle > summary::-webkit-details-marker { display: none; }
+details.table-toggle > summary::before { content: '▸ '; color: var(--amber); }
+details.table-toggle[open] > summary::before { content: '▾ '; }
+details.table-toggle > summary:hover { color: var(--ink); }
+
+.table-scroll { overflow-x: auto; margin-top: 8px; }
+table.data {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12.5px;
+  font-family: 'IBM Plex Mono', monospace;
+  min-width: 520px;
+}
+table.data th, table.data td {
+  padding: 6px 10px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th {
+  color: var(--ink-faint);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10.5px;
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+}
+table.data td.mar { color: var(--morocco); }
+table.data td.esp { color: var(--spain); }
+
+.callout {
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  border-left: 2px solid var(--amber);
+  padding: 3px 0 3px 12px;
+  margin-top: 10px;
+}
+.callout b { color: var(--ink); }
+
+.foot {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  font-family: 'IBM Plex Mono', monospace;
+  padding-top: 4px;
+}
+
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="title-block">
+      <span class="eyebrow">Pressure Read &middot; Companion Analysis</span>
+      <h1>PPDA Timeline</h1>
+    </div>
+    <div class="matchup">
+      <b class="mar">MAR</b> vs <b class="esp">ESP</b> &middot; 2022 World Cup R16 &middot; Game 10508
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Passes allowed per defensive action</h2>
+        <p class="sub">PPDA in 5-minute windows across the full match, extra time included. Lower means a team let the opponent complete fewer passes before making a tackle, interception, or clearance &mdash; a proxy for pressing intensity. Only actions and passes at least 35m from the defending team's own goal count, so deep low-block phases don't get credited as "pressing."</p>
+      </div>
+      <div class="legend" id="mainLegend"></div>
+    </div>
+    <div class="chart-scroll">
+      <svg class="chart" id="mainChart" viewBox="0 0 1160 460" role="img" aria-label="Scatter plot of PPDA over match time for Morocco and Spain"></svg>
+    </div>
+    <details class="table-toggle">
+      <summary>Table view &mdash; PPDA by window</summary>
+      <div class="table-scroll">
+        <table class="data" id="mainTable">
+          <thead><tr><th>Team</th><th>Window</th><th>PPDA</th><th>Opp. passes</th><th>Def. actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Passes before turnover</h2>
+        <p class="sub">Every one of the 399 times a team lost the ball, plotted at the moment of loss. Dot size is the number of completed passes strung together in that possession before it broke down &mdash; a small dot is an instant giveaway, a large one is a passing move that eventually ran out.</p>
+      </div>
+      <div class="legend" id="turnoverLegend"></div>
+    </div>
+    <div class="chart-scroll">
+      <svg class="chart" id="turnoverChart" viewBox="0 0 1160 180" role="img" aria-label="Strip plot of passes completed before each turnover, by team, across match time"></svg>
+    </div>
+    <div class="callout">Turnovers are attached to the timeline below by moment, not window &mdash; hover or tab through any dot for its exact time and pass count.</div>
+    <details class="table-toggle">
+      <summary>Table view &mdash; turnovers</summary>
+      <div class="table-scroll">
+        <table class="data" id="turnoverTable">
+          <thead><tr><th>Team</th><th>Time</th><th>Passes before</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <div class="foot">Source: PFF FC tracking &amp; event data, game 10508. Press zone &ge;35m from own goal. Bucket size 300s.</div>
+</div>
+
+<div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+<script id="ppda-data" type="application/json">
+__DATA_JSON__
+</script>
+<script>
+(function () {
+  'use strict';
+  var DATA = JSON.parse(document.getElementById('ppda-data').textContent);
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var TEAM_CLASS = {};
+  TEAM_CLASS[374] = 'mar';
+  TEAM_CLASS[52] = 'esp';
+  var TEAM_LABEL = { 374: 'Morocco', 52: 'Spain' };
+
+  function el(tag, attrs, ns) {
+    var e = document.createElementNS(ns || SVGNS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function fmtMin(m) {
+    var mm = Math.floor(m);
+    var ss = Math.round((m - mm) * 60);
+    if (ss === 60) { mm += 1; ss = 0; }
+    return mm + ':' + (ss < 10 ? '0' : '') + ss;
+  }
+
+  // ---------------- tooltip ----------------
+  var tipEl = document.getElementById('tooltip');
+  function showTip(x, y, rowsHtml) {
+    while (tipEl.firstChild) tipEl.removeChild(tipEl.firstChild);
+    rowsHtml(tipEl);
+    tipEl.classList.add('show');
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var rect = tipEl.getBoundingClientRect();
+    var px = x + 14, py = y - rect.height / 2;
+    if (px + rect.width + 12 > vw) px = x - rect.width - 14;
+    py = Math.max(8, Math.min(py, vh - rect.height - 8));
+    tipEl.style.left = px + 'px';
+    tipEl.style.top = py + 'px';
+  }
+  function hideTip() { tipEl.classList.remove('show'); }
+
+  function tipHead(text) {
+    return function (container) {
+      var h = document.createElement('div');
+      h.className = 'head';
+      h.textContent = text;
+      container.appendChild(h);
+    };
+  }
+  function tipRow(teamCls, label, value) {
+    return function (container) {
+      var row = document.createElement('div');
+      row.className = 'row';
+      var key = document.createElement('span');
+      key.className = 'key ' + teamCls;
+      row.appendChild(key);
+      var val = document.createElement('span');
+      val.className = 'val';
+      val.textContent = value;
+      row.appendChild(val);
+      var lbl = document.createElement('span');
+      lbl.className = 'lbl';
+      lbl.textContent = label;
+      row.appendChild(lbl);
+      container.appendChild(row);
+    };
+  }
+  function composeTip(fns) {
+    return function (container) {
+      fns.forEach(function (f) { f(container); });
+    };
+  }
+
+  // ---------------- main scatter ----------------
+  (function buildMainChart() {
+    var svg = document.getElementById('mainChart');
+    var W = 1160, H = 460;
+    var M = { l: 70, r: 20, t: 34, b: 40 };
+    var plotW = W - M.l - M.r, plotH = H - M.t - M.b;
+
+    var xMax = 145; // minutes, padded past ET2 end (~143)
+    var yMax = 40;  // PPDA
+    function xScale(min) { return M.l + (min / xMax) * plotW; }
+    function yScale(v) { return M.t + plotH - (v / yMax) * plotH; }
+
+    // period bands
+    var bandFill = ['rgba(238,243,238,0.02)', 'rgba(238,243,238,0.00)'];
+    DATA.periods.forEach(function (p, i) {
+      var x0 = xScale(p.t_lo_min), x1 = xScale(p.t_hi_min);
+      var rect = el('rect', { x: x0, y: M.t, width: Math.max(0, x1 - x0), height: plotH, fill: bandFill[i % 2] });
+      svg.appendChild(rect);
+      var lbl = el('text', { x: (x0 + x1) / 2, y: M.t - 12, class: 'period-label', 'text-anchor': 'middle' });
+      lbl.textContent = p.label;
+      svg.appendChild(lbl);
+      if (i > 0) {
+        svg.appendChild(el('line', { x1: x0, x2: x0, y1: M.t, y2: M.t + plotH, class: 'period-sep' }));
+      }
+    });
+
+    // y gridlines + labels
+    for (var v = 0; v <= yMax; v += 10) {
+      var y = yScale(v);
+      svg.appendChild(el('line', { x1: M.l, x2: M.l + plotW, y1: y, y2: y, class: 'gridline' }));
+      var t = el('text', { x: M.l - 10, y: y + 4, class: 'axis-label', 'text-anchor': 'end' });
+      t.textContent = String(v);
+      svg.appendChild(t);
+    }
+    var yTitle = el('text', { x: 16, y: M.t - 12, class: 'axis-title' });
+    yTitle.textContent = 'PPDA';
+    svg.appendChild(yTitle);
+
+    // x ticks
+    for (var xm = 0; xm <= xMax; xm += 20) {
+      var x = xScale(xm);
+      var t2 = el('text', { x: x, y: M.t + plotH + 20, class: 'axis-label', 'text-anchor': 'middle' });
+      t2.textContent = xm + "'";
+      svg.appendChild(t2);
+    }
+    var xTitle = el('text', { x: M.l + plotW, y: H - 4, class: 'axis-title', 'text-anchor': 'end' });
+    xTitle.textContent = 'Match time';
+    svg.appendChild(xTitle);
+
+    // points
+    DATA.points.forEach(function (p) {
+      var cx = xScale(p.t_mid_min), cy = yScale(p.ppda);
+      var cls = TEAM_CLASS[p.team_id];
+      var mark = el('circle', { cx: cx, cy: cy, r: 5, class: 'mark ' + cls });
+      var hit = el('circle', { cx: cx, cy: cy, r: 13, class: 'hit', tabindex: '0',
+        role: 'img', 'aria-label': p.team + ', minute ' + Math.round(p.t_lo/60) + ' to ' + Math.round(p.t_hi/60) + ', PPDA ' + p.ppda });
+      function activate(clientX, clientY) {
+        mark.classList.add('hover');
+        showTip(clientX, clientY, composeTip([
+          tipHead(fmtMin(p.t_lo/60) + '–' + fmtMin(p.t_hi/60)),
+          tipRow(cls, p.team + ' PPDA', String(p.ppda)),
+          tipRow(cls, 'Opponent passes allowed', String(p.opp_passes)),
+          tipRow(cls, 'Defensive actions', String(p.def_actions))
+        ]));
+      }
+      function deactivate() { mark.classList.remove('hover'); hideTip(); }
+      hit.addEventListener('pointerenter', function (e) { activate(e.clientX, e.clientY); });
+      hit.addEventListener('pointermove', function (e) { activate(e.clientX, e.clientY); });
+      hit.addEventListener('pointerleave', deactivate);
+      hit.addEventListener('focus', function () {
+        var r = hit.getBoundingClientRect();
+        activate(r.left + r.width / 2, r.top + r.height / 2);
+      });
+      hit.addEventListener('blur', deactivate);
+      svg.appendChild(hit);
+      svg.appendChild(mark);
+    });
+
+    // legend
+    var legend = document.getElementById('mainLegend');
+    [['mar', 'Morocco'], ['esp', 'Spain']].forEach(function (pair) {
+      var item = document.createElement('div');
+      item.className = 'legend-item';
+      var dot = document.createElement('span');
+      dot.className = 'legend-dot ' + pair[0];
+      item.appendChild(dot);
+      var label = document.createElement('span');
+      label.textContent = pair[1];
+      item.appendChild(label);
+      legend.appendChild(item);
+    });
+
+    // table twin
+    var tbody = document.querySelector('#mainTable tbody');
+    DATA.points.slice().sort(function (a, b) { return a.t_lo - b.t_lo || a.team_id - b.team_id; }).forEach(function (p) {
+      var tr = document.createElement('tr');
+      var cls = TEAM_CLASS[p.team_id];
+      function td(text, extraCls) {
+        var d = document.createElement('td');
+        if (extraCls) d.className = extraCls;
+        d.textContent = text;
+        tr.appendChild(d);
+      }
+      td(p.team, cls);
+      td(fmtMin(p.t_lo / 60) + '–' + fmtMin(p.t_hi / 60));
+      td(String(p.ppda));
+      td(String(p.opp_passes));
+      td(String(p.def_actions));
+      tbody.appendChild(tr);
+    });
+  })();
+
+  // ---------------- turnover strip ----------------
+  (function buildTurnoverChart() {
+    var svg = document.getElementById('turnoverChart');
+    var W = 1160, H = 180;
+    var M = { l: 70, r: 20, t: 14, b: 26 };
+    var rowY = { 374: M.t + 34, 52: M.t + 34 + 76 };
+    var xMax = 145;
+    var plotW = W - M.l - M.r;
+    function xScale(min) { return M.l + (min / xMax) * plotW; }
+
+    var maxPasses = Math.max.apply(null, DATA.turnovers.map(function (t) { return t.passes_before; }));
+    function radius(n) { return 4 + 6 * Math.sqrt(n / maxPasses); }
+
+    // baseline rows
+    [374, 52].forEach(function (tid) {
+      var y = rowY[tid];
+      svg.appendChild(el('line', { x1: M.l, x2: M.l + plotW, y1: y, y2: y, class: 'gridline' }));
+      var lbl = el('text', { x: M.l - 10, y: y + 4, class: 'row-label', 'text-anchor': 'end' });
+      lbl.textContent = TEAM_LABEL[tid];
+      svg.appendChild(lbl);
+    });
+
+    // period separators (context, matches chart above)
+    DATA.periods.forEach(function (p, i) {
+      if (i > 0) {
+        var x0 = xScale(p.t_lo_min);
+        svg.appendChild(el('line', { x1: x0, x2: x0, y1: M.t, y2: H - M.b, class: 'period-sep' }));
+      }
+    });
+
+    // x ticks
+    for (var xm = 0; xm <= xMax; xm += 20) {
+      var x = xScale(xm);
+      var t2 = el('text', { x: x, y: H - 6, class: 'axis-label', 'text-anchor': 'middle' });
+      t2.textContent = xm + "'";
+      svg.appendChild(t2);
+    }
+
+    var sorted = { 374: [], 52: [] };
+    DATA.turnovers.forEach(function (t) {
+      var cx = xScale(t.t_min), cy = rowY[t.team_id];
+      var r = radius(t.passes_before);
+      var cls = TEAM_CLASS[t.team_id];
+      var mark = el('circle', { cx: cx, cy: cy, r: r, class: 'mark ' + cls + ' dim' });
+      var hit = el('circle', { cx: cx, cy: cy, r: Math.max(12, r + 6), class: 'hit', tabindex: '0',
+        role: 'img', 'aria-label': t.team + ' turnover at ' + fmtMin(t.t_min) + ', ' + t.passes_before + ' passes before' });
+      function activate(clientX, clientY) {
+        mark.classList.remove('dim');
+        mark.classList.add('hover');
+        showTip(clientX, clientY, composeTip([
+          tipHead(t.team + ' — ' + fmtMin(t.t_min)),
+          tipRow(cls, 'Passes before turnover', String(t.passes_before))
+        ]));
+      }
+      function deactivate() { mark.classList.remove('hover'); mark.classList.add('dim'); hideTip(); }
+      hit.addEventListener('pointerenter', function (e) { activate(e.clientX, e.clientY); });
+      hit.addEventListener('pointermove', function (e) { activate(e.clientX, e.clientY); });
+      hit.addEventListener('pointerleave', deactivate);
+      hit.addEventListener('focus', function () {
+        var r2 = hit.getBoundingClientRect();
+        activate(r2.left + r2.width / 2, r2.top + r2.height / 2);
+      });
+      hit.addEventListener('blur', deactivate);
+      svg.appendChild(hit);
+      svg.appendChild(mark);
+      sorted[t.team_id].push(t);
+    });
+
+    var legend = document.getElementById('turnoverLegend');
+    [['mar', 'Morocco'], ['esp', 'Spain']].forEach(function (pair) {
+      var item = document.createElement('div');
+      item.className = 'legend-item';
+      var dot = document.createElement('span');
+      dot.className = 'legend-dot ' + pair[0];
+      item.appendChild(dot);
+      var label = document.createElement('span');
+      label.textContent = pair[1];
+      item.appendChild(label);
+      legend.appendChild(item);
+    });
+    var sizeNote = document.createElement('div');
+    sizeNote.className = 'legend-item';
+    sizeNote.textContent = 'dot size = passes before loss (0–' + maxPasses + ')';
+    legend.appendChild(sizeNote);
+
+    // table twin
+    var tbody = document.querySelector('#turnoverTable tbody');
+    DATA.turnovers.slice().sort(function (a, b) { return a.time_s - b.time_s; }).forEach(function (t) {
+      var tr = document.createElement('tr');
+      var cls = TEAM_CLASS[t.team_id];
+      function td(text, extraCls) {
+        var d = document.createElement('td');
+        if (extraCls) d.className = extraCls;
+        d.textContent = text;
+        tr.appendChild(d);
+      }
+      td(t.team, cls);
+      td(fmtMin(t.t_min));
+      td(String(t.passes_before));
+      tbody.appendChild(tr);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

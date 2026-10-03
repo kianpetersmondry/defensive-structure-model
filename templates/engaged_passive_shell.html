@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engaged vs. Passive Defense — Full Match</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #0c1512;
+  --panel: #131f1a;
+  --panel-raised: #17251f;
+  --border: #253830;
+  --ink: #eef3ee;
+  --ink-dim: #93a89c;
+  --ink-faint: #5e7268;
+  --morocco: #e8323a;
+  --spain: #249e97;
+  --amber: #ffb020;
+  --high-press: #e8323a;
+  --mid-block: #d99a2b;
+  --low-block: #3f8f5c;
+  --unresolved: #4a5a52;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body { padding: 34px 20px 60px; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: 8px 0 10px;
+  text-wrap: balance;
+}
+.dek { font-size: 14.5px; line-height: 1.65; color: var(--ink-dim); max-width: 74ch; margin: 0 0 14px; }
+.masthead { margin-bottom: 22px; }
+.matchup {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-faint);
+}
+.matchup b.mar { color: var(--morocco); }
+.matchup b.esp { color: var(--spain); }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 24px 20px;
+  margin-bottom: 18px;
+}
+.card h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 21px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin: 0 0 4px;
+}
+.card .card-note {
+  font-size: 13px; line-height: 1.65; color: var(--ink-dim); margin: 6px 0 16px; max-width: 92ch;
+}
+.card .card-note b { color: var(--ink); }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 16px 22px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-dim);
+  margin: 4px 0 16px;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-swatch { width: 22px; height: 13px; border-radius: 3px; flex: none; }
+.legend-sep { width: 1px; height: 14px; background: var(--border); }
+
+.chart-shell { position: relative; }
+svg.chart { display: block; width: 100%; height: auto; overflow: visible; }
+svg.chart text { font-family: 'IBM Plex Mono', monospace; fill: var(--ink-faint); }
+svg.chart .axis-line { stroke: var(--border); stroke-width: 1; }
+svg.chart .period-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 3 4; }
+svg.chart .period-label { fill: var(--ink-faint); font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase; }
+svg.chart .team-label { fill: var(--ink); font-size: 12.5px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; }
+svg.chart .hit-rect { fill: transparent; cursor: crosshair; }
+svg.chart .crosshair-line { stroke: var(--amber); stroke-width: 1; pointer-events: none; opacity: 0; }
+svg.chart .seg-block { stroke: rgba(0,0,0,0.35); stroke-width: 0.5; cursor: pointer; }
+
+.tooltip {
+  position: absolute; pointer-events: none; opacity: 0; transition: opacity 0.08s;
+  background: var(--panel-raised); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 13px; font-size: 12px; line-height: 1.6; color: var(--ink-dim);
+  min-width: 190px; z-index: 5; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tooltip .t-title { color: var(--ink); font-weight: 600; margin-bottom: 3px; display: block; }
+.tooltip .t-time { color: var(--amber); font-family: 'IBM Plex Mono', monospace; font-size: 11px; margin-bottom: 6px; display: block; }
+.tooltip .t-row { display: flex; justify-content: space-between; gap: 10px; }
+
+.bars-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+@media (max-width: 700px) { .bars-wrap { grid-template-columns: 1fr; } }
+.bars-team-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 10px; }
+.bars-team-label.mar { color: var(--morocco); }
+.bars-team-label.esp { color: var(--spain); }
+.bar-row { margin-bottom: 14px; }
+.bar-row-head { display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-dim); margin-bottom: 5px; }
+.bar-track { display: flex; height: 22px; border-radius: 5px; overflow: hidden; background: var(--panel-raised); gap: 2px; }
+.bar-seg { height: 100%; }
+.bar-seg.engaged { opacity: 0.95; }
+.bar-seg.passive { opacity: 0.95; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.28) 0, rgba(0,0,0,0.28) 3px, transparent 3px, transparent 7px); }
+.bar-seg.unresolved { background: var(--unresolved); opacity: 0.6; }
+.bar-foot { display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-faint); margin-top: 4px; }
+
+.note-block {
+  background: var(--panel-raised); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; font-size: 13px; line-height: 1.7; color: var(--ink-dim); margin-top: 14px;
+}
+.note-block strong { color: var(--ink); }
+.note-block .amber { color: var(--amber); }
+
+details.table-view { margin-top: 14px; }
+details.table-view summary {
+  cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px;
+  color: var(--ink-faint); letter-spacing: 0.03em; text-transform: uppercase; padding: 4px 0;
+}
+table.data-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+table.data-table th, table.data-table td {
+  text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace;
+  color: var(--ink-dim); white-space: nowrap;
+}
+table.data-table th { color: var(--ink-faint); font-weight: 500; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.03em; }
+.table-scroll { overflow-x: auto; max-height: 360px; overflow-y: auto; }
+
+.foot {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-faint);
+  text-align: center; padding-top: 10px;
+}
+.foot a { color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <span class="eyebrow">Phase-detection definition &middot; idea #1</span>
+    <h1>Engaged vs. Passive Defense</h1>
+    <p class="dek">Same geometric phases (High Press / Mid Block / Low Block) as the rest of Pressure Read &mdash;
+      but each phase instance is also labeled by whether the team was actually closing someone down at the time,
+      or just holding its line. A deep back line and a genuine low block aren't the same thing unless there's
+      real engagement behind it.</p>
+    <div class="matchup"><b class="mar">Morocco</b> vs <b class="esp">Spain</b> &middot; FIFA World Cup 2022,
+      Round of 16 &middot; full match including extra time</div>
+  </div>
+
+  <div class="card">
+    <h2>Full match, by phase and engagement</h2>
+    <p class="card-note">Each block is one continuous phase instance (&ge;5s, gaps &le;3s merged &mdash; the
+      same segmentation the project's own PPDA-by-structure validation uses), colored by geometric phase.
+      <b>Solid</b> = Engaged: <span class="amber-inline">pressure_score</span> (the time-to-intercept metric
+      already used for the pressure meter) was at or above <b id="threshVal">&mdash;</b> for most of that
+      instance's tracked frames. <b>Diagonal hatch</b> = Passive: the team held that phase's depth/compactness
+      without real 1v1 pressure being applied. Muted grey = not enough resolved pressure data in that instance
+      to call it either way. Hover a block for its exact numbers.</p>
+    <div class="legend" id="legend"></div>
+    <div class="chart-shell">
+      <svg class="chart" id="chart"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Share of each phase's time that's genuinely engaged</h2>
+    <p class="card-note">Within each phase, how much of the time is Engaged vs. Passive vs. Unresolved &mdash;
+      the finding this whole idea was testing: does the geometric label alone conflate "pressing" with "just
+      standing there at the right depth"?</p>
+    <div class="bars-wrap" id="bars"></div>
+  </div>
+
+  <div class="card">
+    <h2>Reading this &mdash; methodology and honest limits</h2>
+    <div class="note-block" id="methodNote"></div>
+    <details class="table-view">
+      <summary>Show all phase instances as a table</summary>
+      <div class="table-scroll">
+        <table class="data-table" id="segTable"></table>
+      </div>
+    </details>
+  </div>
+
+  <div class="foot">PFF FC tracking + event data &middot; pressure_score threshold validated against PFF's own analyst-tagged pressure events</div>
+</div>
+
+<script id="chart-data" type="application/json">__DATA_JSON__</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('chart-data').textContent);
+  var STATE_COLOR = { 'High Press': '#e8323a', 'Mid Block': '#d99a2b', 'Low Block': '#3f8f5c' };
+  var STATE_LABEL = { 'High Press': 'HIGH PRESS', 'Mid Block': 'MID BLOCK', 'Low Block': 'LOW BLOCK' };
+  var T_MAX = DATA.t_max_s;
+  var HOME = DATA.match.home, AWAY = DATA.match.away;
+
+  document.getElementById('threshVal').textContent = DATA.threshold_info.threshold.toFixed(2);
+
+  // ---------------- Panel A: full-match timeline ----------------
+  var MARGIN_L = 46, MARGIN_R = 16, MARGIN_T = 26, ROW_H = 46, ROW_GAP = 22, MARGIN_B = 30;
+  var svg = document.getElementById('chart');
+  var W = 1120;
+  var PLOT_W = W - MARGIN_L - MARGIN_R;
+  var rowHomeY = MARGIN_T, rowAwayY = MARGIN_T + ROW_H + ROW_GAP;
+  var H = rowAwayY + ROW_H + MARGIN_B;
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+  function el(tag, attrs) {
+    var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function x(t) { return MARGIN_L + (t / T_MAX) * PLOT_W; }
+
+  // period boundaries + labels
+  DATA.periods.forEach(function (p) {
+    if (p.t0 > 0) {
+      svg.appendChild(el('line', { class: 'period-line', x1: x(p.t0), x2: x(p.t0), y1: MARGIN_T - 8, y2: rowAwayY + ROW_H }));
+    }
+    var lbl = el('text', { class: 'period-label', x: x(p.t0) + 4, y: MARGIN_T - 12 });
+    lbl.textContent = p.label;
+    svg.appendChild(lbl);
+  });
+  svg.appendChild(el('line', { class: 'axis-line', x1: MARGIN_L, x2: W - MARGIN_R, y1: rowAwayY + ROW_H + 6, y2: rowAwayY + ROW_H + 6 }));
+
+  // team row labels
+  var hl = el('text', { class: 'team-label', x: 0, y: rowHomeY + ROW_H / 2 + 4 }); hl.textContent = HOME.toUpperCase();
+  hl.setAttribute('fill', '#e8323a');
+  svg.appendChild(hl);
+  var al = el('text', { class: 'team-label', x: 0, y: rowAwayY + ROW_H / 2 + 4 }); al.textContent = AWAY.toUpperCase();
+  al.setAttribute('fill', '#249e97');
+  svg.appendChild(al);
+
+  // bottom time axis (every 15 min)
+  for (var m = 0; m * 900 <= T_MAX; m++) {
+    var t = m * 900;
+    var lab = el('text', { x: x(t), y: rowAwayY + ROW_H + 20, 'text-anchor': 'middle' });
+    lab.textContent = Math.round(t / 60) + "'";
+    svg.appendChild(lab);
+  }
+
+  var tooltip = document.getElementById('tooltip');
+  var chartShell = document.querySelector('.chart-shell');
+
+  function fmtClock(sec) {
+    var m = Math.floor(sec / 60), s = Math.round(sec % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function drawRow(segs, rowY, teamName) {
+    segs.forEach(function (s) {
+      var x0 = x(s.t0), x1 = x(s.t1);
+      var w = Math.max(x1 - x0 - 0.6, 0.6);
+      var rect = el('rect', {
+        class: 'seg-block', x: x0, y: rowY, width: w, height: ROW_H,
+        fill: STATE_COLOR[s.state],
+        opacity: s.label === 'Unresolved' ? 0.35 : (s.label === 'Passive' ? 0.42 : 0.95)
+      });
+      if (s.label === 'Passive') {
+        rect.setAttribute('fill', 'url(#hatch-' + s.state.replace(/\s+/g, '') + ')');
+        rect.setAttribute('opacity', 0.95);
+      }
+      if (s.label === 'Unresolved') {
+        rect.setAttribute('fill', '#4a5a52');
+        rect.setAttribute('opacity', 0.55);
+      }
+      rect.addEventListener('mouseenter', function (evt) {
+        var rectBox = chartShell.getBoundingClientRect();
+        var tx = evt.clientX - rectBox.left + 14, ty = evt.clientY - rectBox.top - 10;
+        tooltip.innerHTML =
+          '<span class="t-title">' + teamName + ' &middot; ' + STATE_LABEL[s.state] + '</span>' +
+          '<span class="t-time">' + fmtClock(s.t0) + '&ndash;' + fmtClock(s.t1) + ' (' + Math.round(s.dur) + 's)</span>' +
+          '<div class="t-row"><span>Label</span><span>' + s.label + '</span></div>' +
+          '<div class="t-row"><span>Engaged frames</span><span>' + (s.frac_engaged === null ? 'n/a' : Math.round(s.frac_engaged * 100) + '%') + '</span></div>' +
+          '<div class="t-row"><span>Resolved frames</span><span>' + s.n_resolved + '</span></div>';
+        tooltip.style.opacity = 1;
+        tooltip.style.left = tx + 'px';
+        tooltip.style.top = ty + 'px';
+      });
+      rect.addEventListener('mouseleave', function () { tooltip.style.opacity = 0; });
+      svg.appendChild(rect);
+    });
+  }
+
+  // hatch patterns, one per phase color, defined before rows draw
+  var defs = el('defs', {});
+  ['High Press', 'Mid Block', 'Low Block'].forEach(function (state) {
+    var pat = el('pattern', {
+      id: 'hatch-' + state.replace(/\s+/g, ''), patternUnits: 'userSpaceOnUse',
+      width: 6, height: 6, patternTransform: 'rotate(45)'
+    });
+    pat.appendChild(el('rect', { width: 6, height: 6, fill: STATE_COLOR[state], opacity: 0.32 }));
+    pat.appendChild(el('rect', { width: 3, height: 6, fill: STATE_COLOR[state], opacity: 0.62 }));
+    defs.appendChild(pat);
+  });
+  svg.appendChild(defs);
+
+  drawRow(DATA.segments.home, rowHomeY, HOME);
+  drawRow(DATA.segments.away, rowAwayY, AWAY);
+
+  // legend
+  var legend = document.getElementById('legend');
+  function addSwatch(fillCss, label, extraStyle) {
+    var item = document.createElement('div'); item.className = 'legend-item';
+    var sw = document.createElement('span'); sw.className = 'legend-swatch';
+    sw.style.background = fillCss; if (extraStyle) sw.style.cssText += extraStyle;
+    var t = document.createElement('span'); t.textContent = label;
+    item.appendChild(sw); item.appendChild(t); legend.appendChild(item);
+  }
+  ['High Press', 'Mid Block', 'Low Block'].forEach(function (s) { addSwatch(STATE_COLOR[s], STATE_LABEL[s]); });
+  var sep = document.createElement('div'); sep.className = 'legend-sep'; legend.appendChild(sep);
+  addSwatch('linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,255,255,0.9))', 'Solid = Engaged', 'background:#8a8f8c;opacity:0.95;');
+  addSwatch('repeating-linear-gradient(45deg, rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 3px, #8a8f8c 3px, #8a8f8c 7px)', 'Hatched = Passive');
+  addSwatch('#4a5a52', 'Grey = Unresolved', 'opacity:0.55;');
+
+  // ---------------- Panel B: summary bars ----------------
+  var bars = document.getElementById('bars');
+  var STATES3 = ['High Press', 'Mid Block', 'Low Block'];
+
+  function buildTeamBars(teamName, summary, teamClass) {
+    var col = document.createElement('div');
+    var head = document.createElement('div'); head.className = 'bars-team-label ' + teamClass; head.textContent = teamName;
+    col.appendChild(head);
+    STATES3.forEach(function (state) {
+      var s = summary[state];
+      if (!s || s.total_s === 0) return;
+      var row = document.createElement('div'); row.className = 'bar-row';
+      var rh = document.createElement('div'); rh.className = 'bar-row-head';
+      rh.innerHTML = '<span>' + STATE_LABEL[state] + '</span><span>' + Math.round(s.total_s / 60 * 10) / 10 + ' min total</span>';
+      row.appendChild(rh);
+      var track = document.createElement('div'); track.className = 'bar-track';
+      var segE = document.createElement('div'); segE.className = 'bar-seg engaged';
+      segE.style.width = (s.engaged_s / s.total_s * 100) + '%'; segE.style.backgroundColor = STATE_COLOR[state];
+      var segP = document.createElement('div'); segP.className = 'bar-seg passive';
+      segP.style.width = (s.passive_s / s.total_s * 100) + '%'; segP.style.backgroundColor = STATE_COLOR[state];
+      var segU = document.createElement('div'); segU.className = 'bar-seg unresolved';
+      segU.style.width = (s.unresolved_s / s.total_s * 100) + '%';
+      track.appendChild(segE); track.appendChild(segP); track.appendChild(segU);
+      row.appendChild(track);
+      var rf = document.createElement('div'); rf.className = 'bar-foot';
+      rf.innerHTML = '<span>' + (s.engaged_pct === null ? '—' : s.engaged_pct + '% engaged') + '</span>' +
+        '<span>' + (s.passive_pct === null ? '—' : s.passive_pct + '% passive') + '</span>' +
+        '<span>' + s.n_segments + ' instances</span>';
+      row.appendChild(rf);
+      col.appendChild(row);
+    });
+    return col;
+  }
+  bars.appendChild(buildTeamBars(HOME, DATA.summary[HOME], 'mar'));
+  bars.appendChild(buildTeamBars(AWAY, DATA.summary[AWAY], 'esp'));
+
+  // ---------------- methodology note ----------------
+  var ti = DATA.threshold_info;
+  document.getElementById('methodNote').innerHTML =
+    '<strong>Threshold, not eyeballed.</strong> pressure.py\'s frame-level pressure_score was validated against ' +
+    'PFF\'s own analyst-tagged pressure field (initialPressureType: P = a defender tagged as applying pressure ' +
+    'at that touch, N = not) across all ' + (ti.p_n + ti.n_n) + ' tagged touches this match. Tagged-pressure touches ' +
+    'score <b>' + ti.p_mean + '</b> on average, untagged touches <b>' + ti.n_mean + '</b> &mdash; a real, well-separated ' +
+    'signal (AUC ' + ti.auc + '). The engaged/passive split above uses <b>' + ti.threshold + '</b>, the threshold that ' +
+    'best separates the two groups (Youden\'s J), catching ' + Math.round(ti.tpr * 100) + '% of genuinely-tagged pressure ' +
+    'while wrongly flagging ' + Math.round(ti.fpr * 100) + '% of untagged touches as high-pressure &mdash; a real tradeoff, ' +
+    'not a clean cut, which is why a whole PHASE INSTANCE is labeled by majority vote across its own frames rather than ' +
+    'trusting any single frame.<br><br>' +
+    '<strong>What this finds.</strong> Every phase, for both teams, is a real mix of Engaged and Passive time &mdash; ' +
+    'confirming the professor\'s note that depth alone doesn\'t distinguish genuine pressing from standing at the right ' +
+    'height. Spain\'s three Low Block instances this match are <span class="amber">100% passive</span> (0% engaged) &mdash; ' +
+    'when Spain does sit deep, it never actually closes anyone down there, distinct from its High Press (43% engaged). ' +
+    'Morocco is majority-passive in every phase, most heavily in Low Block (72% passive) &mdash; consistent with its ' +
+    'known passive PPDA profile, but now visible as an engagement pattern, not just a depth number.<br><br>' +
+    '<strong>What did NOT pan out, reported honestly.</strong> Two follow-up checks were tried to see whether the ' +
+    'split also predicts something downstream: PPDA computed separately for Engaged vs. Passive instances of the ' +
+    'same phase (too sparse &mdash; single-digit defensive-action counts per cell at this granularity, the same ' +
+    'PPDA sparsity problem already documented elsewhere in this project, just worse once split a second way); and ' +
+    'whether the attacking team loses the ball sooner after an Engaged instance than a Passive one (confounded &mdash; ' +
+    'phase instances mostly END at a possession change already, so a turnover \"within 20s after\" is close to ' +
+    'guaranteed either way and doesn\'t discriminate). <strong>This chart is a descriptive finding, not yet a validated ' +
+    'predictor of anything downstream</strong> &mdash; the split itself is real and well-grounded (AUC ' + ti.auc + ' ' +
+    'against analyst tags), but confirming it changes outcomes needs more matches than this one.<br><br>' +
+    '<strong>Scope.</strong> This labels existing High Press/Mid Block/Low Block phases with a second attribute; it ' +
+    'does not change classify_structure() or replace the depth/inter-line thresholds. A phase instance needs at least ' +
+    '3 frames with a resolved pressure score to be labeled at all (below that: Unresolved, shown in grey) &mdash; the ' +
+    'usual broadcast-tracking ball-dropout gaps, not a new data problem.';
+
+  // ---------------- table view ----------------
+  var tbl = document.getElementById('segTable');
+  var allRows = DATA.segments.home.map(function (s) { return Object.assign({ team: HOME }, s); })
+    .concat(DATA.segments.away.map(function (s) { return Object.assign({ team: AWAY }, s); }))
+    .sort(function (a, b) { return a.t0 - b.t0; });
+  var thead = '<tr><th>Team</th><th>Phase</th><th>Start</th><th>End</th><th>Duration</th><th>Label</th><th>% engaged frames</th><th>Resolved frames</th></tr>';
+  var rows = allRows.map(function (r) {
+    return '<tr><td>' + r.team + '</td><td>' + STATE_LABEL[r.state] + '</td><td>' + fmtClock(r.t0) + '</td><td>' + fmtClock(r.t1) +
+      '</td><td>' + Math.round(r.dur) + 's</td><td>' + r.label + '</td><td>' + (r.frac_engaged === null ? '—' : Math.round(r.frac_engaged * 100) + '%') +
+      '</td><td>' + r.n_resolved + '</td></tr>';
+  }).join('');
+  tbl.innerHTML = thead + rows;
+})();
+</script>
+</body>
+</html>

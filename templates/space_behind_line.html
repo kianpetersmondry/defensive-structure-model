@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Space in Behind</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ============================================================
+   Space in Behind -- companion analysis for Pressure Read
+   Morocco vs Spain, 2022 World Cup Round of 16 (PFF FC tracking,
+   the same 5-minute clean window as the main animation)
+
+   Same single deliberate dark "tactics monitor" theme as the other
+   Pressure Read pieces. Danger/space values come from the DAS
+   (Dangerous Accessible Space) physics model, Bischofberger & Baca
+   2026, via the accessible-space package -- fit on public open
+   tracking data, not this match, so treat magnitudes as relative,
+   not calibrated probabilities.
+   ============================================================ */
+
+:root {
+  --bg: #0c1512;
+  --panel: #131f1a;
+  --panel-raised: #17251f;
+  --border: #253830;
+  --ink: #eef3ee;
+  --ink-dim: #93a89c;
+  --ink-faint: #5e7268;
+
+  --morocco: #e8323a;
+  --spain: #249e97;
+
+  --amber: #ffb020;
+  --grid: #21322b;
+  --grid-strong: #2c4139;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; padding: 20px 20px 40px; }
+.wrap { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+.masthead {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px 20px;
+  border-bottom: 1px solid var(--border); padding-bottom: 12px;
+}
+.masthead .title-block { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.masthead h1 {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px;
+  letter-spacing: 0.02em; text-transform: uppercase; margin: 0; color: var(--ink);
+  text-wrap: balance;
+}
+.masthead .eyebrow {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--amber);
+}
+.masthead .matchup {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-dim);
+  text-align: right; line-height: 1.5;
+}
+.masthead .matchup b.mar { color: var(--morocco); }
+.masthead .matchup b.esp { color: var(--spain); }
+
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px 14px; }
+.panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; }
+.panel-head h2 {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 19px;
+  letter-spacing: 0.01em; text-transform: uppercase; margin: 0 0 2px; color: var(--ink);
+}
+.panel-head p.sub { margin: 0; font-size: 13px; color: var(--ink-dim); max-width: 66ch; }
+
+.legend { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-dim); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; box-shadow: 0 0 0 2px var(--panel); }
+.legend-dot.mar { background: var(--morocco); }
+.legend-dot.esp { background: var(--spain); }
+
+.facet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+@media (max-width: 720px) { .facet-grid { grid-template-columns: 1fr; } }
+.facet { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px 6px; background: var(--panel-raised); }
+.facet-title { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink); display: flex; justify-content: space-between; align-items: baseline; }
+.facet-title .n { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 400; color: var(--ink-faint); text-transform: none; letter-spacing: 0; }
+.facet-note { font-size: 11px; color: var(--amber); font-family: 'IBM Plex Mono', monospace; margin-top: 2px; }
+
+.chart-scroll { overflow-x: auto; }
+svg.chart { display: block; width: 100%; height: auto; }
+.axis-label { fill: var(--ink-faint); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; }
+.axis-title { fill: var(--ink-dim); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+
+circle.mark { stroke: var(--panel-raised); stroke-width: 1.5; cursor: pointer; }
+circle.mark.mar { fill: var(--morocco); }
+circle.mark.esp { fill: var(--spain); }
+circle.hit { fill: transparent; cursor: pointer; }
+circle.hit:focus { outline: none; }
+circle.mark.hover { stroke: var(--amber); filter: brightness(1.3); }
+
+
+.tooltip {
+  position: fixed; pointer-events: none; background: var(--panel-raised); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 12px; font-size: 12.5px; color: var(--ink-dim);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45); z-index: 20; opacity: 0; transform: translateY(2px);
+  transition: opacity 0.1s ease, transform 0.1s ease; max-width: 250px;
+}
+.tooltip.show { opacity: 1; transform: translateY(0); }
+.tooltip .row { display: flex; align-items: baseline; gap: 7px; margin: 2px 0; }
+.tooltip .key { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.tooltip .key.mar { background: var(--morocco); }
+.tooltip .key.esp { background: var(--spain); }
+.tooltip .val { color: var(--ink); font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.tooltip .lbl { color: var(--ink-faint); font-size: 11.5px; }
+.tooltip .head { color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 4px; }
+@media (prefers-reduced-motion: reduce) { .tooltip { transition: none; } }
+
+.spike-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.spike-row {
+  display: grid; grid-template-columns: 64px 1fr auto auto; align-items: center; gap: 12px;
+  padding: 8px 12px; background: var(--panel-raised); border: 1px solid var(--border); border-radius: 7px;
+  font-size: 12.5px;
+}
+.spike-time { font-family: 'IBM Plex Mono', monospace; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.spike-desc { color: var(--ink-dim); }
+.spike-desc b { color: var(--ink); font-weight: 600; }
+.spike-desc b.mar { color: var(--morocco); }
+.spike-desc b.esp { color: var(--spain); }
+.spike-val { font-family: 'IBM Plex Mono', monospace; color: var(--amber); font-weight: 600; text-align: right; white-space: nowrap; }
+.spike-width { font-family: 'IBM Plex Mono', monospace; color: var(--ink-faint); text-align: right; white-space: nowrap; font-size: 11.5px; }
+
+details.table-toggle { margin-top: 4px; }
+details.table-toggle > summary {
+  cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--ink-dim); padding: 6px 0; list-style: none;
+}
+details.table-toggle > summary::-webkit-details-marker { display: none; }
+details.table-toggle > summary::before { content: '▸ '; color: var(--amber); }
+details.table-toggle[open] > summary::before { content: '▾ '; }
+details.table-toggle > summary:hover { color: var(--ink); }
+.table-scroll { overflow-x: auto; margin-top: 8px; max-height: 420px; overflow-y: auto; }
+table.data { border-collapse: collapse; width: 100%; font-size: 12.5px; font-family: 'IBM Plex Mono', monospace; min-width: 520px; }
+table.data th, table.data td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th { color: var(--ink-faint); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10.5px; position: sticky; top: 0; background: var(--panel); }
+table.data td.mar { color: var(--morocco); }
+table.data td.esp { color: var(--spain); }
+
+.callout { font-size: 12.5px; color: var(--ink-dim); border-left: 2px solid var(--amber); padding: 3px 0 3px 12px; margin-top: 10px; }
+.callout b { color: var(--ink); }
+.foot { font-size: 11.5px; color: var(--ink-faint); font-family: 'IBM Plex Mono', monospace; padding-top: 4px; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="title-block">
+      <span class="eyebrow">Pressure Read &middot; Companion Analysis</span>
+      <h1>Space in Behind</h1>
+    </div>
+    <div class="matchup"><b class="mar">MAR</b> vs <b class="esp">ESP</b> &middot; 2022 World Cup R16 &middot; Game 10508</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Space opened behind the line, by phase</h2>
+        <p class="sub">For every half-second in the animation's 5-minute window, how much of the pitch behind the defending team's back line was both reachable by a single pass from the ball's current spot <em>and</em> dangerous (close to goal) &mdash; the DAS (Dangerous Accessible Space) model, evaluated only on the strip between the last defender and their own byline. Log scale: most moments carry very little live danger, and the interesting story is in the spikes.</p>
+      </div>
+      <div class="legend" id="facetLegend"></div>
+    </div>
+    <div class="facet-grid" id="facetGrid"></div>
+    <div class="callout">
+      <b>Why High Press looks "quiet" here isn't a bug, and why phases aren't ranked against each other.</b> This metric only counts danger the ball could reach with <em>one</em> realistic pass <em>right now</em>. While a team is still pressing, the ball is usually still up near the press itself, a long way from the space opening up behind it &mdash; the danger shows up once the block breaks down, which is why spikes cluster in Mid Block and Defensive Transition. But there's no fair single number for "which phase is worst": a deeper block's space-in-behind is, by definition, closer to goal, so it will always price out as more "dangerous" per the value model than a high line's much larger but further-out gap &mdash; that's a property of geography, not of which phase is riskier to play. Read each facet for its own spikes and timing, not as a ranking against the others.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Moments worth reviewing</h2>
+        <p class="sub">The six single instants in this window with the most dangerous accessible space in behind &mdash; the clearest candidates for pulling up the actual footage.</p>
+      </div>
+    </div>
+    <ul class="spike-list" id="spikeList"></ul>
+    <details class="table-toggle">
+      <summary>Table view &mdash; all sampled instants</summary>
+      <div class="table-scroll">
+        <table class="data" id="rawTable">
+          <thead><tr><th>Team</th><th>Phase</th><th>Time</th><th>DAS behind</th><th>AS behind</th><th>Region width (m)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <div class="foot">Space model: Bischofberger &amp; Baca (2026), "Dangerous Accessible Space" &mdash; `accessible-space` package, parameters fit on public Metrica Sports tracking data. Source tracking: PFF FC, game 10508, window 11:27&ndash;16:26. Sampled every 0.5s.</div>
+</div>
+
+<div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+<script id="space-data" type="application/json">
+__DATA_JSON__
+</script>
+<script>
+(function () {
+  'use strict';
+  var DATA = JSON.parse(document.getElementById('space-data').textContent);
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var TEAM_CLASS = { home: 'mar', away: 'esp' };
+  var TEAM_LABEL = DATA.teams;
+
+  function el(tag, attrs) {
+    var e = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function fmtClock(s) {
+    var mm = Math.floor(s / 60), ss = Math.round(s % 60);
+    if (ss === 60) { mm += 1; ss = 0; }
+    return mm + ':' + (ss < 10 ? '0' : '') + ss;
+  }
+  function fmtDas(v) {
+    if (v >= 1) return v.toFixed(2);
+    if (v >= 0.01) return v.toFixed(3);
+    return v.toFixed(4);
+  }
+
+  var tipEl = document.getElementById('tooltip');
+  function showTip(x, y, build) {
+    while (tipEl.firstChild) tipEl.removeChild(tipEl.firstChild);
+    build(tipEl);
+    tipEl.classList.add('show');
+    var rect = tipEl.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var px = x + 14, py = y - rect.height / 2;
+    if (px + rect.width + 12 > vw) px = x - rect.width - 14;
+    py = Math.max(8, Math.min(py, vh - rect.height - 8));
+    tipEl.style.left = px + 'px';
+    tipEl.style.top = py + 'px';
+  }
+  function hideTip() { tipEl.classList.remove('show'); }
+  function tipHead(t) { return function (c) { var h = document.createElement('div'); h.className = 'head'; h.textContent = t; c.appendChild(h); }; }
+  function tipRow(cls, label, value) {
+    return function (c) {
+      var row = document.createElement('div'); row.className = 'row';
+      var key = document.createElement('span'); key.className = 'key ' + cls; row.appendChild(key);
+      var val = document.createElement('span'); val.className = 'val'; val.textContent = value; row.appendChild(val);
+      var lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = label; row.appendChild(lbl);
+      c.appendChild(row);
+    };
+  }
+  function composeTip(fns) { return function (c) { fns.forEach(function (f) { f(c); }); }; }
+
+  function legendInto(container) {
+    [['mar', DATA.teams.home], ['esp', DATA.teams.away]].forEach(function (pair) {
+      var item = document.createElement('div'); item.className = 'legend-item';
+      var dot = document.createElement('span'); dot.className = 'legend-dot ' + pair[0]; item.appendChild(dot);
+      var label = document.createElement('span'); label.textContent = pair[1]; item.appendChild(label);
+      container.appendChild(item);
+    });
+  }
+  legendInto(document.getElementById('facetLegend'));
+
+  // ---------------- log scale helpers ----------------
+  var allVals = DATA.samples.map(function (s) { return s.das_behind; }).filter(function (v) { return v > 0; });
+  var minVal = Math.min.apply(null, allVals), maxVal = Math.max.apply(null, allVals);
+  var logMin = Math.floor(Math.log10(minVal)), logMax = Math.ceil(Math.log10(maxVal));
+
+  function yScaleLog(v, plotTop, plotH) {
+    var lv = Math.log10(Math.max(v, Math.pow(10, logMin)));
+    var frac = (lv - logMin) / (logMax - logMin);
+    return plotTop + plotH - frac * plotH;
+  }
+
+  var tMin = DATA.window.startMin * 60, tMax = DATA.window.endMin * 60;
+  function xScaleTime(t, plotLeft, plotW) {
+    return plotLeft + ((t - tMin) / (tMax - tMin)) * plotW;
+  }
+
+  // ---------------- small multiples (facets) ----------------
+  (function buildFacets() {
+    var grid = document.getElementById('facetGrid');
+    var W = 560, H = 190;
+    var M = { l: 46, r: 12, t: 10, b: 24 };
+    var plotW = W - M.l - M.r, plotH = H - M.t - M.b;
+
+    DATA.phases.forEach(function (phase) {
+      var samples = DATA.samples.filter(function (s) { return s.phase === phase; });
+      var facet = document.createElement('div'); facet.className = 'facet';
+      var title = document.createElement('div'); title.className = 'facet-title';
+      var name = document.createElement('span'); name.textContent = phase;
+      var n = document.createElement('span'); n.className = 'n'; n.textContent = 'n=' + samples.length;
+      title.appendChild(name); title.appendChild(n);
+      facet.appendChild(title);
+
+      var scrollWrap = document.createElement('div'); scrollWrap.className = 'chart-scroll';
+      var svg = el('svg', { class: 'chart', viewBox: '0 0 ' + W + ' ' + H, role: 'img',
+        'aria-label': phase + ': dangerous accessible space behind the line over time, ' + samples.length + ' samples' });
+
+      // y gridlines (powers of ten)
+      for (var e = logMin; e <= logMax; e++) {
+        var y = yScaleLog(Math.pow(10, e), M.t, plotH);
+        svg.appendChild(el('line', { x1: M.l, x2: M.l + plotW, y1: y, y2: y, class: 'gridline' }));
+        var lbl = el('text', { x: M.l - 8, y: y + 3, class: 'axis-label', 'text-anchor': 'end' });
+        lbl.textContent = e < 0 ? ('.' + '0'.repeat(-e - 1) + '1') : (e === 0 ? '1' : '1e' + e);
+        svg.appendChild(lbl);
+      }
+      // x ticks at window start/mid/end
+      [0, 0.5, 1].forEach(function (frac) {
+        var t = tMin + frac * (tMax - tMin);
+        var x = xScaleTime(t, M.l, plotW);
+        var t2 = el('text', { x: x, y: H - 6, class: 'axis-label', 'text-anchor': frac === 0 ? 'start' : (frac === 1 ? 'end' : 'middle') });
+        t2.textContent = fmtClock(t);
+        svg.appendChild(t2);
+      });
+
+      samples.forEach(function (s) {
+        var cx = xScaleTime(s.clockS, M.l, plotW);
+        var cy = yScaleLog(s.das_behind, M.t, plotH);
+        var cls = TEAM_CLASS[s.team];
+        var mark = el('circle', { cx: cx, cy: cy, r: 3.2, class: 'mark ' + cls });
+        var hit = el('circle', { cx: cx, cy: cy, r: 11, class: 'hit', tabindex: '0', role: 'img',
+          'aria-label': TEAM_LABEL[s.team] + ' at ' + fmtClock(s.clockS) + ', DAS behind ' + fmtDas(s.das_behind) });
+        function activate(cxp, cyp) {
+          mark.classList.add('hover');
+          showTip(cxp, cyp, composeTip([
+            tipHead(TEAM_LABEL[s.team] + ' — ' + fmtClock(s.clockS)),
+            tipRow(cls, 'DAS behind', fmtDas(s.das_behind)),
+            tipRow(cls, 'Region width', s.region_width_m.toFixed(1) + 'm')
+          ]));
+        }
+        function deactivate() { mark.classList.remove('hover'); hideTip(); }
+        hit.addEventListener('pointerenter', function (ev) { activate(ev.clientX, ev.clientY); });
+        hit.addEventListener('pointermove', function (ev) { activate(ev.clientX, ev.clientY); });
+        hit.addEventListener('pointerleave', deactivate);
+        hit.addEventListener('focus', function () { var r = hit.getBoundingClientRect(); activate(r.left + r.width / 2, r.top + r.height / 2); });
+        hit.addEventListener('blur', deactivate);
+        svg.appendChild(hit);
+        svg.appendChild(mark);
+      });
+
+      scrollWrap.appendChild(svg);
+      facet.appendChild(scrollWrap);
+      grid.appendChild(facet);
+    });
+  })();
+
+  // ---------------- spike list ----------------
+  (function buildSpikes() {
+    var list = document.getElementById('spikeList');
+    DATA.top_spikes.forEach(function (s) {
+      var li = document.createElement('li'); li.className = 'spike-row';
+      var time = document.createElement('span'); time.className = 'spike-time'; time.textContent = fmtClock(s.clockS);
+      var desc = document.createElement('span'); desc.className = 'spike-desc';
+      var teamB = document.createElement('b'); teamB.className = TEAM_CLASS[s.team]; teamB.textContent = s.team_name;
+      desc.appendChild(teamB);
+      desc.appendChild(document.createTextNode(' defending in ' + s.phase));
+      var val = document.createElement('span'); val.className = 'spike-val'; val.textContent = 'DAS ' + s.das_behind.toFixed(2);
+      var width = document.createElement('span'); width.className = 'spike-width'; width.textContent = s.region_width_m.toFixed(1) + 'm gap';
+      li.appendChild(time); li.appendChild(desc); li.appendChild(val); li.appendChild(width);
+      list.appendChild(li);
+    });
+  })();
+
+  // ---------------- table twins ----------------
+  (function buildTables() {
+    var rawBody = document.querySelector('#rawTable tbody');
+    DATA.samples.slice().sort(function (x, y) { return x.clockS - y.clockS; }).forEach(function (s) {
+      var tr = document.createElement('tr');
+      function td(text, cls) { var d = document.createElement('td'); if (cls) d.className = cls; d.textContent = text; tr.appendChild(d); }
+      td(TEAM_LABEL[s.team], TEAM_CLASS[s.team]);
+      td(s.phase);
+      td(fmtClock(s.clockS));
+      td(fmtDas(s.das_behind));
+      td(s.as_behind.toFixed(2));
+      td(s.region_width_m.toFixed(1));
+      rawBody.appendChild(tr);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

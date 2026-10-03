@@ -1,0 +1,11 @@
+# core pipeline
+numpy
+pandas
+scipy
+matplotlib
+Pillow
+accessible-space   # Dangerous Accessible Space model (danger heatmap, space in behind)
+
+# broadcast-footage prototype (footage/)
+opencv-python
+onnxruntime

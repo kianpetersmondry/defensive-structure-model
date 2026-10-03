@@ -1,0 +1,46 @@
+# --- match data: never commit (PFF terms; DFL files are large, link instead) ---
+*.jsonl
+*.jsonl.bz2
+*.bz2
+*.xml
+**/tracking*.json*
+**/roster.json
+**/metadata.json
+**/events.json
+data/
+raw/
+wc2022*/
+dfl_*/
+
+# --- generated outputs (large, reproducible) ---
+*.pkl
+*.npz
+chapters*/
+anim_*.json
+heat_*.json
+manifest*.json
+chapter_urls*.json
+final_urls.json
+engagement_threshold*.json
+pet_by_frame*.json
+site_build/
+website/
+hub.html
+pressure_read*.html
+
+# --- video, models, archives ---
+*.mp4
+*.mov
+*.m4s
+*.onnx
+*.pt
+*.zip
+*.tar*
+
+# --- misc ---
+*.bak*
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+.env

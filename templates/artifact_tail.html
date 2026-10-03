@@ -1,0 +1,891 @@
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var DATA = JSON.parse(document.getElementById('match-data').textContent);
+  var META = DATA.meta;
+  var FRAMES = DATA.frames;
+  var FPS = META.fps;
+  var T0 = FRAMES[0].t;
+  var T1 = FRAMES[FRAMES.length - 1].t;
+  var HOME_OWN_GOAL_X = META.homeDefendsPositiveX ? 52.5 : -52.5;
+  var AWAY_OWN_GOAL_X = META.homeDefendsPositiveX ? -52.5 : 52.5;
+
+  // home/away colors come from the exported meta (added round 30 alongside
+  // the France vs Morocco match, so a second match's team colors don't need
+  // a forked copy of this file) -- fall back to the original Morocco red /
+  // Spain teal so an older chapter export without these fields still renders
+  // exactly as before.
+  var COLORS = {
+    home: META.homeColor || '#e8323a',
+    away: META.awayColor || '#4fd8d0',
+    ball: '#f4e9c9',
+    amber: '#ffb020',
+    line: 'rgba(240,248,240,0.78)',
+    ink: '#eef3ee'
+  };
+
+  var STATE_COLOR = {
+    'In Possession': '#3c5148',
+    'Defensive Transition': '#b5563a',
+    'High Press': '#e8323a',
+    'Mid Block': '#d99a2b',
+    'Low Block': '#3f8f5c'
+  };
+  var STATE_LABEL = {
+    'In Possession': 'ON THE BALL',
+    'Defensive Transition': 'TRANSITION',
+    'High Press': 'HIGH PRESS',
+    'Mid Block': 'MID BLOCK',
+    'Low Block': 'LOW BLOCK'
+  };
+
+  // ---------------- pitch geometry (meters -> px, 10px/m) ----------------
+  var SCALE = 10;
+  var PW = META.pitchLength * SCALE;   // 1050
+  var PH = META.pitchWidth * SCALE;    // 680
+
+  function toPx(x, y) {
+    return [ (x + META.pitchLength / 2) * SCALE, (META.pitchWidth / 2 - y) * SCALE ];
+  }
+
+  var pitchCanvas = document.getElementById('pitch');
+  var ctx = pitchCanvas.getContext('2d');
+  var staticLayer = document.createElement('canvas');
+  staticLayer.width = PW; staticLayer.height = PH;
+  var sctx = staticLayer.getContext('2d');
+
+  function drawStaticPitch() {
+    var stripes = 10, stripeW = META.pitchLength / stripes;
+    for (var i = 0; i < stripes; i++) {
+      sctx.fillStyle = (i % 2 === 0) ? '#1f6b41' : '#226f44';
+      var x0 = toPx(-META.pitchLength / 2 + i * stripeW, 0)[0];
+      sctx.fillRect(x0, 0, stripeW * SCALE + 1, PH);
+    }
+    sctx.strokeStyle = COLORS.line;
+    sctx.lineWidth = 2;
+    sctx.strokeRect(1, 1, PW - 2, PH - 2);
+
+    var mid0 = toPx(0, META.pitchWidth / 2), mid1 = toPx(0, -META.pitchWidth / 2);
+    sctx.beginPath(); sctx.moveTo(mid0[0], mid0[1]); sctx.lineTo(mid1[0], mid1[1]); sctx.stroke();
+
+    var c = toPx(0, 0);
+    sctx.beginPath(); sctx.arc(c[0], c[1], 9.15 * SCALE, 0, Math.PI * 2); sctx.stroke();
+    sctx.beginPath(); sctx.arc(c[0], c[1], 3, 0, Math.PI * 2); sctx.fillStyle = COLORS.line; sctx.fill();
+
+    [[-META.pitchLength / 2, 1], [META.pitchLength / 2, -1]].forEach(function (gs) {
+      var goalX = gs[0], sign = gs[1];
+      var box0 = toPx(goalX, 20.16), box1 = toPx(goalX + sign * 16.5, -20.16);
+      sctx.strokeRect(Math.min(box0[0], box1[0]), Math.min(box0[1], box1[1]),
+        Math.abs(box1[0] - box0[0]), Math.abs(box1[1] - box0[1]));
+      var six0 = toPx(goalX, 9.16), six1 = toPx(goalX + sign * 5.5, -9.16);
+      sctx.strokeRect(Math.min(six0[0], six1[0]), Math.min(six0[1], six1[1]),
+        Math.abs(six1[0] - six0[0]), Math.abs(six1[1] - six0[1]));
+      var spot = toPx(goalX + sign * 11.0, 0);
+      sctx.beginPath(); sctx.arc(spot[0], spot[1], 3, 0, Math.PI * 2); sctx.fillStyle = COLORS.line; sctx.fill();
+      var goal0 = toPx(goalX, 3.66), goal1 = toPx(goalX - sign * 2.0, -3.66);
+      sctx.strokeStyle = 'rgba(230,236,230,0.55)';
+      sctx.strokeRect(Math.min(goal0[0], goal1[0]), Math.min(goal0[1], goal1[1]),
+        Math.max(2, Math.abs(goal1[0] - goal0[0])), Math.abs(goal1[1] - goal0[1]));
+      sctx.strokeStyle = COLORS.line;
+    });
+  }
+  drawStaticPitch();
+
+  // ---------------- player metadata lookup ----------------
+  function playerInfo(id) { return META.players[id] || { name: id, pos: '' }; }
+  function ownGoalX(team) { return team === 'home' ? HOME_OWN_GOAL_X : AWAY_OWN_GOAL_X; }
+  function depthLineX(team, depthVal) {
+    var g = ownGoalX(team);
+    return g < 0 ? g + depthVal : g - depthVal;
+  }
+
+  // Outfield players of `team` in this exact frame, sorted by distance from
+  // their own goal (ascending -- index 0 is the single deepest/last-man
+  // defender, the last index is the single most advanced attacker). Shared
+  // by backLineGap() and teamShapeLive() below so every on-canvas/on-panel
+  // number comes from the same set of positions being drawn as dots.
+  function outfieldByDepth(frame, team) {
+    var g = ownGoalX(team);
+    var prefix = team === 'home' ? 'H' : 'A';
+    var list = [];
+    frame.players.forEach(function (p) {
+      if (p.id[0] !== prefix) return;
+      var info = playerInfo(p.id);
+      if (info.pos === 'GK') return;
+      list.push({ id: p.id, depth: Math.abs(g - p.x), x: p.x, y: p.y });
+    });
+    list.sort(function (a, b) { return a.depth - b.depth; });
+    return list;
+  }
+
+  // back-line gap: recomputed live from the frame's own player positions,
+  // so the highlighted gap is always the two real players forming it
+  function backLineGap(frame, team) {
+    var back = outfieldByDepth(frame, team).slice(0, 4).sort(function (a, b) { return a.y - b.y; });
+    if (back.length < 2) return null;
+    var maxGap = -1, pair = null;
+    for (var i = 0; i < back.length - 1; i++) {
+      var gap = back[i + 1].y - back[i].y;
+      if (gap > maxGap) { maxGap = gap; pair = [back[i], back[i + 1]]; }
+    }
+    return { gap: maxGap, a: pair[0], b: pair[1] };
+  }
+
+  // Team shape, computed live from THIS frame's own player positions --
+  // deliberately not the exported homeDepth/awayDepth/homeInterLine/
+  // awayInterLine fields, which are a 3-second rolling mean applied
+  // server-side (transitions.py) so the High Press/Mid/Low Block LABEL
+  // doesn't flicker. That smoothing is fine for a label, but it made the
+  // on-canvas line and band visibly lag the real dots by several meters
+  // whenever a team's shape was changing fast -- one flagged frame measured
+  // a 7m gap between the smoothed "depth" used to draw the line and the
+  // true instantaneous back-four position, on top of a further ~2-3m the
+  // old band math could overshoot by (see below). Both go away by reading
+  // straight from frame.players every frame, the exact coordinates already
+  // being plotted as dots -- so the line and band are always exactly
+  // "right now," never a trailing average.
+  //
+  // backDepth = mean of the back four (unchanged concept -- still what the
+  // High Press/Mid/Low Block thresholds and the side panel's "Depth" number
+  // mean), used for the dashed back-line marker only.
+  // dMin/dMax = the single deepest defender and single most advanced
+  // attacker's own distance from goal -- what the inter-line band's two
+  // edges now bind to directly, instead of the old `backDepth + interLine`
+  // arithmetic, which structurally overshot dMax (it added the full
+  // team-length spread on top of the back-FOUR AVERAGE rather than the
+  // single deepest defender, so the front edge always landed a few meters
+  // past the real most-advanced player). This also matches the very first
+  // spec for this overlay: the band should sit "strictly between the
+  // highest player and the furthest defender."
+  function teamShapeLive(frame, team) {
+    var list = outfieldByDepth(frame, team);
+    if (list.length < 3) return null;
+    var backGroup = list.slice(0, Math.min(4, list.length));
+    var backDepth = backGroup.reduce(function (s, p) { return s + p.depth; }, 0) / backGroup.length;
+    var dMin = list[0].depth;
+    var dMax = list[list.length - 1].depth;
+    return { backDepth: backDepth, dMin: dMin, dMax: dMax, interLine: dMax - dMin, n: list.length };
+  }
+
+  // The 5 outfield players of `team` nearest the ball THIS frame -- the
+  // exact group ball_proximal_compactness.py measures (min(5, n) nearest by
+  // straight-line distance to the ball, GK excluded via outfieldByDepth).
+  // Used to draw the TIGHT/LOOSE marking zone directly around the real
+  // players it describes, instead of only naming the state in a side tag.
+  function ballProximalGroupLive(frame, team) {
+    if (!frame.ball) return null;
+    var list = outfieldByDepth(frame, team);
+    if (list.length < 3) return null;
+    var withDist = list.map(function (p) {
+      return { id: p.id, x: p.x, y: p.y, d: Math.hypot(p.x - frame.ball.x, p.y - frame.ball.y) };
+    });
+    withDist.sort(function (a, b) { return a.d - b.d; });
+    return withDist.slice(0, Math.min(5, withDist.length));
+  }
+
+  // Standard monotone-chain convex hull, in pixel space -- just enough to
+  // trace a shape around the ball-proximal group's actual on-screen
+  // positions (3-5 points), not a general-purpose geometry library.
+  function convexHull(pts) {
+    var p = pts.slice().sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+    function cross(o, a, b) { return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); }
+    var lower = [];
+    for (var i = 0; i < p.length; i++) {
+      while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p[i]) <= 0) lower.pop();
+      lower.push(p[i]);
+    }
+    var upper = [];
+    for (var j = p.length - 1; j >= 0; j--) {
+      while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p[j]) <= 0) upper.pop();
+      upper.push(p[j]);
+    }
+    upper.pop(); lower.pop();
+    return lower.concat(upper);
+  }
+
+  // ---------------- danger heatmap (Dangerous Accessible Space) ----------------
+  // Rasterized offline (heatmap_export.py) from the same DAS model used by the
+  // "Space in Behind" companion chart -- accessible_space's physics-based
+  // pass-completion simulation plus its fitted distance+angle danger model
+  // (Bischofberger & Baca, 2026). Sampled at 5Hz; each cell holds that cell's
+  // share of the team-IN-POSSESSION's dangerous accessible space at that
+  // instant, quantized 0-255 against one FIXED ceiling (the 99.5th
+  // percentile across the whole window, not a per-frame max) so brightness
+  // stays comparable frame to frame -- a genuinely bigger pocket of space
+  // reads brighter, it isn't auto-normalized away every frame.
+  var HEAT = JSON.parse(document.getElementById('heatmap-data').textContent);
+  var HEAT_COLS = HEAT.meta.cols, HEAT_ROWS = HEAT.meta.rows;
+  var HEAT_FRAMES = HEAT.frames.map(function (r) {
+    var bin = atob(r.grid);
+    var arr = new Uint8ClampedArray(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return { t: r.t, grid: arr };
+  });
+
+  var heatCanvas = document.createElement('canvas');
+  heatCanvas.width = HEAT_COLS; heatCanvas.height = HEAT_ROWS;
+  var heatCtx = heatCanvas.getContext('2d');
+  var heatImageData = heatCtx.createImageData(HEAT_COLS, HEAT_ROWS);
+  var heatOn = true;
+
+  // HEAT_FRAMES is sampled at a fixed 5Hz and sorted by t -- binary search
+  // for whichever sample is currently closest to the animation's live clock.
+  function findHeatFrame(t) {
+    var lo = 0, hi = HEAT_FRAMES.length - 1;
+    if (t <= HEAT_FRAMES[0].t) return HEAT_FRAMES[0];
+    if (t >= HEAT_FRAMES[hi].t) return HEAT_FRAMES[hi];
+    while (hi - lo > 1) {
+      var mid = (lo + hi) >> 1;
+      if (HEAT_FRAMES[mid].t <= t) lo = mid; else hi = mid;
+    }
+    return (t - HEAT_FRAMES[lo].t) <= (HEAT_FRAMES[hi].t - t) ? HEAT_FRAMES[lo] : HEAT_FRAMES[hi];
+  }
+
+  // Tinted to whichever team has the ball -- it's THEIR accessible danger,
+  // not the defense's -- then upscaled from the small raster onto the full
+  // pitch canvas with the browser's own bilinear smoothing, which is what
+  // gives the glow its soft, blurred edge rather than a blocky grid.
+  function drawHeatmap(frame) {
+    if (!heatOn) return;
+    if (frame.possessionTeam !== 'home' && frame.possessionTeam !== 'away') return;
+    var hf = findHeatFrame(frame.clockS);
+    var rgb = frame.possessionTeam === 'home' ? [232, 50, 58] : [79, 216, 208];
+    var grid = hf.grid;
+    var px = heatImageData.data;
+    for (var c = 0; c < HEAT_COLS; c++) {
+      for (var r = 0; r < HEAT_ROWS; r++) {
+        var v = grid[c * HEAT_ROWS + r];
+        // raster row 0 = pitch y = -34 (bottom); canvas image row 0 = top -> flip
+        var imgRow = HEAT_ROWS - 1 - r;
+        var idx = (imgRow * HEAT_COLS + c) * 4;
+        px[idx] = rgb[0]; px[idx + 1] = rgb[1]; px[idx + 2] = rgb[2];
+        px[idx + 3] = v;
+      }
+    }
+    heatCtx.putImageData(heatImageData, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.globalAlpha = 0.85;
+    ctx.drawImage(heatCanvas, 0, 0, PW, PH);
+    ctx.globalAlpha = 1;
+  }
+
+  // ---------------- dynamic frame render ----------------
+  var tooltip = document.getElementById('tooltip');
+  var stage = document.querySelector('.pitch-stage');
+  var lastHoverId = null;
+  var hitboxes = [];
+  var bandOn = true;
+
+  function render(frame) {
+    ctx.clearRect(0, 0, PW, PH);
+    ctx.drawImage(staticLayer, 0, 0);
+    drawHeatmap(frame);
+
+    var defendingTeam = frame.possessionTeam === 'home' ? 'away' :
+                         (frame.possessionTeam === 'away' ? 'home' : null);
+
+    if (defendingTeam) {
+      var shape = teamShapeLive(frame, defendingTeam);
+      var defStructure = defendingTeam === 'home' ? frame.homeStructure : frame.awayStructure;
+      // Team shape isn't settled yet during Defensive Transition -- right
+      // after losing the ball, "team length" can legitimately span most of
+      // the pitch (a stranded attacker who hasn't recovered yet), which is
+      // real but doesn't read as a coherent defensive block. Confirmed with
+      // the user: keep the dashed back-line marker always, but only draw the
+      // inter-line band once the team has reached an Organized Defense state
+      // (High Press / Mid Block / Low Block) -- matches how classification
+      // itself already leaves structure undefined during Transition.
+      var isOrganized = defStructure === 'High Press' || defStructure === 'Mid Block' ||
+                         defStructure === 'Low Block';
+      // The separate dashed "back line" marker (mean of the back four) was
+      // removed per user feedback -- with the band's own edges now landing
+      // exactly on the deepest defender and most advanced attacker, a third,
+      // slightly-different average line just inside the band added a second
+      // reference point without adding information. The band's own back and
+      // front boundaries are the back-line/attacking-line markers now; the
+      // side panel's "Depth" number (still the back-four mean, for
+      // consistency with the classification thresholds) is unaffected.
+      if (shape && isOrganized && bandOn) {
+        var teamRgb = defendingTeam === 'home' ? '232,50,58' : '79,216,208';
+        // Band spans the two REAL extreme players -- the single deepest
+        // defender to the single most advanced attacker -- not the
+        // back-four average plus the spread (see teamShapeLive's comment
+        // for why that overshot). depthLineX handles which screen
+        // direction is "forward" for this team, so no separate sign/dir
+        // math is needed here.
+        var lxBack = depthLineX(defendingTeam, shape.dMin);
+        var lxFront = depthLineX(defendingTeam, shape.dMax);
+        var b0 = toPx(lxBack, META.pitchWidth / 2);
+        var b1 = toPx(lxFront, -META.pitchWidth / 2);
+        // Tinted with the defending team's own color (not a flat white wash)
+        // so the band visibly "locks onto" that team at a glance, and solid
+        // lines close off both edges -- at plain 8% white with only one
+        // bounded edge, the fill was real (verified against the underlying
+        // data) but too subtle to read as tracking anything.
+        ctx.fillStyle = 'rgba(' + teamRgb + ',0.16)';
+        ctx.fillRect(b0[0], b0[1], b1[0] - b0[0], b1[1] - b0[1]);
+
+        ctx.strokeStyle = 'rgba(' + teamRgb + ',0.75)';
+        ctx.lineWidth = 2;
+        var f0 = toPx(lxFront, META.pitchWidth / 2), f1 = toPx(lxFront, -META.pitchWidth / 2);
+        ctx.beginPath(); ctx.moveTo(f0[0], f0[1]); ctx.lineTo(f1[0], f1[1]); ctx.stroke();
+        var k0 = toPx(lxBack, META.pitchWidth / 2), k1 = toPx(lxBack, -META.pitchWidth / 2);
+        ctx.beginPath(); ctx.moveTo(k0[0], k0[1]); ctx.lineTo(k1[0], k1[1]); ctx.stroke();
+      }
+
+      // TIGHT/LOOSE marking zone -- a shape traced around the actual 5
+      // ball-proximal defenders the tag describes (see
+      // ballProximalGroupLive), not just a text chip in the side rail.
+      // TIGHT: solid blue fill, matching the --marking token used for the
+      // chip. LOOSE: the same 135deg hatch already used for the LOOSE
+      // legend swatch and timeline convention, so the visual language
+      // matches whether you're reading the key or the pitch.
+      var markingState = defendingTeam === 'home' ? frame.homeMarking : frame.awayMarking;
+      if (isOrganized && (markingState === 'Tight' || markingState === 'Loose')) {
+        var group = ballProximalGroupLive(frame, defendingTeam);
+        if (group && group.length >= 3) {
+          var hull = convexHull(group.map(function (p) { return toPx(p.x, p.y); }));
+          if (hull.length >= 3) {
+            ctx.save();
+            ctx.beginPath();
+            hull.forEach(function (pt, i) { i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]); });
+            ctx.closePath();
+            if (markingState === 'Tight') {
+              ctx.fillStyle = 'rgba(91,141,238,0.18)';
+              ctx.fill();
+            } else {
+              ctx.save();
+              ctx.clip();
+              var xs = hull.map(function (pt) { return pt[0]; }), ys = hull.map(function (pt) { return pt[1]; });
+              var minX = Math.min.apply(null, xs) - 16, maxX = Math.max.apply(null, xs) + 16;
+              var minY = Math.min.apply(null, ys) - 16, maxY = Math.max.apply(null, ys) + 16;
+              var span = maxY - minY;
+              ctx.strokeStyle = 'rgba(147,168,156,0.55)';
+              ctx.lineWidth = 1;
+              for (var hx = minX - span; hx < maxX + span; hx += 7) {
+                ctx.beginPath(); ctx.moveTo(hx, minY); ctx.lineTo(hx + span, maxY); ctx.stroke();
+              }
+              ctx.restore();
+            }
+            ctx.lineWidth = markingState === 'Tight' ? 1.75 : 1.25;
+            ctx.strokeStyle = markingState === 'Tight' ? 'rgba(91,141,238,0.85)' : 'rgba(147,168,156,0.6)';
+            if (markingState === 'Loose') ctx.setLineDash([4, 3]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+          }
+        }
+      }
+    } else if (bandOn) {
+      // Loose ball (frame.possessionTeam null -- no team in clear
+      // possession this instant): there's no single "defending" side, so
+      // this used to mean nothing was drawn here at all, leaving a blank
+      // gap on the pitch even though the side panel keeps showing both
+      // teams' shape numbers live. Depth/inter-line are computed
+      // independent of possession (teamShapeLive takes a team, not a
+      // "defending" role), and transitions.py classifies BOTH teams'
+      // structure every frame regardless of who has the ball -- so during
+      // a loose ball, draw each team's own band when that team's own
+      // structure happens to be Organized Defense, dimmer and dashed
+      // (rather than the normal solid single-team band) to signal that,
+      // with the ball loose, this is each side's own shape shown for
+      // context, not "the" defensive shape of this instant.
+      ['home', 'away'].forEach(function (team) {
+        var teamStructure = team === 'home' ? frame.homeStructure : frame.awayStructure;
+        var isTeamOrganized = teamStructure === 'High Press' || teamStructure === 'Mid Block' ||
+                               teamStructure === 'Low Block';
+        if (!isTeamOrganized) return;
+        var teamShape = teamShapeLive(frame, team);
+        if (!teamShape) return;
+        var teamRgb = team === 'home' ? '232,50,58' : '79,216,208';
+        var lxBack = depthLineX(team, teamShape.dMin);
+        var lxFront = depthLineX(team, teamShape.dMax);
+        var b0 = toPx(lxBack, META.pitchWidth / 2);
+        var b1 = toPx(lxFront, -META.pitchWidth / 2);
+        ctx.fillStyle = 'rgba(' + teamRgb + ',0.08)';
+        ctx.fillRect(b0[0], b0[1], b1[0] - b0[0], b1[1] - b0[1]);
+        ctx.setLineDash([6, 4]);
+        ctx.strokeStyle = 'rgba(' + teamRgb + ',0.45)';
+        ctx.lineWidth = 1.5;
+        var f0 = toPx(lxFront, META.pitchWidth / 2), f1 = toPx(lxFront, -META.pitchWidth / 2);
+        ctx.beginPath(); ctx.moveTo(f0[0], f0[1]); ctx.lineTo(f1[0], f1[1]); ctx.stroke();
+        var k0 = toPx(lxBack, META.pitchWidth / 2), k1 = toPx(lxBack, -META.pitchWidth / 2);
+        ctx.beginPath(); ctx.moveTo(k0[0], k0[1]); ctx.lineTo(k1[0], k1[1]); ctx.stroke();
+        ctx.setLineDash([]);
+      });
+    }
+
+    // pressure ring under the carrier -- ring style itself now reflects
+    // ENGAGED vs. PASSIVE (see engagement.py), not just pressureScore's raw
+    // intensity: a genuinely engaged press keeps the solid glowing ring;
+    // a passive phase (proximity without real closing-down) renders the
+    // same ring dashed and dimmer, so the two read differently on the
+    // pitch itself, not only via the side-rail tag.
+    if (frame.ball && frame.pressureScore != null && frame.primaryPresser) {
+      var carrierPos = toPx(frame.ball.x, frame.ball.y);
+      var engagedState = frame.pressingTeam === 'home' ? frame.homeEngaged :
+                          (frame.pressingTeam === 'away' ? frame.awayEngaged : null);
+      var isPassive = engagedState === 'Passive';
+      var r = 14 + frame.pressureScore * 22;
+      var glowMax = isPassive ? 0.10 : 0.22;
+      var grad = ctx.createRadialGradient(carrierPos[0], carrierPos[1], 2, carrierPos[0], carrierPos[1], r);
+      grad.addColorStop(0, 'rgba(255,176,32,' + (0.03 + frame.pressureScore * glowMax) + ')');
+      grad.addColorStop(1, 'rgba(255,176,32,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(carrierPos[0], carrierPos[1], r, 0, Math.PI * 2); ctx.fill();
+      if (isPassive) ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = 'rgba(255,176,32,' + (isPassive ? (0.16 + frame.pressureScore * 0.28)
+                                                          : (0.35 + frame.pressureScore * 0.55)) + ')';
+      ctx.lineWidth = (isPassive ? 1 : 1.5) + frame.pressureScore * (isPassive ? 1.5 : 2.5);
+      ctx.beginPath(); ctx.arc(carrierPos[0], carrierPos[1], r, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    hitboxes = [];
+    frame.players.forEach(function (p) {
+      var isHome = p.id[0] === 'H';
+      var pos = toPx(p.x, p.y);
+      var isCarrier = frame.ball && Math.hypot(p.x - frame.ball.x, p.y - frame.ball.y) < 1.4 &&
+                       ((isHome && frame.possessionTeam === 'home') || (!isHome && frame.possessionTeam === 'away'));
+      var isPresser = p.id === frame.primaryPresser;
+
+      if (isCarrier) {
+        ctx.beginPath(); ctx.arc(pos[0], pos[1], 10, 0, Math.PI * 2);
+        ctx.strokeStyle = COLORS.ink; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+      if (isPresser) {
+        ctx.beginPath(); ctx.arc(pos[0], pos[1], 10.5, 0, Math.PI * 2);
+        ctx.strokeStyle = COLORS.amber; ctx.lineWidth = 2; ctx.stroke();
+      }
+
+      ctx.beginPath(); ctx.arc(pos[0], pos[1], 7, 0, Math.PI * 2);
+      ctx.fillStyle = isHome ? COLORS.home : COLORS.away;
+      ctx.fill();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(12,21,18,0.6)';
+      ctx.stroke();
+
+      hitboxes.push({ id: p.id, x: pos[0], y: pos[1] });
+    });
+
+    if (frame.ball) {
+      var bp = toPx(frame.ball.x, frame.ball.y);
+      var zlift = Math.min(frame.ball.z || 0, 8) * 1.1;
+      ctx.beginPath(); ctx.arc(bp[0], bp[1] - zlift, 4.2, 0, Math.PI * 2);
+      ctx.fillStyle = COLORS.ball;
+      ctx.fill();
+      ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(12,21,18,0.7)'; ctx.stroke();
+    }
+  }
+
+  // ---------------- side panel ----------------
+  var el = {
+    clock: document.getElementById('clockBadge'),
+    pillHome: document.getElementById('pillHome'),
+    pillAway: document.getElementById('pillAway'),
+    engHome: document.getElementById('engHome'),
+    engAway: document.getElementById('engAway'),
+    mrkHome: document.getElementById('mrkHome'),
+    mrkAway: document.getElementById('mrkAway'),
+    mDepth: document.getElementById('mDepth'),
+    mIL: document.getElementById('mIL'),
+    mGap: document.getElementById('mGap'),
+    aDepth: document.getElementById('aDepth'),
+    aIL: document.getElementById('aIL'),
+    aGap: document.getElementById('aGap'),
+    ballLost: document.getElementById('ballLostBadge'),
+    poss: document.getElementById('statPoss'),
+    pressurePct: document.getElementById('pressurePct'),
+    pressureFill: document.getElementById('pressureFill'),
+    presserName: document.getElementById('presserName')
+  };
+
+  // Running-clock offset per period, for the "elapsed match time" display.
+  // Regulation halves are 45 min each; extra-time periods are 15 min each
+  // (90:00 and 105:00 kickoff), NOT another +45 -- a flat `45*(period-1)`
+  // (this file's original formula, fine while only period 1 was ever
+  // rendered) would show 2nd extra time starting at 135:00 instead of the
+  // real 105:00, once full-match chapters made periods 3/4 reachable.
+  var PERIOD_START_S = { 1: 0, 2: 45 * 60, 3: 90 * 60, 4: 105 * 60 };
+  function fmtClock(s) {
+    if (s == null) return '--:--';
+    var total = s + (PERIOD_START_S[META.period] != null ? PERIOD_START_S[META.period] : 45 * 60 * (META.period - 1));
+    var m = Math.floor(total / 60), sec = Math.floor(total % 60);
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  // Header/timeline labels describe which slice of the match this clip is --
+  // derive them from META every load instead of hardcoding a window's start/
+  // end text in the HTML. Two window changes this project already left the
+  // old window's text stranded in the markup after the JS-driven per-frame
+  // clock (which IS meta-driven) moved on; this keeps the two in sync for
+  // whichever window gets exported next.
+  var PERIOD_LABEL = { 1: '1st half', 2: '2nd half', 3: '1st extra time', 4: '2nd extra time' };
+  (function initHeaderFromMeta() {
+    var half = PERIOD_LABEL[META.period] || ('period ' + META.period);
+    var startS = (META.windowStartMin != null) ? META.windowStartMin * 60 : null;
+    var endS = (META.windowEndMin != null) ? META.windowEndMin * 60 : null;
+    var midS = (startS != null && endS != null) ? (startS + endS) / 2 : null;
+    var startTxt = fmtClock(startS), midTxt = fmtClock(midS), endTxt = fmtClock(endS);
+
+    var mw = document.getElementById('matchupWindow');
+    if (mw) mw.textContent = half + ', ' + startTxt + '–' + endTxt;
+
+    var tlStart = document.getElementById('tlLabelStart');
+    var tlMid = document.getElementById('tlLabelMid');
+    var tlEnd = document.getElementById('tlLabelEnd');
+    if (tlStart) tlStart.textContent = startTxt;
+    if (tlMid) tlMid.textContent = midTxt;
+    if (tlEnd) tlEnd.textContent = endTxt;
+
+    if (el.clock) el.clock.innerHTML = startTxt + '<span>P' + META.period + '</span>';
+  })();
+
+  function setPill(node, state) {
+    var color = STATE_COLOR[state] || '#3c5148';
+    node.textContent = STATE_LABEL[state] || (state || '—');
+    node.style.borderColor = color;
+    node.style.color = color;
+    node.style.background = 'color-mix(in srgb, ' + color + ' 16%, transparent)';
+  }
+
+  // Idea #1, engaged vs. passive defense: a live add-on next to the phase
+  // pill, not a new phase of its own -- see engagement.py. `engaged` is
+  // 'Engaged' / 'Passive' (organized defense only, smoothed like depth/
+  // inter-line already are) or null/undefined outside organized defense or
+  // where too little pressure data resolves it -- the tag just hides then.
+  function setEngagedTag(node, engaged) {
+    node.classList.remove('show', 'is-engaged', 'is-passive');
+    if (engaged !== 'Engaged' && engaged !== 'Passive') {
+      node.textContent = '';
+      return;
+    }
+    node.textContent = engaged.toUpperCase();
+    node.classList.add('show', engaged === 'Engaged' ? 'is-engaged' : 'is-passive');
+  }
+
+  // Idea #3, ball-proximal compactness: a second, independent add-on tag
+  // next to the phase pill -- see compactness_tag.py. `marking` is
+  // 'Tight' / 'Loose' (organized defense only, smoothed like depth/
+  // inter-line already are) or null/undefined outside organized defense --
+  // the tag just hides then, same convention as the engaged tag.
+  function setMarkingTag(node, marking) {
+    node.classList.remove('show', 'is-tight', 'is-loose');
+    if (marking !== 'Tight' && marking !== 'Loose') {
+      node.textContent = '';
+      return;
+    }
+    node.textContent = marking.toUpperCase();
+    node.classList.add('show', marking === 'Tight' ? 'is-tight' : 'is-loose');
+  }
+
+  function updatePanel(frame) {
+    el.clock.innerHTML = fmtClock(frame.clockS) + '<span>P' + META.period + '</span>';
+    // Same raw frame.ball check the canvas draw uses (line ~339) before
+    // plotting the ball -- reading anything else here (a smoothed/derived
+    // field) risks the exact "badge disagrees with what's drawn" bug this
+    // project has hit before with depth/inter-line (see methodology,
+    // round 8). frame.ball is null exactly when this instant's ball
+    // position is a genuine broadcast-tracking gap, not bridged by the
+    // Kalman/RTS smoothing pipeline.
+    if (el.ballLost) el.ballLost.hidden = !!frame.ball;
+    setPill(el.pillHome, frame.homeStructure);
+    setPill(el.pillAway, frame.awayStructure);
+    setEngagedTag(el.engHome, frame.homeEngaged);
+    setEngagedTag(el.engAway, frame.awayEngaged);
+    if (el.mrkHome) setMarkingTag(el.mrkHome, frame.homeMarking);
+    if (el.mrkAway) setMarkingTag(el.mrkAway, frame.awayMarking);
+
+    // Team shape stats stand on their own (computed every frame regardless
+    // of who currently has the ball), so both rows populate even when
+    // possession is momentarily unresolved -- only the pitch overlay and
+    // pressure read need a settled "who's defending" answer. Read live off
+    // this frame's own player positions (teamShapeLive/backLineGap), the
+    // same numbers driving the canvas -- not the exported homeDepth/
+    // awayDepth/homeInterLine/awayInterLine fields, which are a 3-second
+    // rolling mean meant to keep the structure LABEL stable and would
+    // otherwise show a different number than what's drawn.
+    var mShape = teamShapeLive(frame, 'home'), aShape = teamShapeLive(frame, 'away');
+    var mBl = backLineGap(frame, 'home'), aBl = backLineGap(frame, 'away');
+    el.mDepth.textContent = mShape ? mShape.backDepth.toFixed(1) + 'm' : '—';
+    el.mIL.textContent = mShape ? mShape.interLine.toFixed(1) + 'm' : '—';
+    el.mGap.textContent = mBl ? mBl.gap.toFixed(1) + 'm' : '—';
+    el.aDepth.textContent = aShape ? aShape.backDepth.toFixed(1) + 'm' : '—';
+    el.aIL.textContent = aShape ? aShape.interLine.toFixed(1) + 'm' : '—';
+    el.aGap.textContent = aBl ? aBl.gap.toFixed(1) + 'm' : '—';
+
+    el.poss.textContent = frame.possessionTeam === 'home' ? META.homeTeam :
+                           (frame.possessionTeam === 'away' ? META.awayTeam : '—');
+
+    if (frame.pressureScore != null) {
+      var pct = Math.round(frame.pressureScore * 100);
+      el.pressurePct.textContent = pct + '%';
+      el.pressureFill.style.width = pct + '%';
+      if (frame.primaryPresser) {
+        var info = playerInfo(frame.primaryPresser);
+        var teamName = frame.primaryPresser[0] === 'H' ? META.homeTeam : META.awayTeam;
+        el.presserName.innerHTML = 'Tightest: <b>' + info.name + '</b> (' + teamName + ', ' + info.pos + ')';
+      } else {
+        el.presserName.textContent = 'No single defender applying sustained pressure.';
+      }
+    } else {
+      el.pressurePct.textContent = '—';
+      el.pressureFill.style.width = '0%';
+      el.presserName.textContent = frame.ball
+        ? 'Loose ball — no team in clear possession, so pressure isn’t attributed.'
+        : 'Ball position unavailable this instant.';
+    }
+  }
+
+  // ---------------- timelines ----------------
+  // Idea #1 (engaged vs. passive defense): the strip keeps its existing
+  // phase colors -- this isn't a new phase -- but a Passive stretch of
+  // High Press/Mid/Low Block gets the same diagonal-hatch treatment as the
+  // companion chart and the phase pill's engagement tag, so all three read
+  // the same way. Canvas patterns are cached per phase color since building
+  // one is more than a fillRect.
+  var HATCH_PATTERN_CACHE = {};
+  function hatchPatternFor(ctx, color) {
+    if (HATCH_PATTERN_CACHE[color]) return HATCH_PATTERN_CACHE[color];
+    var size = 6;
+    var pc = document.createElement('canvas');
+    pc.width = size; pc.height = size;
+    var pctx = pc.getContext('2d');
+    pctx.fillStyle = color;
+    pctx.globalAlpha = 0.32;
+    pctx.fillRect(0, 0, size, size);
+    pctx.globalAlpha = 0.85;
+    pctx.strokeStyle = color;
+    pctx.lineWidth = 2;
+    pctx.beginPath();
+    pctx.moveTo(-1, size + 1); pctx.lineTo(size + 1, -1);
+    pctx.moveTo(-1 - size, size + 1); pctx.lineTo(1, -1);
+    pctx.moveTo(size - 1, size + size + 1); pctx.lineTo(size + size + 1, size - 1);
+    pctx.stroke();
+    var pattern = ctx.createPattern(pc, 'repeat');
+    HATCH_PATTERN_CACHE[color] = pattern;
+    return pattern;
+  }
+
+  function buildTimeline(canvas, structKey, engagedKey) {
+    var w = 900, h = 30;
+    canvas.width = w; canvas.height = h;
+    var tctx = canvas.getContext('2d');
+    var n = FRAMES.length;
+    for (var col = 0; col < w; col++) {
+      var loIdx = Math.floor((col / w) * n);
+      var hiIdx = Math.min(n, Math.max(loIdx + 1, Math.floor(((col + 1) / w) * n)));
+      // Display-only aggregation: raw per-frame structure/engagement state
+      // flickers far more than a viewer needs to see (>97% single-frame
+      // runs match-wide), so picking one arbitrary frame per column (the
+      // old behavior) just showed that same flicker at a coarser sample
+      // rate. Instead, take the dominant (mode) state across every frame
+      // this column actually spans -- same spirit as the PPDA vs. Phase
+      // Detector companion's display-only bucket vote (rounds 21-23), sized
+      // down from that artifact's 300s match-wide buckets to this column's
+      // own (much shorter, ~1/3s at native fps) span so a ~5-minute chapter
+      // still reads with real resolution instead of a few giant blocks.
+      var stateCounts = {}, bestState = null, bestCount = -1;
+      var engagedCounts = { Engaged: 0, Passive: 0 };
+      for (var i = loIdx; i < hiIdx; i++) {
+        var s = FRAMES[i][structKey];
+        if (s) {
+          var c = (stateCounts[s] || 0) + 1;
+          stateCounts[s] = c;
+          if (c > bestCount) { bestCount = c; bestState = s; }
+        }
+        var eng = FRAMES[i][engagedKey];
+        if (eng === 'Engaged' || eng === 'Passive') engagedCounts[eng]++;
+      }
+      var color = STATE_COLOR[bestState] || '#1c2a24';
+      if (engagedCounts.Passive > engagedCounts.Engaged) {
+        tctx.fillStyle = hatchPatternFor(tctx, color);
+      } else {
+        tctx.fillStyle = color;
+      }
+      tctx.fillRect(col, 0, 1, h);
+    }
+  }
+  var tlHomeCanvas = document.querySelector('#tlHome canvas');
+  var tlAwayCanvas = document.querySelector('#tlAway canvas');
+  buildTimeline(tlHomeCanvas, 'homeStructure', 'homeEngaged');
+  buildTimeline(tlAwayCanvas, 'awayStructure', 'awayEngaged');
+
+  var phHome = document.getElementById('phHome');
+  var phAway = document.getElementById('phAway');
+
+  function updatePlayheads(frac) {
+    var pct = (frac * 100) + '%';
+    phHome.style.left = pct;
+    phAway.style.left = pct;
+  }
+
+  [document.getElementById('tlHome'), document.getElementById('tlAway')].forEach(function (strip) {
+    function seekFromEvent(e) {
+      var rect = strip.getBoundingClientRect();
+      var frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      playheadT = T0 + frac * (T1 - T0);
+      renderAtTime(playheadT);
+    }
+    strip.addEventListener('mousedown', function (e) { seeking = true; seekFromEvent(e); });
+  });
+  window.addEventListener('mousemove', function (e) {
+    if (seeking) {
+      var strip = document.getElementById('tlHome');
+      var rect = strip.getBoundingClientRect();
+      var frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      playheadT = T0 + frac * (T1 - T0);
+      renderAtTime(playheadT);
+    }
+  });
+  window.addEventListener('mouseup', function () { seeking = false; });
+
+  // ---------------- playback loop ----------------
+  var playing = true, speed = 1, seeking = false;
+  var playheadT = T0;
+  var lastPerf = null;
+  var lastIdx = -1;
+
+  function frameIndexForTime(t) {
+    var idx = Math.round((t - T0) * FPS);
+    return Math.min(FRAMES.length - 1, Math.max(0, idx));
+  }
+
+  function renderAtTime(t) {
+    var idx = frameIndexForTime(t);
+    if (idx === lastIdx) return;
+    lastIdx = idx;
+    var frame = FRAMES[idx];
+    render(frame);
+    updatePanel(frame);
+    updatePlayheads((t - T0) / (T1 - T0));
+  }
+
+  // Chapter-end overlay: shown when playback reaches the end of this
+  // chapter's frames and a real next chapter exists. A script can't
+  // reliably navigate the whole page on its own here -- this artifact's
+  // content renders inside a sandboxed frame under the page's own title
+  // bar, and browsers only let a sandboxed frame swap the WHOLE page for
+  // a navigation that comes from a genuine click, never from a timer/tick
+  // callback (that's a deliberate anti-abuse rule, not a bug to route
+  // around). So instead of forcing a jump, playback stops at the end and
+  // this overlay's own real link -- one click -- takes the viewer to the
+  // next chapter. On the last chapter of a match (no real "Next" link,
+  // just the disabled span) this is never shown and playback loops as it
+  // always did.
+  var chapterEndOverlay = document.getElementById('chapterEndOverlay');
+  var chapterEndNextBtn = document.getElementById('chapterEndNextBtn');
+  var chapterEndReplayBtn = document.getElementById('chapterEndReplayBtn');
+  function showChapterEndOverlay(nextUrl) {
+    if (!chapterEndOverlay) return;
+    chapterEndNextBtn.href = nextUrl;
+    chapterEndOverlay.hidden = false;
+  }
+  function hideChapterEndOverlay() {
+    if (!chapterEndOverlay) return;
+    chapterEndOverlay.hidden = true;
+  }
+  if (chapterEndReplayBtn) {
+    chapterEndReplayBtn.addEventListener('click', function () {
+      hideChapterEndOverlay();
+      playheadT = T0;
+      lastPerf = null;
+      renderAtTime(playheadT);
+      setPlaying(true);
+    });
+  }
+
+  function tick(now) {
+    if (playing && !seeking) {
+      if (lastPerf != null) {
+        playheadT += ((now - lastPerf) / 1000) * speed;
+        if (playheadT > T1) {
+          // End of chapter: if a real "Next" link exists (not the disabled
+          // span shown on the last chapter of a match), stop here and show
+          // the one-click continue overlay instead of looping.
+          var nextLink = document.querySelector('.chapter-bar > a.chapter-nav-btn:last-child');
+          if (nextLink && nextLink.href) {
+            playheadT = T1;
+            renderAtTime(playheadT);
+            setPlaying(false);
+            showChapterEndOverlay(nextLink.href);
+            lastPerf = now;
+            requestAnimationFrame(tick);
+            return;
+          }
+          playheadT = T0;
+        }
+      }
+      lastPerf = now;
+      renderAtTime(playheadT);
+    } else {
+      lastPerf = now;
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  renderAtTime(playheadT);
+
+  // ---------------- controls ----------------
+  var playBtn = document.getElementById('playBtn');
+  var playIcon = document.getElementById('playIcon');
+  function setPlaying(v) {
+    playing = v;
+    playIcon.innerHTML = playing
+      ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>'
+      : '<path d="M8 5v14l11-7z"/>';
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  }
+  playBtn.addEventListener('click', function () { setPlaying(!playing); });
+  setPlaying(true);
+
+  Array.prototype.forEach.call(document.querySelectorAll('.speed-btn'), function (btn) {
+    btn.addEventListener('click', function () {
+      speed = parseFloat(btn.dataset.speed);
+      Array.prototype.forEach.call(document.querySelectorAll('.speed-btn'), function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    });
+  });
+
+  var heatBtn = document.getElementById('heatBtn');
+  heatBtn.addEventListener('click', function () {
+    heatOn = !heatOn;
+    heatBtn.classList.toggle('active', heatOn);
+    heatBtn.setAttribute('aria-pressed', String(heatOn));
+    render(FRAMES[lastIdx]); // force a redraw of the current frame -- renderAtTime only redraws on a frame-index change
+  });
+
+  var bandBtn = document.getElementById('bandBtn');
+  bandBtn.addEventListener('click', function () {
+    bandOn = !bandOn;
+    bandBtn.classList.toggle('active', bandOn);
+    bandBtn.setAttribute('aria-pressed', String(bandOn));
+    render(FRAMES[lastIdx]);
+  });
+
+  // ---------------- hover tooltip ----------------
+  pitchCanvas.addEventListener('mousemove', function (e) {
+    var rect = pitchCanvas.getBoundingClientRect();
+    var scaleX = PW / rect.width, scaleY = PH / rect.height;
+    var mx = (e.clientX - rect.left) * scaleX, my = (e.clientY - rect.top) * scaleY;
+    var best = null, bestD = 14;
+    hitboxes.forEach(function (h) {
+      var d = Math.hypot(h.x - mx, h.y - my);
+      if (d < bestD) { bestD = d; best = h; }
+    });
+    if (best) {
+      var info = playerInfo(best.id);
+      tooltip.textContent = info.name + '  ·  ' + info.pos;
+      tooltip.style.left = ((best.x / PW) * rect.width) + 'px';
+      tooltip.style.top = ((best.y / PH) * rect.height) + 'px';
+      tooltip.style.opacity = '1';
+    } else {
+      tooltip.style.opacity = '0';
+    }
+  });
+  pitchCanvas.addEventListener('mouseleave', function () { tooltip.style.opacity = '0'; });
+
+})();
+</script>

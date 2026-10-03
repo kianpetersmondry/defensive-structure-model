@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3-D Animation Model</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #0c1512; --panel: #131f1a; --panel-raised: #17251f; --border: #253830;
+  --ink: #eef3ee; --ink-dim: #93a89c; --ink-faint: #5e7268;
+  --amber: #ffb020; --france: #2f6fe0; --morocco: #e8323a;
+  --tight: #5b8dee; --loose: #93a89c;
+  --state-high: #e8323a; --state-mid: #d99a2b; --state-low: #3f8f5c; --state-transition: #b5563a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 16px 56px; display: flex; flex-direction: column; gap: 30px; }
+
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.topbar a { color: var(--ink-dim); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
+.topbar a:hover { color: var(--amber); border-color: var(--amber); }
+.topbar a:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.topbar .tag { color: var(--ink-faint); }
+
+.hero { padding: 18px 0 20px; border-bottom: 1px solid var(--border); }
+.eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--amber); }
+.hero h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 50px; line-height: 1.02;
+  letter-spacing: 0.01em; text-transform: uppercase; margin: 8px 0 14px; text-wrap: balance; }
+.hero p { font-size: 15px; line-height: 1.65; color: var(--ink-dim); max-width: 62ch; margin: 0 0 12px; }
+.hero .matchup { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink-faint);
+  display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+.section-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--ink-faint); margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ---- player ---- */
+.player { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.player video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.parts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 12px; }
+@media (max-width: 640px) { .parts { grid-template-columns: repeat(2, 1fr); } }
+.part { display: flex; flex-direction: column; gap: 3px; text-align: left; cursor: pointer;
+  background: var(--panel-raised); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px;
+  color: var(--ink); font: inherit; }
+.part:hover { border-color: var(--ink-faint); }
+.part:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+.part[aria-current="true"] { border-color: var(--amber); }
+.part .n { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink-faint); }
+.part[aria-current="true"] .n { color: var(--amber); }
+.part .range { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 17px; letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums; }
+.part .what { font-size: 11.5px; color: var(--ink-dim); }
+.player-note { padding: 0 14px 14px; font-size: 12.5px; line-height: 1.6; color: var(--ink-faint); margin: 0; }
+.player-note b { color: var(--ink-dim); font-weight: 500; }
+
+/* ---- key ---- */
+.key { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+@media (max-width: 640px) { .key { grid-template-columns: 1fr; } }
+.key-item { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; line-height: 1.55; color: var(--ink-dim); }
+.key-item b { color: var(--ink); font-weight: 600; }
+.sw { flex: 0 0 38px; height: 24px; border-radius: 4px; position: relative; margin-top: 1px; }
+.sw-markers::before, .sw-markers::after { content: ''; position: absolute; top: 7px; width: 14px; height: 9px;
+  border-radius: 50%; border: 2px solid; }
+.sw-markers::before { left: 2px; border-color: var(--france); }
+.sw-markers::after { right: 2px; border-color: var(--morocco); }
+.sw-band { background: rgba(232, 50, 58, 0.22); border-left: 3px solid var(--morocco); border-right: 3px solid var(--morocco); }
+.sw-tight { background: rgba(91, 141, 238, 0.35); border: 2px solid var(--tight); }
+.sw-loose { border: 2px solid var(--loose);
+  background: repeating-linear-gradient(135deg, rgba(147,168,156,0.55) 0 1px, transparent 1px 7px); }
+.sw-engaged::before, .sw-passive::before { content: ''; position: absolute; inset: 3px 6px; border-radius: 50%; }
+.sw-engaged::before { border: 3px solid var(--amber); }
+.sw-passive::before { border: 2px dashed var(--amber); }
+.sw-heat { background: radial-gradient(ellipse at 35% 55%, rgba(47,111,224,0.85), rgba(47,111,224,0.25) 55%, rgba(47,111,224,0) 80%); }
+.sw-badge { background: var(--panel-raised); border: 1px solid var(--border); display: flex; align-items: center;
+  justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; color: var(--amber); }
+
+/* ---- findings ---- */
+.callout { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--amber);
+  border-radius: 10px; padding: 16px 18px; font-size: 14px; line-height: 1.65; color: var(--ink-dim); }
+.callout b { color: var(--ink); font-weight: 600; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 640px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px; }
+.stat .v { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1;
+  font-variant-numeric: tabular-nums; }
+.stat .l { font-size: 12.5px; line-height: 1.45; color: var(--ink-dim); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 520px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink-faint); font-weight: 500; background: var(--panel); }
+tr.group td { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--amber); background: var(--panel); padding-top: 9px; padding-bottom: 7px; }
+td.num { font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; font-weight: 500; }
+td.note { color: var(--ink-faint); font-size: 12.5px; }
+tr:last-child td { border-bottom: none; }
+
+.prose { font-size: 14px; line-height: 1.7; color: var(--ink-dim); max-width: 68ch; }
+.prose p { margin: 0 0 12px; }
+.prose b { color: var(--ink); font-weight: 600; }
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 10px; }
+.steps li { counter-increment: s; display: flex; gap: 12px; font-size: 14px; line-height: 1.6; color: var(--ink-dim); }
+.steps li::before { content: counter(s); flex: 0 0 24px; height: 24px; border-radius: 50%; background: var(--panel-raised);
+  border: 1px solid var(--border); color: var(--amber); font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  display: flex; align-items: center; justify-content: center; }
+.steps b { color: var(--ink); font-weight: 600; }
+.limits { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.7; color: var(--ink-dim); }
+.limits li { margin-bottom: 6px; }
+footer.credit { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-faint);
+  text-align: center; padding-top: 6px; line-height: 1.6; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a href="https://claude.ai/code/artifact/ffac7d5a-5ef4-409d-9586-80b044e97f16">&larr; Match Library</a>
+    <span class="tag">Companion analysis &middot; Morocco vs France</span>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Prototype &middot; model on real broadcast footage</span>
+    <h1>3-D Animation Model</h1>
+    <p>The same defensive-structure model that drives the match animations, run on the actual TV pictures
+      instead of a 2-D pitch. Players are found in the broadcast, placed on the real pitch, and the read is drawn
+      back onto them: team markers, the inter-line band, the ball-side marking zone, the pressure ring and the
+      danger heatmap.</p>
+    <div class="matchup">
+      <span><span class="dot" style="background:var(--france)"></span>France</span>
+      <span><span class="dot" style="background:var(--morocco)"></span>Morocco</span>
+      <span>2022 World Cup semifinal &middot; first 6 minutes</span>
+    </div>
+  </header>
+
+  <section>
+    <p class="section-label">Watch</p>
+    <div class="player">
+      <video id="vid" controls playsinline preload="metadata" poster="poster.jpg" src="part1.mp4"></video>
+      <div class="parts" id="parts"></div>
+      <p class="player-note">Plays straight through all five parts. Match clock as shown on the broadcast
+        scoreboard. <b>Part 4</b> has France's 5th-minute goal; <b>part 5</b> is the celebration and replays,
+        which are deliberately left unread.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">What's drawn</p>
+    <div class="key">
+      <div class="key-item"><span class="sw sw-markers"></span><span><b>Player markers</b> under every tracked
+        player, in team colour. Shows what the model can actually see.</span></div>
+      <div class="key-item"><span class="sw sw-band"></span><span><b>Inter-line band</b>, deepest to most advanced
+        defender. Drawn only when <b>all 10</b> outfield defenders are in shot.</span></div>
+      <div class="key-item"><span class="sw sw-tight"></span><span><b>TIGHT</b> marking zone: the 5 defenders nearest
+        the ball span 23 m or less.</span></div>
+      <div class="key-item"><span class="sw sw-loose"></span><span><b>LOOSE</b> marking zone: the same group is
+        spread wider than 23 m.</span></div>
+      <div class="key-item"><span class="sw sw-engaged"></span><span><b>Pressure ring</b> round the ball carrier,
+        solid when the defence is <b>ENGAGED</b> (smoothed pressure &ge; 0.67).</span></div>
+      <div class="key-item"><span class="sw sw-passive"></span><span>Dashed when it's <b>PASSIVE</b>. Colour runs from
+        grey to amber to red as pressure rises.</span></div>
+      <div class="key-item"><span class="sw sw-heat"></span><span><b>Danger heatmap</b>, tinted to the team on the ball.
+        Shown once possession has been stable for 1.5 s.</span></div>
+      <div class="key-item"><span class="sw sw-badge">NO READ</span><span><b>Badges</b> when there's nothing to
+        read: close-ups and other camera angles, replays, or not all 10 defenders in shot.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">The 10-player rule</p>
+    <div class="callout">A defensive phase (High Press, Mid Block, Low Block, Transition), the inter-line band and
+      the depth / team-length numbers are only shown when <b>all 10 outfield players of the defending team are in
+      shot</b>, and the pitch behind and in front of them is visible too. With part of the team off-screen the
+      model could call a High Press off the players it happens to see, so it doesn't guess. A broadcast camera
+      rarely frames a whole team, which is why the phase label is missing most of the time: that's the camera's
+      limit made visible, not the model failing. A defender hidden behind another player for under a third of a
+      second doesn't break the read, as long as all 10 are in shot either side of it. Pressure, ENGAGED/PASSIVE, TIGHT/LOOSE and the heatmap only need
+      the players around the ball, so they keep running.</div>
+  </section>
+
+  <section>
+    <p class="section-label">How close is it to the 2-D model?</p>
+    <div class="stats">
+      <div class="stat"><span class="v">0.83 m</span><span class="l">median gap between a player's position here and in PFF's tracking</span></div>
+      <div class="stat"><span class="v">84%</span><span class="l">of the players in shot are found and placed</span></div>
+      <div class="stat"><span class="v">0.8 m</span><span class="l">median back-line depth gap when all 10 defenders are in shot</span></div>
+    </div>
+    <p class="prose" style="margin-top:14px">Compared frame by frame against PFF's tracking for the same minutes, the
+      data behind the 2-D animation. PFF's tracking is itself made from broadcast video, so this is agreement with a
+      professional system, not ground truth.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Measure</th><th>This model vs PFF</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr class="group"><td colspan="3">Where the players are</td></tr>
+          <tr><td>Player position, median gap</td><td class="num">0.83 m</td><td class="note">61% within 1 m, 90% within 2 m, 28,105 comparisons</td></tr>
+          <tr><td>Players in shot that are found</td><td class="num">84%</td><td class="note">within 3 m of PFF's position</td></tr>
+          <tr><td>Who has the ball</td><td class="num">85.5%</td><td class="note">agreement on possession</td></tr>
+          <tr><td>Ball position, median gap</td><td class="num">2.5 m</td><td class="note">weakest part: a ball in the air looks like it's further away</td></tr>
+          <tr class="group"><td colspan="3">What the model reads</td></tr>
+          <tr><td>Pressure on the ball</td><td class="num">r = 0.74</td><td class="note">correlation with the 2-D model's pressure score</td></tr>
+          <tr><td>ENGAGED / PASSIVE</td><td class="num">85%</td><td class="note">agreement, 1,281 frames</td></tr>
+          <tr><td>Back-line depth</td><td class="num">0.8 m</td><td class="note">median gap, every read within 3 m (all-10 frames only)</td></tr>
+          <tr><td>Team length</td><td class="num">1.1 m</td><td class="note">median gap (all-10 frames only)</td></tr>
+          <tr><td>Organised phase label</td><td class="num">93%</td><td class="note">when both call an organised block; small sample, 30 moments</td></tr>
+          <tr><td>Transition timing</td><td class="num">differs</td><td class="note">most label disagreements are about when a transition starts and ends</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">How it works</p>
+    <ol class="steps">
+      <li><span><b>Find the players and the ball</b> in every third frame of the broadcast with an object detector.</span></li>
+      <li><span><b>Work out where the camera is looking.</b> The main camera sits in one place and only pans, tilts and zooms,
+        so its position is solved once from the pitch lines, then its angle and zoom are fitted frame by frame to the white markings.</span></li>
+      <li><span><b>Put everyone on the pitch.</b> Each player's feet are mapped to real pitch coordinates, sorted into France,
+        Morocco, keepers and referee by kit colour, and followed from frame to frame. Identities restart after every camera cut.</span></li>
+      <li><span><b>Run the same model</b> as the animations: the same phase thresholds, pressure formula, ENGAGED/PASSIVE
+        and TIGHT/LOOSE cut-offs, and danger heatmap.</span></li>
+      <li><span><b>Draw it back onto the video</b>, painted only on the grass so players and pitch lines stay on top.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <p class="section-label">What it can't do yet</p>
+    <ul class="limits">
+      <li>The broadcast shows 10-15 of the 22 players at a time, so the full shape was readable for only about 11 seconds of these five minutes of play.</li>
+      <li>The camera is tracked on about three-quarters of live play; close-ups and the pitch-level and reverse-angle cameras are left unread.</li>
+      <li>Replays are recognised and skipped, not analysed.</li>
+      <li>Kit colours, the camera position and the attacking direction are set per match, so a new stadium or club broadcast needs its own set-up.</li>
+    </ul>
+  </section>
+
+  <footer class="credit">Footage: FIFA broadcast (screen recording) &middot; Reference tracking: PFF FC &middot; Prototype, one match, one camera</footer>
+</div>
+<script>
+(function () {
+  var PARTS = [
+    { src: 'part1.mp4', range: '0:00 – 1:06', what: 'Kickoff' },
+    { src: 'part2.mp4', range: '1:06 – 2:21', what: 'Open play' },
+    { src: 'part3.mp4', range: '2:21 – 3:36', what: 'Open play' },
+    { src: 'part4.mp4', range: '3:36 – 4:51', what: 'France goal' },
+    { src: 'part5.mp4', range: 'Replays', what: 'Celebration' }
+  ];
+  var vid = document.getElementById('vid');
+  var wrap = document.getElementById('parts');
+  var cur = 0;
+  var buttons = PARTS.map(function (p, k) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'part';
+    b.innerHTML = '<span class="n">Part ' + (k + 1) + '</span><span class="range">' + p.range +
+                  '</span><span class="what">' + p.what + '</span>';
+    b.addEventListener('click', function () { load(k, true); });
+    wrap.appendChild(b);
+    return b;
+  });
+  function mark() {
+    buttons.forEach(function (b, k) { b.setAttribute('aria-current', k === cur ? 'true' : 'false'); });
+  }
+  function load(k, play) {
+    cur = k;
+    vid.src = PARTS[k].src;
+    if (k > 0) vid.removeAttribute('poster');
+    mark();
+    if (play) {
+      var pr = vid.play();
+      if (pr && pr.catch) pr.catch(function () {});
+    }
+  }
+  vid.addEventListener('ended', function () {
+    if (cur + 1 < PARTS.length) load(cur + 1, true);
+  });
+  mark();
+})();
+</script>
+</body>
+</html>
