@@ -88,8 +88,7 @@ No match data is included in this repository.
 ## Status
 
 The analysis code was rebuilt from the published outputs after the original working copy was lost; every
-view was checked against what is live ([docs/VERIFICATION.md](docs/VERIFICATION.md)). Morocco vs Spain and
-France vs Morocco are re-checked once their raw files are back.
+view was checked against what is live, for all six matches ([docs/VERIFICATION.md](docs/VERIFICATION.md)).
 
 Planned next: an Opta converter, and carrying PFF's "estimated position" flag into the animation.
 
