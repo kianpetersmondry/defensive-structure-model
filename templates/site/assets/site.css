@@ -259,8 +259,8 @@ a.chlink:hover { border-color: var(--line-strong); }
 .chlink.off { opacity: 0.4; }
 .rail { display: flex; flex-direction: column; gap: 12px; }
 .rcard { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
-.rlabel { margin: 0 0 12px; font: 500 11px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); display: flex; justify-content: space-between; gap: 8px; }
-.rlabel .window { letter-spacing: 0.02em; text-transform: none; }
+.rlabel { margin: 0 0 12px; font: 500 11px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.rlabel .window { display: block; margin-top: 4px; letter-spacing: 0.02em; text-transform: none; color: var(--dim); }
 .team-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .team-row + .team-row { margin-top: 10px; }
 .team-name { display: flex; align-items: center; gap: 8px; font: 600 18px var(--display); text-transform: uppercase; letter-spacing: 0.02em; }

@@ -102,26 +102,38 @@ def compute_chapter_heatmap(anim_path, out_path):
     return len(frame_records), os.path.getsize(out_path)
 
 
-def main():
+def main(part=0, parts=1):
+    """Compute every chapter's heatmap. A chapter whose heat file is newer than its animation file is kept
+    (so an interrupted run resumes); part/parts splits the chapters across processes (part k takes every
+    parts-th chapter starting at k)."""
     with open(f'{CHAPTERS_DIR}/manifest.json') as f:
         manifest = json.load(f)
 
     t0 = time.time()
-    for ch in manifest['chapters']:
+    for i, ch in enumerate(manifest['chapters']):
         idx = ch['chapterIndex']
         anim_path = ch['animPath']
         out_path = f'{CHAPTERS_DIR}/heat_{idx:02d}.json'
-        n_frames, size_b = compute_chapter_heatmap(anim_path, out_path)
         ch['heatPath'] = out_path
-        ch['heatFrames'] = n_frames
-        ch['heatSizeMb'] = round(size_b / 1e6, 2)
+        if i % parts != part:
+            continue
+        if os.path.exists(out_path) and os.path.getmtime(out_path) >= os.path.getmtime(anim_path):
+            print(f"chapter {idx:02d}: already done")
+            continue
+        n_frames, size_b = compute_chapter_heatmap(anim_path, out_path)
         print(f"chapter {idx:02d}: {n_frames} heatmap samples, {size_b/1e6:.2f}MB "
               f"({time.time()-t0:.1f}s elapsed)")
 
-    with open(f'{CHAPTERS_DIR}/manifest.json', 'w') as f:
-        json.dump(manifest, f, indent=2)
+    if parts == 1:
+        with open(f'{CHAPTERS_DIR}/manifest.json', 'w') as f:
+            json.dump(manifest, f, indent=2)
     print(f"Done in {time.time()-t0:.1f}s")
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+    if len(sys.argv) > 1:
+        k, n = sys.argv[1].split('/')
+        main(int(k), int(n))
+    else:
+        main()
