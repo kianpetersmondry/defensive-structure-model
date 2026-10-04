@@ -20,6 +20,7 @@ Pipeline:
    Engaged / Passive by majority vote of its own (resolved) frames.
 4. Write engaged_passive_data.json for the companion artifact.
 """
+from config import EVENTS_PATH
 import json
 import numpy as np
 import pandas as pd
@@ -32,7 +33,7 @@ MIN_RESOLVED_FRAMES = 3
 
 
 def derive_threshold():
-    with open('/home/claude/wc2022/events.json') as f:
+    with open(EVENTS_PATH) as f:
         events = json.load(f)
     df = pd.read_pickle('match_features_with_pressure.pkl')
     tagged = []

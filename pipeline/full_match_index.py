@@ -9,10 +9,11 @@ Usage: fill CHAPTER_URLS below (chapterIndex -> url) and run; prints the
 assembled HTML path. The chapter pages' own __INDEX_URL__ token gets patched
 separately once this page is itself published (see full_match_patch.py).
 """
+import os
 import json
 
-CHAPTERS_DIR = '/home/claude/project_work/chapters'
-OUT_PATH = '/home/claude/project_work/chapters/match_index.html'
+from config import CHAPTERS_DIR
+OUT_PATH = os.path.join(CHAPTERS_DIR, 'match_index.html')
 
 PERIOD_ORDER = [1, 2, 3, 4]
 

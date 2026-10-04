@@ -24,6 +24,7 @@ Pressure Read animation:
 
 Output: space_behind_line.json, consumed by the companion chart.
 """
+from config import json_path
 import json
 import time
 import pandas as pd
@@ -31,7 +32,7 @@ pd.set_option('future.infer_string', False)  # accessible-space's internals pred
 import numpy as np
 import accessible_space as accsp
 
-ANIM_PATH = '/home/claude/project_work/animation_data.json'
+ANIM_PATH = json_path('animation_data')
 SAMPLE_EVERY_S = 0.5  # ~600 samples over the 5-minute window
 
 PITCH_X_MIN, PITCH_X_MAX = -52.5, 52.5
@@ -189,7 +190,7 @@ def main():
         'teams': {'home': meta['homeTeam'], 'away': meta['awayTeam']},
         'samples': results,
     }
-    with open('/home/claude/project_work/space_behind_line.json', 'w') as f:
+    with open(json_path('space_behind_line'), 'w') as f:
         json.dump(out, f)
     print("Wrote space_behind_line.json")
 

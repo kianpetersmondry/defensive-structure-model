@@ -62,6 +62,7 @@ looking "messy" and hard to read:
    this kind of heavy-tailed density is the standard fix and is what actually
    produces a readable multi-level gradient instead of a binary on/off wash.
 """
+from config import json_path
 import json
 import base64
 import time
@@ -73,8 +74,8 @@ import accessible_space as accsp
 
 from space_behind_line import build_velocity_lookup, frame_to_tracking_df
 
-ANIM_PATH = '/home/claude/project_work/animation_data.json'
-OUT_PATH = '/home/claude/project_work/heatmap_data.json'
+ANIM_PATH = json_path('animation_data')
+OUT_PATH = json_path('heatmap_data')
 
 SAMPLE_HZ = 5.0
 GRID_COLS = 52

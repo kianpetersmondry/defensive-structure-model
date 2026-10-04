@@ -10,13 +10,16 @@ Steps per valid sampled frame:
   5. smooth each track and differentiate for velocity
   6. pick the ball, track + gap-fill it, and assign possession
 """
+import os as _os
+HERE = _os.path.dirname(_os.path.abspath(__file__))
+PIPELINE = _os.path.join(HERE, '..', 'pipeline')
 import cv2, numpy as np, pickle
 from scipy.optimize import linear_sum_assignment
 from scipy.signal import savgol_filter
 from calib import homography, project, HL, HW
 from fit_camera import OV
 
-C = np.load('/home/claude/project_work/footage/camera_C.npy')
+C = np.load(_os.path.join(HERE, 'camera_C.npy'))
 MAX_GAP_SAMPLES = 3          # bridge up to 3 missing calibrations (~0.3 s) inside a run
 
 

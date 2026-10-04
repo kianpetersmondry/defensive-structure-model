@@ -1,6 +1,7 @@
 """Scan the full match for 5-minute windows with much better ball-tracking
 coverage than the current one (68%, with gaps up to 23s), so we can pick a
 cleaner window before considering a much bigger rebuild."""
+from config import pkl_path
 import bz2
 import json
 from config import TRACKING_PATH
@@ -36,5 +37,5 @@ for period, recs in sorted(by_period.items()):
           f"pet range {recs[0][2]}-{recs[-1][2]}")
 
 import pickle
-with open('/tmp/ball_coverage_records.pkl', 'wb') as f:
+with open(pkl_path('ball_coverage_records'), 'wb') as f:
     pickle.dump(by_period, f)

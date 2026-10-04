@@ -13,17 +13,20 @@ Status handling (agreed with the user):
   replay / pre-kickoff  -> video untouched, badge "Replay - not live" / "Pre-kickoff"
 Identities and the transition state are re-initialised after every cut.
 """
+import os as _os
+HERE = _os.path.dirname(_os.path.abspath(__file__))
+PIPELINE = _os.path.join(HERE, '..', 'pipeline')
 import cv2, numpy as np, pickle, subprocess, sys, math
 from PIL import Image, ImageDraw, ImageFont
 from scipy.signal import savgol_filter
 from calib import homography, project, HL, HW
 from model_footage import team_family
 
-FONT_DIR = '/home/claude/project_work/footage/models/fonts'
+FONT_DIR = _os.environ.get('FONT_DIR', _os.path.join(HERE, 'models', 'fonts'))
 F_DISPLAY = f'{FONT_DIR}/fontsource-barlow-condensed-5.3.0/files/barlow-condensed-latin-700-normal.woff'
 F_DISPLAY_SEMI = f'{FONT_DIR}/fontsource-barlow-condensed-5.3.0/files/barlow-condensed-latin-600-normal.woff'
 F_MONO = f'{FONT_DIR}/fontsource-ibm-plex-mono-5.3.0/files/ibm-plex-mono-latin-500-normal.woff'
-C = np.load('/home/claude/project_work/footage/camera_C.npy')
+C = np.load(_os.path.join(HERE, 'camera_C.npy'))
 LIVE_START, LIVE_END = 8.4, 307.7
 CLOCK_OFFSET = 8.4
 

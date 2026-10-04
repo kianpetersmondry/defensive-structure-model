@@ -96,6 +96,7 @@ and short bad runs the same way) followed by an RTS backward pass, which is
 the standard technique for exactly this problem -- see that function's
 docstring for the full reasoning.
 """
+from config import json_path
 import bz2
 import json
 import math
@@ -513,7 +514,7 @@ if __name__ == '__main__':
     print(f"Export took {time.time()-t0:.1f}s, {len(payload['frames'])} frames, "
           f"{len(payload['meta']['players'])} players")
 
-    out_path = '/home/claude/project_work/animation_data.json'
+    out_path = json_path('animation_data')
     with open(out_path, 'w') as f:
         json.dump(payload, f, separators=(',', ':'))
     import os

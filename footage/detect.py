@@ -5,11 +5,14 @@ The model takes a fixed 640x640 input. Broadcast wide-shot players are only
 squeezed into 640 px, so each frame is split into overlapping 640x640 tiles at
 native resolution and the detections are merged with NMS.
 """
+import os as _os
+HERE = _os.path.dirname(_os.path.abspath(__file__))
+PIPELINE = _os.path.join(HERE, '..', 'pipeline')
 import numpy as np
 import cv2
 import onnxruntime as ort
 
-MODEL_PATH = '/home/claude/project_work/footage/models/yolov8n.onnx'
+MODEL_PATH = _os.environ.get('YOLO_ONNX', _os.path.join(HERE, 'models', 'yolov8n.onnx'))
 PERSON, BALL = 0, 32
 _sess = None
 

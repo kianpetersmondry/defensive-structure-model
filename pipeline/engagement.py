@@ -22,6 +22,7 @@ build_engaged_passive.py):
      since smoothing shifts the score distribution -- re-validating keeps
      this honest rather than assuming the raw threshold still applies.
 """
+import os
 import json
 import numpy as np
 import pandas as pd
@@ -47,6 +48,28 @@ def add_smoothed_pressure(df):
         df[col] = np.nan
         df.loc[mask, col] = smooth.values
     return df
+
+
+def pooled_threshold(n_tagged):
+    """Data without analyst pressure tags (e.g. DFL open data): nothing in this match to calibrate against, so
+    use the median of the thresholds calibrated on the matches that do have them (pressure_score is the same
+    physics-based metric in every match, so the scale carries over)."""
+    import statistics
+    from config import MATCH_ID, OUT_ROOT
+    from registry import R
+    vals = {}
+    for mid in R.ids():
+        if mid == MATCH_ID:
+            continue
+        p = os.path.join(OUT_ROOT, f'engagement_threshold{R.suffix(mid)}.json')
+        if os.path.exists(p):
+            d = json.load(open(p))
+            if d.get('source') != 'pooled':
+                vals[mid] = d['threshold']
+    if not vals:
+        raise SystemExit('no pressure tags in this match and no calibrated matches to pool from')
+    return {'threshold': round(statistics.median(vals.values()), 2), 'source': 'pooled', 'pooled_from': vals,
+            'tagged_events_in_match': int(n_tagged)}
 
 
 def derive_engaged_threshold(df, events_path=None):
@@ -92,6 +115,8 @@ def derive_engaged_threshold(df, events_path=None):
         idx = (sub['video_t'] - row['t']).abs().idxmin()
         return sub.loc[idx, 'score'] if abs(sub.loc[idx, 'video_t'] - row['t']) <= 0.5 else np.nan
 
+    if min((tagged_df.ptype == 'P').sum(), (tagged_df.ptype == 'N').sum()) < 30:
+        return pooled_threshold(len(tagged_df))
     tagged_df['score'] = tagged_df.apply(nearest, axis=1)
     matched = tagged_df.dropna(subset=['score'])
     p = matched.loc[matched.ptype == 'P', 'score']

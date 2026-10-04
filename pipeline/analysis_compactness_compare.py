@@ -6,6 +6,7 @@ team, to test whether BPC would be a better Low Block compactness gate.
 Current rule (classification.py): Low Block requires depth < 32m AND
 inter_line <= 20m, else downgraded to Mid Block.
 """
+from config import pkl_path, json_path
 import json
 import numpy as np
 import pandas as pd
@@ -13,13 +14,13 @@ import pandas as pd
 HOME_TEAM_ID = 374
 AWAY_TEAM_ID = 52
 
-mfp = pd.read_pickle('/home/claude/project_work/match_features_with_pressure.pkl')
+mfp = pd.read_pickle(pkl_path('match_features_with_pressure'))
 mfp = mfp.drop_duplicates(subset='frameNum', keep='first')
-bpc = pd.read_pickle('/home/claude/project_work/ball_proximal_compactness.pkl')
+bpc = pd.read_pickle(pkl_path('ball_proximal_compactness'))
 
 df = mfp.merge(bpc, on='frameNum', how='inner')
 
-pet = json.load(open('/home/claude/project_work/pet_by_frame.json'))
+pet = json.load(open(json_path('pet_by_frame')))
 pet_by_frame = {int(k): v for k, v in pet['pet_by_frame'].items()}
 period_by_frame = {int(k): v for k, v in pet['period_by_frame'].items()}
 df['clockS'] = df['frameNum'].map(pet_by_frame)
@@ -100,5 +101,5 @@ for thresh in [12, 14, 16, 18, 20]:
     print(f"BPC<={thresh}m: {new_low.sum()} Low Block ({100*new_low.mean():.1f}% of candidates), "
           f"agrees with current rule on {100*agree:.1f}% of candidate frames")
 
-valid.to_pickle('/home/claude/project_work/compactness_compare.pkl')
+valid.to_pickle(pkl_path('compactness_compare'))
 print("\nSaved compactness_compare.pkl")

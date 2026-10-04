@@ -22,6 +22,7 @@ its (resolved) frames are above threshold.
 Step 3: report the split's distribution and whether it's tactically
 informative (PPDA by phase x engagement, not just by phase).
 """
+from config import EVENTS_PATH
 import json
 import numpy as np
 import pandas as pd
@@ -31,7 +32,7 @@ from classification import segment_phases
 df = pd.read_pickle('match_features_with_pressure.pkl')
 
 # ---------- Step 1: derive threshold from PFF's tagged pressure events ----------
-with open('/home/claude/wc2022/events.json') as f:
+with open(EVENTS_PATH) as f:
     events = json.load(f)
 
 tagged = []

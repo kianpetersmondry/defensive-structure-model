@@ -12,14 +12,17 @@ reference, not ground truth.
    camera shows, how many does the footage pipeline have?
 4. Ball error and possession agreement.
 """
+import os as _os
+HERE = _os.path.dirname(_os.path.abspath(__file__))
+PIPELINE = _os.path.join(HERE, '..', 'pipeline')
 import json, pickle, numpy as np, sys
 from scipy.optimize import linear_sum_assignment
-sys.path.insert(0, '/home/claude/project_work/footage')
+sys.path.insert(0, HERE)
 from calib import project, IMG_W, IMG_H
 from model_footage import team_family
 
-C = np.load('/home/claude/project_work/footage/camera_C.npy')
-pff = json.load(open('/home/claude/project_work/chapters_10515/anim_01.json'))['frames']
+C = np.load(_os.path.join(HERE, 'camera_C.npy'))
+pff = json.load(open(_os.path.join(_os.environ.get('DSM_OUT', _os.path.join(HERE, '..', 'output')), 'chapters_10515', 'anim_01.json')))['frames']
 pff_clock = np.array([f['clockS'] for f in pff])
 
 
@@ -84,8 +87,8 @@ def evaluate(positions, model, sx=1, sy=1, offset=8.4, sample_every=1, full=Fals
 
 
 if __name__ == '__main__':
-    positions = pickle.load(open('/home/claude/project_work/footage/positions.pkl', 'rb'))
-    model = pickle.load(open('/home/claude/project_work/footage/model_out.pkl', 'rb'))
+    positions = pickle.load(open(_os.path.join(HERE, 'positions.pkl'), 'rb'))
+    model = pickle.load(open(_os.path.join(HERE, 'model_out.pkl'), 'rb'))
     best = None
     for sx, sy in ((1, 1),):   # sign check done: (+1,+1) wins clearly (3.4 m vs 4.6-5.3 m)
         best = (0, sx, sy)
@@ -107,4 +110,4 @@ if __name__ == '__main__':
            'possession_agreement': float(pa.mean()) if len(pa) else None, 'n_poss': int(len(pa))}
     for k, v in res.items():
         print(f'  {k}: {v if not isinstance(v, float) else round(v, 3)}')
-    json.dump(res, open('/home/claude/project_work/footage/benchmark.json', 'w'), indent=1)
+    json.dump(res, open(_os.path.join(HERE, 'benchmark.json'), 'w'), indent=1)

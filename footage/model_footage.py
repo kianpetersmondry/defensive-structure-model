@@ -16,12 +16,15 @@ Footage-specific guard: a shape read only counts when the camera actually
 shows the pitch behind the deepest defender (and beyond the most advanced one
 for inter-line) -- otherwise a defender could be standing off-screen.
 """
+import os as _os
+HERE = _os.path.dirname(_os.path.abspath(__file__))
+PIPELINE = _os.path.join(HERE, '..', 'pipeline')
 import sys, math, pickle, numpy as np
-sys.path.insert(0, '/home/claude/project_work')
+sys.path.insert(0, PIPELINE)
 from calib import project, HL, HW, IMG_W, IMG_H
 from fit_camera import OV
 
-C = np.load('/home/claude/project_work/footage/camera_C.npy')
+C = np.load(_os.path.join(HERE, 'camera_C.npy'))
 HOME_POSITIVE = False             # France (home) defends -X in the 1st half (PFF + footage agree)
 HIGH_MIN, MID_MIN, LOW_IL_MAX = 40.0, 32.0, 20.0
 REACTION, T0, SCALE, VMAX = 0.7, 1.5, 0.5, 6.0

@@ -18,67 +18,22 @@ file, or in any importing script, needs to change.
 import json
 import os
 
+# Per-match facts live in pipeline/matches.json (one registry for the whole project); this table is
+# generated from it with the same keys every script already uses. Paths come from paths.py.
+from registry import R as _R
+from paths import ROOT as PW_ROOT, OUT as OUT_ROOT
+
 MATCHES = {
-    '10508': dict(
-        game_dir='/home/claude/wc2022',
-        home_team_id=374,   # Morocco
-        away_team_id=52,    # Spain
-        home_team_name='Morocco',
-        away_team_name='Spain',
-        home_color='#e8323a', home_color_dim='#7a2226',   # Morocco red (unchanged)
-        away_color='#4fd8d0', away_color_dim='#235e59',   # Spain teal (unchanged)
-        head_template='/home/claude/project_work/artifact_head.html',
-        label='Morocco vs Spain (Round of 16)',
-        heatmap_vmax_log=5.1933,  # round 37 recalibration -- see full_match_heatmap.py docstring
-    ),
-    '10515': dict(
-        game_dir='/home/claude/wc2022_10515',
-        home_team_id=363,   # France (home team per metadata)
-        away_team_id=374,   # Morocco
-        home_team_name='France',
-        away_team_name='Morocco',
-        home_color='#2f6fe0', home_color_dim='#1f3a66',   # France blue
-        away_color='#e8323a', away_color_dim='#7a2226',   # Morocco red (same identity as 10508)
-        head_template='/home/claude/project_work/artifact_head_10515.html',
-        label='Morocco vs France (Semifinal)',
-        heatmap_vmax_log=5.3972,  # round 37 recalibration
-    ),
-    '3821': dict(
-        game_dir='/home/claude/wc2022_3821',
-        home_team_id=368,   # Germany (home team per metadata)
-        away_team_id=57,    # Japan
-        home_team_name='Germany',
-        away_team_name='Japan',
-        home_color='#f2c14e', home_color_dim='#7d6320',   # Germany gold
-        away_color='#3399ff', away_color_dim='#1f4d80',   # Japan blue
-        head_template='/home/claude/project_work/artifact_head_3821.html',
-        label='Japan vs Germany (Group Stage)',
-        heatmap_vmax_log=5.6386,  # round 37 recalibration
-    ),
-    '3823': dict(
-        game_dir='/home/claude/wc2022_3823',
-        home_team_id=362,   # Belgium (home team per metadata)
-        away_team_id=380,   # Canada
-        home_team_name='Belgium',
-        away_team_name='Canada',
-        home_color='#e33b4d', home_color_dim='#6b1620',   # Belgium red
-        away_color='#7c9fff', away_color_dim='#2a3866',   # Canada periwinkle (actual kit is white/red -- white unreadable on the dark pitch, red would clash with Belgium's, so substituted like Germany's gold was)
-        head_template='/home/claude/project_work/artifact_head_3823.html',
-        label='Belgium vs Canada (Group Stage)',
-        heatmap_vmax_log=5.1722,  # round 37 recalibration
-    ),
-    '10517': dict(
-        game_dir='/home/claude/wc2022_10517',
-        home_team_id=364,   # Argentina (home team per metadata)
-        away_team_id=363,   # France
-        home_team_name='Argentina',
-        away_team_name='France',
-        home_color='#5fb8ea', home_color_dim='#1d3f52',   # Argentina sky blue (actual kit is white/sky-blue stripes -- white unreadable on the dark pitch)
-        away_color='#e63946', away_color_dim='#712024',   # France red (actual kit is navy -- too close to Argentina's blue side by side, substituted with French-flag red for contrast)
-        head_template='/home/claude/project_work/artifact_head_10517.html',
-        label='Argentina vs France (Final)',
-        heatmap_vmax_log=6.2112,  # round 37 recalibration -- highest of the five, this match runs the "hottest"
-    ),
+    _m['id']: dict(
+        game_dir=_R.raw_dir(_m['id']),
+        home_team_id=_m['home']['id'], away_team_id=_m['away']['id'],
+        home_team_name=_m['home']['name'], away_team_name=_m['away']['name'],
+        home_color=_m['home']['color'], home_color_dim=_m['home']['color_dim'],
+        away_color=_m['away']['color'], away_color_dim=_m['away']['color_dim'],
+        head_template=_R.head_template(_m['id']),
+        label=_m['label'],
+        **({'heatmap_vmax_log': _m['heatmap_vmax_log']} if _m.get('heatmap_vmax_log') is not None else {}),
+    ) for _m in (_R.get(i) for i in _R.ids())
 }
 
 MATCH_ID = os.environ.get('MATCH_ID', '10508')
@@ -140,15 +95,17 @@ SUFFIX = '' if MATCH_ID == '10508' else f'_{MATCH_ID}'
 
 def pkl_path(name):
     """name without extension, e.g. pkl_path('match_features') ->
-    '.../match_features.pkl' (10508) or '.../match_features_10515.pkl'."""
-    return f'/home/claude/project_work/{name}{SUFFIX}.pkl'
+    '<output>/match_features.pkl' (10508) or '<output>/match_features_10515.pkl'."""
+    os.makedirs(OUT_ROOT, exist_ok=True)
+    return os.path.join(OUT_ROOT, f'{name}{SUFFIX}.pkl')
 
 
 def json_path(name):
-    return f'/home/claude/project_work/{name}{SUFFIX}.json'
+    os.makedirs(OUT_ROOT, exist_ok=True)
+    return os.path.join(OUT_ROOT, f'{name}{SUFFIX}.json')
 
 
-CHAPTERS_DIR = f'/home/claude/project_work/chapters{SUFFIX}'
+CHAPTERS_DIR = os.path.join(OUT_ROOT, f'chapters{SUFFIX}')
 
 DEADBALL_SETPIECE_TYPES = {'C', 'F', 'P'}  # corner, free kick, penalty
 MASK_BEFORE_S = 2.0
@@ -175,7 +132,9 @@ def load_metadata():
 def orientation_lookup(meta):
     """period -> True if HOME team defends the positive-x goal in that period."""
     home_start_left = meta['homeTeamStartLeft']
-    home_start_left_et = meta.get('homeTeamStartLeftExtraTime', home_start_left)
+    home_start_left_et = meta.get('homeTeamStartLeftExtraTime')
+    if home_start_left_et is None:          # key absent, or present but null (matches without extra time)
+        home_start_left_et = home_start_left
     return {
         1: (not home_start_left),
         2: home_start_left,

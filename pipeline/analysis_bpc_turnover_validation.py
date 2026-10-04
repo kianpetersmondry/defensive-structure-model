@@ -27,6 +27,7 @@ periodElapsedTime / clockS) and never cross a period boundary, avoiding the
 match_t discontinuity that can occur right at a period boundary when a
 period runs long on injury time.
 """
+from config import pkl_path, json_path
 import json
 import bisect
 import numpy as np
@@ -42,10 +43,10 @@ ORGANIZED_STATES = ['High Press', 'Mid Block', 'Low Block']
 # ---------------------------------------------------------------------------
 # 1. True-clock offsets (reusing build_ppda_vs_phase.py's validated method)
 # ---------------------------------------------------------------------------
-mfp = pd.read_pickle('/home/claude/project_work/match_features_with_pressure.pkl')
+mfp = pd.read_pickle(pkl_path('match_features_with_pressure'))
 mfp = mfp.drop_duplicates(subset='frameNum', keep='first')
 
-pet = json.load(open('/home/claude/project_work/pet_by_frame.json'))
+pet = json.load(open(json_path('pet_by_frame')))
 pet_by_frame = {int(k): v for k, v in pet['pet_by_frame'].items()}
 period_by_frame = {int(k): v for k, v in pet['period_by_frame'].items()}
 mfp['pet'] = mfp['frameNum'].map(pet_by_frame)
@@ -100,7 +101,7 @@ for (team, period), times in sorted(regain_times.items()):
 # 3. Merge BPC + inter_line + depth, build the defending-team series (same
 #    stitching pattern as analysis_compactness_compare.py)
 # ---------------------------------------------------------------------------
-bpc = pd.read_pickle('/home/claude/project_work/ball_proximal_compactness.pkl')
+bpc = pd.read_pickle(pkl_path('ball_proximal_compactness'))
 df = mfp.merge(bpc, on='frameNum', how='inner')
 df['clockS'] = df['pet']
 
@@ -175,7 +176,7 @@ for K in KS:
 print("\nBase turnover-within-K rates (all defending-seconds):")
 print(grid[[f'turnover_{K}s' for K in KS]].mean().round(4))
 
-grid.to_pickle('/home/claude/project_work/bpc_turnover_grid.pkl')
+grid.to_pickle(pkl_path('bpc_turnover_grid'))
 
 # ---------------------------------------------------------------------------
 # 6. Quantile-bin analysis: does tighter BPC predict a sooner turnover?
@@ -262,5 +263,5 @@ for K in KS:
     print(f"          corr(turnover,BPC | inter_line)={r_bpc_given_il:+.3f} (n={n1})   "
           f"corr(turnover,inter_line | BPC)={r_il_given_bpc:+.3f} (n={n2})")
 
-candidates.to_pickle('/home/claude/project_work/bpc_turnover_candidates.pkl')
+candidates.to_pickle(pkl_path('bpc_turnover_candidates'))
 print("\nSaved bpc_turnover_grid.pkl and bpc_turnover_candidates.pkl")

@@ -10,11 +10,15 @@ tag, drop in heatmap_data.json, and let artifact_tail.html's own leading
 structural trick the head/tail split already used for one blob, just
 inserted twice.
 """
-HEAD = '/home/claude/project_work/artifact_head.html'
-ANIM = '/home/claude/project_work/animation_data.json'
-HEAT = '/home/claude/project_work/heatmap_data.json'
-TAIL = '/home/claude/project_work/artifact_tail.html'
-OUT = '/home/claude/project_work/pressure_read.html'
+import os
+from paths import TEMPLATES, OUT as OUT_ROOT
+from config import json_path
+
+HEAD = os.path.join(TEMPLATES, 'artifact_head.html')
+ANIM = json_path('animation_data')
+HEAT = json_path('heatmap_data')
+TAIL = os.path.join(TEMPLATES, 'artifact_tail.html')
+OUT = os.path.join(OUT_ROOT, 'pressure_read.html')
 
 with open(OUT, 'wb') as out:
     with open(HEAD, 'rb') as f:
@@ -27,5 +31,4 @@ with open(OUT, 'wb') as out:
     with open(TAIL, 'rb') as f:
         out.write(f.read())
 
-import os
 print(f"Wrote {OUT} ({os.path.getsize(OUT)/1e6:.2f} MB)")

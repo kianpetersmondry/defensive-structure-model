@@ -16,13 +16,15 @@ Two-pass nav, because artifact URLs don't exist until publish time:
     HTML file and does a plain string replace of the three tokens with real
     URLs -- cheap, no need to re-run the head/anim/heat/tail concatenation.
 """
+import os
+from paths import TEMPLATES
 import json
 import sys
 
 from config import CHAPTERS_DIR, HEAD_TEMPLATE, HOME_TEAM_NAME, AWAY_TEAM_NAME, HUB_URL
 
 HEAD = HEAD_TEMPLATE
-TAIL = '/home/claude/project_work/artifact_tail.html'
+TAIL = os.path.join(TEMPLATES, 'artifact_tail.html')
 
 
 def chapter_bar_html(ch, total):
