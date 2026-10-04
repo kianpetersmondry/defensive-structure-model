@@ -72,7 +72,7 @@ examples/    sample outputs
 pip install -r requirements.txt
 python3 pipeline/run_match.py 3823          # raw files in data/3823/ -> chapters + the ten Analysis views
 python3 pipeline/run_match.py hub           # comparison board, scouting reports, hub page
-python3 pipeline/build_site.py              # self-contained static site in output/site/
+python3 pipeline/build_web.py --chapters-from <earlier site>   # the website: home, sections, every chapter
 ```
 
 Raw data goes in `data/<match id>/` and everything generated goes in `output/`; set `DSM_DATA` or `DSM_OUT`
