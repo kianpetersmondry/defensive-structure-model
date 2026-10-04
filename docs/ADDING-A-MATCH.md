@@ -58,8 +58,8 @@ The steps, in order:
 | Steps | What they make |
 |---|---|
 | `validate` | directions, quirks, checks |
-| `tracking_features`, `transitions`, `classification`, `pressure`, `merge_pressure`, `engagement`, `compactness`, `marking` | the per-frame feature table: shape, phase, pressure, engaged/passive, tight/loose |
-| `export`, `heatmap`, `head`, `build` | the chapter pages in `output/chapters_<id>/` |
+| `tracking_features`, `transitions`, `classification`, `pressure`, `merge_pressure`, `engagement` | the per-frame feature table: shape, phase, pressure, engaged/passive |
+| `export`, `compactness`, `marking`, `export_marked`, `heatmap`, `head`, `build` | the chapter pages in `output/chapters_<id>/`; the tight/loose tag is computed from the first export, so the chapters are exported again to carry it |
 | `events`, `positions` | the event feed and 5 Hz positions the Analysis views share |
 | `attack`, `teams`, `players`, `shape`, `time`, `gaps`, `lb`, `turn`, `chances`, `press` | the ten Analysis views in `output/analysis/<view>/<slug>.{png,jpg,json}` |
 
