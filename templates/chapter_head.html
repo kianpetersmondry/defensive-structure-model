@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="{{ROOT}}assets/site.css">
+<style>
+:root { --home: {{HOME_COLOR}}; --away: {{AWAY_COLOR}}; }
+</style>
+</head>
+<body class="chapter-page">
+{{NAV}}
+<div class="mstrip" role="navigation" aria-label="Matches">
+  <div class="wrap">{{MATCH_TABS}}</div>
+</div>
+<div class="chbar">
+  <div class="wrap">
+    <h1 class="chtitle"><span class="dot lg" style="background:var(--home)"></span>{{HOME}} <span class="vs">{{SCORE}}</span> {{AWAY}}<span class="dot lg" style="background:var(--away)"></span><span class="chsub">{{COMP}}</span></h1>
+    <div class="chnav">
+      <label class="fld"><span>Chapter</span><select class="select" id="chapterSelect" aria-label="Chapter">{{CHAPTER_OPTIONS}}</select></label>
+      {{PREV}}
+      {{NEXT}}
+    </div>
+  </div>
+</div>
+
+<main class="chmain">
+  <div class="wrap">
+    <div>
+      <div class="stage">
+        <div class="stage-wrap">
+          <canvas id="pitch" width="1050" height="680" aria-label="2-D animation of the match"></canvas>
+          <div class="clock" id="clockBadge">0:00<span>P1</span></div>
+          <div class="ball-lost" id="ballLostBadge" hidden>Ball not tracked</div>
+          <div class="chapter-end" id="chapterEndOverlay" hidden>
+            <div class="chapter-end-card">
+              <div class="eyebrow">Chapter finished</div>
+              <a class="btn primary" id="chapterEndNextBtn" href="#">Continue to next chapter →</a>
+              <button class="linkish" id="chapterEndReplayBtn" type="button">Replay this chapter</button>
+            </div>
+          </div>
+          <div class="tooltip" id="tooltip"></div>
+        </div>
+        <div class="transport">
+          <button class="play" id="playBtn" type="button" aria-label="Play"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div class="speeds" role="group" aria-label="Playback speed">
+            <button type="button" class="speed-btn" data-speed="0.5">0.5×</button>
+            <button type="button" class="speed-btn active" data-speed="1">1×</button>
+            <button type="button" class="speed-btn" data-speed="2">2×</button>
+            <button type="button" class="speed-btn" data-speed="4">4×</button>
+          </div>
+          <div class="toggles">
+            <button type="button" class="toggle active" id="heatBtn" aria-pressed="true" title="Dangerous accessible space for the team on the ball">Danger heatmap</button>
+            <button type="button" class="toggle active" id="bandBtn" aria-pressed="true" title="Deepest defender to furthest attacker, tinted to the defending team">Inter-line band</button>
+          </div>
+        </div>
+        <div class="timeline">
+          <div class="tl-row"><span style="color:var(--home)">{{HOME_CODE}}</span><div class="tl-strip" id="tlHome"><canvas></canvas><div class="tl-head" id="phHome"></div></div></div>
+          <div class="tl-row"><span style="color:var(--away)">{{AWAY_CODE}}</span><div class="tl-strip" id="tlAway"><canvas></canvas><div class="tl-head" id="phAway"></div></div></div>
+          <div class="tl-labels"><span id="tlLabelStart"></span><span id="tlLabelMid"></span><span id="tlLabelEnd"></span></div>
+        </div>
+        <div class="legend">
+          <span><i class="sw" style="background:#e8323a"></i>High press</span>
+          <span><i class="sw" style="background:#d99a2b"></i>Mid block</span>
+          <span><i class="sw" style="background:#3f8f5c"></i>Low block</span>
+          <span><i class="sw" style="background:#b5563a"></i>Transition</span>
+          <span><i class="sw" style="background:#3c5148"></i>On the ball</span>
+          <span><i class="sw ring"></i>Pressure on the ball</span>
+          <span><i class="sw hatch"></i>Passive</span>
+        </div>
+      </div>
+      <div class="chfoot">{{FOOT_PREV}}{{FOOT_NEXT}}</div>
+    </div>
+
+    <aside class="rail">
+      <div class="rcard">
+        <h2 class="rlabel">Defensive phase <span class="window" id="matchupWindow"></span></h2>
+        <div class="team-row">
+          <span class="team-name"><span class="dot" style="background:var(--home)"></span>{{HOME_CODE}}</span>
+          <span class="tags"><span class="state-pill" id="pillHome">—</span><span class="engaged-tag" id="engHome"></span><span class="marking-tag" id="mrkHome"></span></span>
+        </div>
+        <div class="team-row">
+          <span class="team-name"><span class="dot" style="background:var(--away)"></span>{{AWAY_CODE}}</span>
+          <span class="tags"><span class="state-pill" id="pillAway">—</span><span class="engaged-tag" id="engAway"></span><span class="marking-tag" id="mrkAway"></span></span>
+        </div>
+        <div class="onball">On the ball: <b id="statPoss">—</b></div>
+        <table class="shape-table">
+          <thead><tr><th></th><th>Depth</th><th>Length</th><th>Gap</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dot" style="background:var(--home)"></span>{{HOME_CODE}}</td><td id="mDepth">—</td><td id="mIL">—</td><td id="mGap">—</td></tr>
+            <tr><td><span class="dot" style="background:var(--away)"></span>{{AWAY_CODE}}</td><td id="aDepth">—</td><td id="aIL">—</td><td id="aGap">—</td></tr>
+          </tbody>
+        </table>
+        <p class="units">Metres. Depth: back line from own goal. Length: back line to front line. Gap: back line to the ball.</p>
+      </div>
+      <div class="rcard">
+        <h2 class="rlabel">Pressure on the ball carrier</h2>
+        <div class="pv"><span class="v" id="pressurePct">—</span></div>
+        <div class="meter"><div id="pressureFill"></div></div>
+        <div class="presser" id="presserName">No sustained pressure right now.</div>
+      </div>
+      <details class="help">
+        <summary>How to read this</summary>
+        <p><b>Phase.</b> Each frame, the team without the ball is classed as high press, mid block, low block or transition, from how deep its back line sits and how compact it is.</p>
+        <p><b>Engaged / passive.</b> Whether someone is really closing the ball down, from the pressure on the carrier. <b>Tight / loose</b> reads how closely the five players nearest the ball are grouped.</p>
+        <p><b>Danger heatmap.</b> Where the team on the ball could reach dangerous space with one realistic pass, right now. It fades when the carrier is closely marked.</p>
+        <p><b>Band.</b> From the defending team's deepest outfielder to its most advanced one. The ring on the ball grows with the pressure.</p>
+        <p><a href="{{ROOT}}method.html">Full methodology →</a></p>
+      </details>
+    </aside>
+  </div>
+</main>
+{{FOOTER}}
+<script>
+document.getElementById('chapterSelect').addEventListener('change', function () { if (this.value) window.location.href = this.value; });
+</script>
+<script id="match-data" type="application/json">
