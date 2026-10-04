@@ -27,7 +27,9 @@
     var X = function (x) { return ox + (x + 52.5) * S; }, Y = function (y) { return oy + (34 - y) * S; };
     var isGk = function (id) { var p = M.players[id]; return p && p.pos === 'GK'; };
     var hexRgb = function (h) { h = h.replace('#', ''); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }).join(','); };
-    var HOME_RGB = hexRgb(M.homeColor);
+    var D = M.defending || 'home', DP = D === 'home' ? 'H' : 'A';
+    var DEF_RGB = hexRgb(M[D + 'Color']);
+    var st = function (f, k) { return f[k] !== undefined ? f[k] : f[D + k.charAt(0).toUpperCase() + k.slice(1)]; };
     var ORGANISED = { 'High Press': 1, 'Mid Block': 1, 'Low Block': 1 };
     var hull = function (pts) {
       var p = pts.slice().sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
@@ -46,17 +48,18 @@
       ctx.beginPath(); ctx.arc(X(0), Y(0), 9.15 * S, 0, 7); ctx.stroke();
       ctx.strokeRect(X(-52.5), Y(20.16), 16.5 * S, 40.32 * S); ctx.strokeRect(X(36), Y(20.16), 16.5 * S, 40.32 * S);
       ctx.strokeRect(X(-52.5), Y(9.16), 5.5 * S, 18.32 * S); ctx.strokeRect(X(47), Y(9.16), 5.5 * S, 18.32 * S);
-      var defending = f.possessionTeam === 'away' && ORGANISED[f.homeStructure];
-      var homeOut = f.players.filter(function (p) { return p[0][0] === 'H' && !isGk(p[0]); });
+      var defending = f.possessionTeam && f.possessionTeam !== D && ORGANISED[st(f, 'structure')];
+      var homeOut = f.players.filter(function (p) { return p[0][0] === DP && !isGk(p[0]); });
       if (defending && homeOut.length) {
         // the inter-line band: the defending team's deepest outfielder to its most advanced one
         var xs = homeOut.map(function (p) { return p[1]; });
         var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs);
-        ctx.fillStyle = 'rgba(' + HOME_RGB + ',0.16)'; ctx.fillRect(X(x0), Y(34), (x1 - x0) * S, 68 * S);
-        ctx.strokeStyle = 'rgba(' + HOME_RGB + ',0.75)'; ctx.lineWidth = 2;
+        ctx.fillStyle = 'rgba(' + DEF_RGB + ',0.16)'; ctx.fillRect(X(x0), Y(34), (x1 - x0) * S, 68 * S);
+        ctx.strokeStyle = 'rgba(' + DEF_RGB + ',0.75)'; ctx.lineWidth = 2;
         [x0, x1].forEach(function (x) { ctx.beginPath(); ctx.moveTo(X(x), Y(34)); ctx.lineTo(X(x), Y(-34)); ctx.stroke(); });
         // the marking zone: the five defenders nearest the ball, solid when tight, hatched when loose
-        if (f.ball && (f.homeMarking === 'Tight' || f.homeMarking === 'Loose')) {
+        var mk = st(f, 'marking');
+        if (f.ball && (mk === 'Tight' || mk === 'Loose')) {
           var near = homeOut.map(function (p) { return { p: p, d: Math.hypot(p[1] - f.ball[0], p[2] - f.ball[1]) }; })
             .sort(function (a, b) { return a.d - b.d; }).slice(0, 5);
           var hp = hull(near.map(function (n) { return [X(n.p[1]), Y(n.p[2])]; }));
@@ -64,7 +67,7 @@
             ctx.save(); ctx.beginPath();
             hp.forEach(function (pt, k) { if (k) ctx.lineTo(pt[0], pt[1]); else ctx.moveTo(pt[0], pt[1]); });
             ctx.closePath();
-            var tight = f.homeMarking === 'Tight';
+            var tight = mk === 'Tight';
             if (tight) { ctx.fillStyle = 'rgba(91,141,238,0.18)'; ctx.fill(); }
             else {
               ctx.save(); ctx.clip();
@@ -83,7 +86,7 @@
       }
       if (f.ball && f.pressureScore != null && f.primaryPresser) {
         // pressure ring on the carrier: solid and glowing when engaged, dashed and dimmer when passive
-        var passive = f.homeEngaged === 'Passive', ps = f.pressureScore, bx = X(f.ball[0]), by = Y(f.ball[1]), r = (14 + ps * 22) * S / 10;
+        var passive = st(f, 'engaged') === 'Passive', ps = f.pressureScore, bx = X(f.ball[0]), by = Y(f.ball[1]), r = (14 + ps * 22) * S / 10;
         var grad = ctx.createRadialGradient(bx, by, 2, bx, by, r);
         grad.addColorStop(0, 'rgba(255,176,32,' + (0.03 + ps * (passive ? 0.10 : 0.22)) + ')'); grad.addColorStop(1, 'rgba(255,176,32,0)');
         ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(bx, by, r, 0, 7); ctx.fill();
@@ -105,9 +108,9 @@
     var show = function (i) {
       var f = FR[i];
       draw(f);
-      var ph = f.homeStructure;
+      var ph = st(f, 'structure');
       phaseEl.textContent = LABEL[ph] || '—'; phaseEl.style.background = PHASE[ph] || '#3c5148';
-      tagEl.textContent = f.homeEngaged || 'Passive';
+      tagEl.textContent = st(f, 'engaged') || 'Passive';
       var s = Math.floor(f.clockS); clockEl.textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
     };
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

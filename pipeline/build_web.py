@@ -163,13 +163,14 @@ def home(ms, kinds, reports, clip, thumbs):
     chips = ''.join(chip_html(c) for c in rep['chips'][:3])
     goods = ''.join(f'<li>{e(x)}</li>' for x in (rep['good'][0], rep['exploit'][0]))
     cm = clip['meta']
+    dfd = cm.get('defending', 'home')
     body = f'''<header class="hero"><div class="wrap">
 <div><div class="eyebrow">Football tracking analysis</div><h1>How teams defend, frame by frame</h1>
 <p class="lede">A model that reads every frame of tracking data to show each team’s shape without the ball, the pressure on the ball carrier, and the space it leaves to be exploited.</p>
 <div class="hero-actions"><a class="btn primary" href="matches.html">Watch a match</a><a class="btn" href="analysis.html">Explore the analysis</a></div></div>
-<div class="pitch-card"><canvas id="heroPitch" width="1050" height="680" aria-label="Animated 2-D tracking: {e(cm['homeTeam'])} defending against {e(cm['awayTeam'])}"></canvas>
-<div class="pitch-overlay"><div class="readout"><span class="team"><span class="dot" style="background:{cm['homeColor']}"></span>{e(cm['homeTeam'])} defending</span><span class="pill phase" id="heroPhase">—</span><span class="pill tag" id="heroTag">—</span></div><div class="clock" id="heroClock" style="position:static">0:00</div></div>
-<div class="pitch-caption"><span><b>{e(cm['homeTeam'])} vs {e(cm['awayTeam'])}</b> · {e(clip.get('caption', ''))}</span><a href="matches/{clip['folder']}/chapter-01.html" class="link">Watch this chapter →</a></div></div>
+<div class="pitch-card"><canvas id="heroPitch" width="1050" height="680" aria-label="Animated 2-D tracking: {e(cm[dfd + 'Team'])} defending"></canvas>
+<div class="pitch-overlay"><div class="readout"><span class="team"><span class="dot" style="background:{cm[dfd + 'Color']}"></span>{e(cm[dfd + 'Team'])} defending</span><span class="pill phase" id="heroPhase">—</span><span class="pill tag" id="heroTag">—</span></div><div class="clock" id="heroClock" style="position:static">0:00</div></div>
+<div class="pitch-caption"><span><b>{e(cm['homeTeam'])} vs {e(cm['awayTeam'])}</b> · {e(clip.get('caption', ''))}</span><a href="matches/{clip['folder']}/{clip.get('chapter', 'chapter-01.html')}" class="link">Watch this chapter →</a></div></div>
 </div></header>
 <div class="strip"><div class="wrap">
 <div class="stat"><div class="n">{len(ms)}</div><div class="l">full matches, World Cup and Bundesliga</div></div>
