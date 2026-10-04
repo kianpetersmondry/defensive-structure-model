@@ -99,8 +99,6 @@ def build():
 
     n_teams = len(board)
     fill = {
-        'MATCHUP': ' &nbsp;|&nbsp; '.join(f"<b>{html.escape(e['home'])}</b> vs <b>{html.escape(e['away'])}</b> "
-                                          f"&middot; {html.escape(e['competition'])}" for e in matches),
         'MATCH_TABS': ''.join(tab(R.get(mid)['title']) for mid in complete),
         'TEAM_TABS': ''.join(tab(r['team'], r['color'], f"v {r['opp']}") for r in reports),
         'N_TEAMS': NUMBER_WORDS.get(n_teams, str(n_teams)),

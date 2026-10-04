@@ -20,9 +20,6 @@ body { min-height:100vh; }
 .hero h1 { font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:52px; line-height:1.02;
   letter-spacing:0.01em; text-transform:uppercase; margin:8px 0 14px; text-wrap:balance; }
 .hero p { font-size:15px; line-height:1.65; color:var(--ink-dim); max-width:58ch; margin:0 0 16px; }
-.hero .matchup { display:block; line-height:1.7; font-family:'IBM Plex Mono', monospace;
-  font-size:12.5px; color:var(--ink-faint); }
-.hero .matchup b { color:var(--ink-dim); font-weight:600; }
 
 /* ---- section framing ---- */
 .section-label { font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.09em;
@@ -44,8 +41,6 @@ select { appearance:none; -webkit-appearance:none; width:100%; background:var(--
 select:focus-visible { outline:2px solid var(--amber); outline-offset:1px; }
 select:disabled { color:var(--ink-faint); cursor:not-allowed; opacity:0.6; }
 
-.version-note { font-size:12px; line-height:1.5; color:var(--ink-faint); margin-top:-1px; }
-.version-note[hidden] { display:none; }
 
 .preview { display:flex; align-items:center; gap:14px; background:var(--panel-raised);
   border:1px solid var(--border); border-radius:8px; padding:12px 14px;
@@ -179,7 +174,6 @@ td.on .cmp-v { color:var(--ink); font-weight:600; }
     <p>Renders a full match and reads each team's defensive structure whenever they're out of possession —
       where the space and gaps are, what's working, and how it could be exploited. Live phase classification,
       a pressure-on-ball-carrier score, an inter-line band, and a danger heatmap, all updating frame by frame.</p>
-    <div class="matchup">{{MATCHUP}}</div>
   </div>
 
   <div>
@@ -196,7 +190,6 @@ td.on .cmp-v { color:var(--ink); font-weight:600; }
         <select id="versionSelect" disabled>
           <option value="" selected>Select a match first…</option>
         </select>
-        <p class="version-note" id="versionNote" hidden></p>
       </div>
       <div class="field">
         <label for="chapterSelect"><span class="step">Step 3</span> · Chapter</label>
@@ -410,7 +403,6 @@ var MATCHES = {{MATCHES}};
 
 var matchSelect = document.getElementById('matchSelect');
 var versionSelect = document.getElementById('versionSelect');
-var versionNote = document.getElementById('versionNote');
 var chapterSelect = document.getElementById('chapterSelect');
 var preview = document.getElementById('preview');
 var previewPeriod = document.getElementById('previewPeriod');
@@ -447,7 +439,6 @@ function resetChapterPicker(message) {
 function resetVersionPicker() {
   versionSelect.innerHTML = '<option value="" selected>Select a match first…</option>';
   versionSelect.disabled = true;
-  versionNote.hidden = true;
   resetChapterPicker('Select a definition first…');
 }
 
@@ -527,13 +518,7 @@ matchSelect.addEventListener('change', function () {
 versionSelect.addEventListener('change', function () {
   var match = findMatch(matchSelect.value);
   var version = findVersion(match, versionSelect.value);
-  if (!version) { resetChapterPicker('Select a definition first…'); versionNote.hidden = true; return; }
-  if (version.note) {
-    versionNote.textContent = version.note;
-    versionNote.hidden = false;
-  } else {
-    versionNote.hidden = true;
-  }
+  if (!version) { resetChapterPicker('Select a definition first…'); return; }
   populateChapters(version);
   preview.hidden = true;
   openBtn.setAttribute('aria-disabled', 'true');
