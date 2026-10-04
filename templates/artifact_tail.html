@@ -25,6 +25,17 @@
     line: 'rgba(240,248,240,0.78)',
     ink: '#eef3ee'
   };
+  // Team colours as 'r,g,b' strings, from this match's own META colours.
+  // Round 39 fix: the heatmap tint and the inter-line band used hardcoded
+  // Morocco-red / Spain-teal values from match 1, so every other match drew
+  // them in the wrong team's colour.
+  function hexToRgbStr(hex) {
+    var h = hex.replace('#', '');
+    if (h.length === 3) h = h.split('').map(function (c) { return c + c; }).join('');
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)].join(',');
+  }
+  var TEAM_RGB = { home: hexToRgbStr(COLORS.home), away: hexToRgbStr(COLORS.away) };
+
 
   var STATE_COLOR = {
     'In Possession': '#3c5148',
@@ -251,7 +262,7 @@
     if (!heatOn) return;
     if (frame.possessionTeam !== 'home' && frame.possessionTeam !== 'away') return;
     var hf = findHeatFrame(frame.clockS);
-    var rgb = frame.possessionTeam === 'home' ? [232, 50, 58] : [79, 216, 208];
+    var rgb = TEAM_RGB[frame.possessionTeam].split(',').map(Number);
     var grid = hf.grid;
     var px = heatImageData.data;
     for (var c = 0; c < HEAT_COLS; c++) {
@@ -308,7 +319,7 @@
       // side panel's "Depth" number (still the back-four mean, for
       // consistency with the classification thresholds) is unaffected.
       if (shape && isOrganized && bandOn) {
-        var teamRgb = defendingTeam === 'home' ? '232,50,58' : '79,216,208';
+        var teamRgb = TEAM_RGB[defendingTeam];
         // Band spans the two REAL extreme players -- the single deepest
         // defender to the single most advanced attacker -- not the
         // back-four average plus the spread (see teamShapeLive's comment
@@ -399,7 +410,7 @@
         if (!isTeamOrganized) return;
         var teamShape = teamShapeLive(frame, team);
         if (!teamShape) return;
-        var teamRgb = team === 'home' ? '232,50,58' : '79,216,208';
+        var teamRgb = TEAM_RGB[team];
         var lxBack = depthLineX(team, teamShape.dMin);
         var lxFront = depthLineX(team, teamShape.dMax);
         var b0 = toPx(lxBack, META.pitchWidth / 2);
