@@ -26,6 +26,17 @@
     var ctx = heroCanvas.getContext('2d'), W = heroCanvas.width, H = heroCanvas.height, S = W / 111, ox = 3 * S, oy = (H - 68 * S) / 2;
     var X = function (x) { return ox + (x + 52.5) * S; }, Y = function (y) { return oy + (34 - y) * S; };
     var isGk = function (id) { var p = M.players[id]; return p && p.pos === 'GK'; };
+    var hexRgb = function (h) { h = h.replace('#', ''); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }).join(','); };
+    var HOME_RGB = hexRgb(M.homeColor);
+    var ORGANISED = { 'High Press': 1, 'Mid Block': 1, 'Low Block': 1 };
+    var hull = function (pts) {
+      var p = pts.slice().sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+      var cross = function (o, a, b) { return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); };
+      var lo = [], up = [], i;
+      for (i = 0; i < p.length; i++) { while (lo.length >= 2 && cross(lo[lo.length - 2], lo[lo.length - 1], p[i]) <= 0) lo.pop(); lo.push(p[i]); }
+      for (i = p.length - 1; i >= 0; i--) { while (up.length >= 2 && cross(up[up.length - 2], up[up.length - 1], p[i]) <= 0) up.pop(); up.push(p[i]); }
+      up.pop(); lo.pop(); return lo.concat(up);
+    };
     var draw = function (f) {
       ctx.fillStyle = '#163a28'; ctx.fillRect(0, 0, W, H);
       for (var i = 0; i < 14; i += 2) { ctx.fillStyle = '#183f2c'; ctx.fillRect(X(-52.5 + (i + 1) * 7.5), Y(34), 7.5 * S, 68 * S); }
@@ -35,22 +46,56 @@
       ctx.beginPath(); ctx.arc(X(0), Y(0), 9.15 * S, 0, 7); ctx.stroke();
       ctx.strokeRect(X(-52.5), Y(20.16), 16.5 * S, 40.32 * S); ctx.strokeRect(X(36), Y(20.16), 16.5 * S, 40.32 * S);
       ctx.strokeRect(X(-52.5), Y(9.16), 5.5 * S, 18.32 * S); ctx.strokeRect(X(47), Y(9.16), 5.5 * S, 18.32 * S);
-      if (f.possessionTeam === 'away') {
-        var xs = f.players.filter(function (p) { return p[0][0] === 'H' && !isGk(p[0]); }).map(function (p) { return p[1]; });
-        if (xs.length) {
-          var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs);
-          ctx.fillStyle = 'rgba(239,75,75,0.13)'; ctx.fillRect(X(x0), Y(34), (x1 - x0) * S, 68 * S);
-          ctx.strokeStyle = 'rgba(239,75,75,0.6)'; ctx.setLineDash([6, 6]); ctx.lineWidth = 1.5;
-          [x0, x1].forEach(function (x) { ctx.beginPath(); ctx.moveTo(X(x), Y(34)); ctx.lineTo(X(x), Y(-34)); ctx.stroke(); });
-          ctx.setLineDash([]);
+      var defending = f.possessionTeam === 'away' && ORGANISED[f.homeStructure];
+      var homeOut = f.players.filter(function (p) { return p[0][0] === 'H' && !isGk(p[0]); });
+      if (defending && homeOut.length) {
+        // the inter-line band: the defending team's deepest outfielder to its most advanced one
+        var xs = homeOut.map(function (p) { return p[1]; });
+        var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs);
+        ctx.fillStyle = 'rgba(' + HOME_RGB + ',0.16)'; ctx.fillRect(X(x0), Y(34), (x1 - x0) * S, 68 * S);
+        ctx.strokeStyle = 'rgba(' + HOME_RGB + ',0.75)'; ctx.lineWidth = 2;
+        [x0, x1].forEach(function (x) { ctx.beginPath(); ctx.moveTo(X(x), Y(34)); ctx.lineTo(X(x), Y(-34)); ctx.stroke(); });
+        // the marking zone: the five defenders nearest the ball, solid when tight, hatched when loose
+        if (f.ball && (f.homeMarking === 'Tight' || f.homeMarking === 'Loose')) {
+          var near = homeOut.map(function (p) { return { p: p, d: Math.hypot(p[1] - f.ball[0], p[2] - f.ball[1]) }; })
+            .sort(function (a, b) { return a.d - b.d; }).slice(0, 5);
+          var hp = hull(near.map(function (n) { return [X(n.p[1]), Y(n.p[2])]; }));
+          if (hp.length >= 3) {
+            ctx.save(); ctx.beginPath();
+            hp.forEach(function (pt, k) { if (k) ctx.lineTo(pt[0], pt[1]); else ctx.moveTo(pt[0], pt[1]); });
+            ctx.closePath();
+            var tight = f.homeMarking === 'Tight';
+            if (tight) { ctx.fillStyle = 'rgba(91,141,238,0.18)'; ctx.fill(); }
+            else {
+              ctx.save(); ctx.clip();
+              var hx = hp.map(function (pt) { return pt[0]; }), hy = hp.map(function (pt) { return pt[1]; });
+              var mnX = Math.min.apply(null, hx) - 16, mxX = Math.max.apply(null, hx) + 16, mnY = Math.min.apply(null, hy) - 16, mxY = Math.max.apply(null, hy) + 16, sp = mxY - mnY;
+              ctx.strokeStyle = 'rgba(147,168,156,0.55)'; ctx.lineWidth = 1;
+              for (var q = mnX - sp; q < mxX + sp; q += 7) { ctx.beginPath(); ctx.moveTo(q, mnY); ctx.lineTo(q + sp, mxY); ctx.stroke(); }
+              ctx.restore();
+            }
+            ctx.lineWidth = tight ? 1.75 : 1.25;
+            ctx.strokeStyle = tight ? 'rgba(91,141,238,0.85)' : 'rgba(147,168,156,0.6)';
+            if (!tight) ctx.setLineDash([4, 3]);
+            ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+          }
         }
       }
-      if (f.ball && f.pressureScore != null) {
-        ctx.beginPath(); ctx.arc(X(f.ball[0]), Y(f.ball[1]), (1.6 + 4.2 * f.pressureScore) * S, 0, 7);
-        ctx.strokeStyle = 'rgba(255,176,32,' + (0.35 + 0.6 * f.pressureScore) + ')'; ctx.lineWidth = 2.5; ctx.stroke();
+      if (f.ball && f.pressureScore != null && f.primaryPresser) {
+        // pressure ring on the carrier: solid and glowing when engaged, dashed and dimmer when passive
+        var passive = f.homeEngaged === 'Passive', ps = f.pressureScore, bx = X(f.ball[0]), by = Y(f.ball[1]), r = (14 + ps * 22) * S / 10;
+        var grad = ctx.createRadialGradient(bx, by, 2, bx, by, r);
+        grad.addColorStop(0, 'rgba(255,176,32,' + (0.03 + ps * (passive ? 0.10 : 0.22)) + ')'); grad.addColorStop(1, 'rgba(255,176,32,0)');
+        ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(bx, by, r, 0, 7); ctx.fill();
+        if (passive) ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = 'rgba(255,176,32,' + (passive ? 0.16 + ps * 0.28 : 0.35 + ps * 0.55) + ')';
+        ctx.lineWidth = (passive ? 1 : 1.5) + ps * (passive ? 1.5 : 2.5);
+        ctx.beginPath(); ctx.arc(bx, by, r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
       }
       f.players.forEach(function (p) {
-        ctx.beginPath(); ctx.arc(X(p[1]), Y(p[2]), 1.25 * S, 0, 7);
+        var px = X(p[1]), py = Y(p[2]);
+        if (p[0] === f.primaryPresser) { ctx.beginPath(); ctx.arc(px, py, 1.25 * S + 4, 0, 7); ctx.strokeStyle = 'rgba(255,176,32,0.9)'; ctx.lineWidth = 1.5; ctx.stroke(); }
+        ctx.beginPath(); ctx.arc(px, py, 1.25 * S, 0, 7);
         ctx.fillStyle = isGk(p[0]) ? '#e9eef0' : (p[0][0] === 'H' ? M.homeColor : M.awayColor); ctx.fill();
         ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(8,14,11,0.9)'; ctx.stroke();
       });
