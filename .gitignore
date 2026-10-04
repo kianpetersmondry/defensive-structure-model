@@ -25,7 +25,7 @@ engagement_threshold*.json
 pet_by_frame*.json
 site_build/
 website/
-hub.html
+/hub.html
 pressure_read*.html
 
 # --- video, models, archives ---

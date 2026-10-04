@@ -1,0 +1,562 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Defensive Structure Monitor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #0c1512; --panel: #131f1a; --panel-raised: #17251f; --border: #253830;
+  --ink: #eef3ee; --ink-dim: #93a89c; --ink-faint: #5e7268;
+  --amber: #ffb020; --state-mid: #d99a2b;
+}
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; background:var(--bg); color:var(--ink);
+  font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+body { min-height:100vh; }
+.wrap { max-width:820px; margin:0 auto; padding:0 20px 56px; display:flex; flex-direction:column; gap:28px; }
+
+/* ---- hero ---- */
+.hero { padding:44px 0 22px; border-bottom:1px solid var(--border); }
+.hero .eyebrow { font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--amber); }
+.hero h1 { font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:52px; line-height:1.02;
+  letter-spacing:0.01em; text-transform:uppercase; margin:8px 0 14px; text-wrap:balance; }
+.hero p { font-size:15px; line-height:1.65; color:var(--ink-dim); max-width:58ch; margin:0 0 16px; }
+.hero .matchup { display:block; line-height:1.7; font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px; color:var(--ink-faint); }
+.hero .matchup b { color:var(--ink-dim); font-weight:600; }
+
+/* ---- section framing ---- */
+.section-label { font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.09em;
+  text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ---- picker ---- */
+.picker { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:22px 22px 24px;
+  display:flex; flex-direction:column; gap:18px; }
+.field { display:flex; flex-direction:column; gap:7px; }
+.field label { font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.07em;
+  text-transform:uppercase; color:var(--ink-faint); }
+.field label .step { color:var(--amber); }
+select { appearance:none; -webkit-appearance:none; width:100%; background:var(--panel-raised);
+  border:1px solid var(--border); border-radius:8px; color:var(--ink); font-family:'IBM Plex Sans', sans-serif;
+  font-size:15px; font-weight:500; padding:12px 40px 12px 14px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' stroke='%2393a89c' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat:no-repeat; background-position:right 14px center; cursor:pointer; }
+select:focus-visible { outline:2px solid var(--amber); outline-offset:1px; }
+select:disabled { color:var(--ink-faint); cursor:not-allowed; opacity:0.6; }
+
+.version-note { font-size:12px; line-height:1.5; color:var(--ink-faint); margin-top:-1px; }
+.version-note[hidden] { display:none; }
+
+.preview { display:flex; align-items:center; gap:14px; background:var(--panel-raised);
+  border:1px solid var(--border); border-radius:8px; padding:12px 14px;
+  font-family:'IBM Plex Mono', monospace; font-size:13px; min-height:20px; }
+.preview[hidden] { display:none; }
+.preview-period { color:var(--ink-dim); }
+.preview-clock { color:var(--ink); font-weight:500; }
+.preview-coverage { margin-left:auto; color:var(--ink-faint); font-size:12px; }
+.preview-coverage.low { color:var(--state-mid); }
+
+.open-btn { display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none;
+  background:var(--amber); color:#1a1400; font-family:'Barlow Condensed', sans-serif; font-weight:700;
+  font-size:17px; letter-spacing:0.03em; text-transform:uppercase; border-radius:8px; padding:13px 18px;
+  transition:filter 0.12s ease; }
+.open-btn:hover { filter:brightness(1.08); }
+.open-btn:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+.open-btn[aria-disabled="true"] { pointer-events:none; background:var(--panel-raised); color:var(--ink-faint); }
+
+.picker-note { font-size:12.5px; line-height:1.6; color:var(--ink-faint); }
+.picker-note b { color:var(--ink-dim); }
+
+/* ---- companion cards ---- */
+.companions { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media (max-width:720px) { .companions { grid-template-columns:1fr 1fr; } }
+@media (max-width:460px) { .companions { grid-template-columns:1fr; } }
+.companion-card { display:flex; flex-direction:column; gap:10px; background:var(--panel);
+  border:1px solid var(--border); border-radius:12px; padding:18px 20px; text-decoration:none; color:var(--ink); }
+.companion-card:hover { border-color:var(--amber); }
+.companion-card:hover .companion-go { color:var(--amber); }
+.companion-icon { font-size:22px; line-height:1; }
+.companion-title { font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:20px;
+  text-transform:uppercase; letter-spacing:0.01em; }
+.companion-blurb { font-size:13px; line-height:1.55; color:var(--ink-dim); flex:1; }
+.companion-go { font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.04em;
+  text-transform:uppercase; color:var(--ink-faint); }
+
+footer.credit { font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint);
+  text-align:center; padding-top:6px; }
+
+/* ---- where they attacked ---- */
+.lanes { background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.lane-tabs { display:flex; flex-wrap:wrap; gap:6px; padding:12px 12px 0; }
+.lane-tab { font-family:'IBM Plex Sans', sans-serif; font-size:13px; font-weight:500; color:var(--ink-dim);
+  background:var(--panel-raised); border:1px solid var(--border); border-radius:999px; padding:7px 13px; cursor:pointer; }
+.lane-tab:hover { color:var(--ink); border-color:var(--ink-faint); }
+.lane-tab:focus-visible { outline:2px solid var(--amber); outline-offset:1px; }
+.lane-tab[aria-selected="true"] { color:#1a1400; background:var(--amber); border-color:var(--amber); }
+.lane-figure { margin:12px 0 0; display:block; background:#0c1512; border-top:1px solid var(--border); }
+.lane-figure[hidden], .lane-foot[hidden], .lane-empty[hidden] { display:none; }
+.lane-empty { margin:0; padding:14px 16px 16px; font-size:13px; color:var(--ink-faint); }
+.lane-figure img { display:block; width:100%; height:auto; }
+.lane-foot { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:10px 14px 12px;
+  border-top:1px solid var(--border); font-size:12.5px; color:var(--ink-faint); }
+.lane-foot a { font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.04em; text-transform:uppercase;
+  color:var(--ink-dim); text-decoration:none; border-bottom:1px dotted var(--ink-faint); }
+.lane-foot a:hover { color:var(--amber); border-color:var(--amber); }
+.an-kinds { display:flex; flex-wrap:wrap; gap:2px 20px; margin:14px 16px 0; border-bottom:1px solid var(--border); }
+.an-kinds[hidden], .an-desc[hidden] { display:none; }
+.an-kind { flex:none; font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--ink-dim); background:none; border:0; padding:9px 0 8px; cursor:pointer; box-shadow:inset 0 -2px 0 transparent; }
+.an-kind:hover { color:var(--ink); }
+.an-kind:focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
+.an-kind[aria-selected="true"] { color:var(--ink); box-shadow:inset 0 -2px 0 var(--amber); }
+.an-desc { margin:0; padding:12px 16px 0; font-size:13px; line-height:1.55; color:var(--ink-dim); max-width:78ch; }
+
+/* ---- team comparison ---- */
+.cmp { background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.cmp-toggle { display:block; width:100%; text-align:left; font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--ink-dim); background:none; border:0; padding:14px 16px; cursor:pointer; }
+.cmp-toggle::before { content:'+'; display:inline-block; width:18px; color:var(--amber); }
+.cmp-toggle[aria-expanded="true"]::before { content:'-'; }
+.cmp-toggle:hover { color:var(--ink); }
+.cmp-toggle:focus-visible { outline:2px solid var(--amber); outline-offset:-2px; }
+.cmp-body[hidden] { display:none; }
+.cmp-scroll { overflow-x:auto; border-top:1px solid var(--border); }
+.cmp-table { border-collapse:collapse; width:100%; min-width:700px; font-variant-numeric:tabular-nums; }
+.cmp-table th, .cmp-table td { padding:8px 5px; text-align:right; white-space:nowrap; }
+.cmp-head th { white-space:normal; max-width:62px; }
+.cmp-table th:first-child, .cmp-table td:first-child { padding-left:14px; text-align:left; position:sticky; left:0; background:var(--panel); z-index:1; }
+.cmp-group th { font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint);
+  font-weight:400; padding-top:12px; padding-bottom:2px; text-align:center; border-bottom:0; }
+.cmp-head th { font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:500; color:var(--ink-dim); border-bottom:1px solid var(--border); vertical-align:bottom; }
+.cmp-head button { font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; text-align:right; line-height:1.35; }
+.cmp-head button:hover, .cmp-head button[aria-sort] { color:var(--ink); }
+.cmp-head button:focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
+.cmp-head button .dir { color:var(--amber); display:inline-block; width:10px; }
+.cmp-table tbody tr { border-bottom:1px solid var(--border); }
+.cmp-table tbody tr:last-child { border-bottom:0; }
+.cmp-table tbody tr:hover td { background:var(--panel-raised); }
+.cmp-team { display:flex; align-items:center; gap:9px; font-size:14px; font-weight:500; color:var(--ink); }
+.cmp-team i { width:10px; height:10px; border-radius:3px; flex:none; }
+.cmp-team small { display:block; font-size:11.5px; font-weight:400; color:var(--ink-faint); }
+.cmp-v { display:grid; gap:4px; justify-items:end; font-size:13px; color:var(--ink); }
+.cmp-bar { width:40px; height:3px; border-radius:2px; background:var(--border); position:relative; overflow:hidden; }
+.cmp-bar b { position:absolute; left:0; top:0; bottom:0; border-radius:2px; background:var(--ink-faint); }
+td.on .cmp-bar b { background:var(--amber); }
+td.on .cmp-v { color:var(--ink); font-weight:600; }
+.cmp-note { margin:0; padding:12px 16px 14px; font-size:12px; line-height:1.55; color:var(--ink-faint); border-top:1px solid var(--border); max-width:120ch; }
+
+/* ---- scouting reports ---- */
+.rep { background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.rep .lane-tab i { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:7px; vertical-align:1px; }
+.rep .lane-tab small { color:var(--ink-faint); font-weight:400; }
+.rep .lane-tab[aria-selected="true"] small { color:#3a2d00; }
+.rep-body[hidden] { display:none; }
+.rep-body { margin-top:12px; border-top:1px solid var(--border); padding:18px 18px 20px; display:grid; gap:18px; }
+.rep-kicker { margin:0; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); }
+.rep-head { margin:4px 0 0; font-family:'Barlow Condensed', sans-serif; font-weight:600; font-size:clamp(22px, 3.2vw, 28px); line-height:1.15; color:var(--ink); text-wrap:balance; max-width:40ch; }
+.rep-chips { display:grid; grid-template-columns:repeat(auto-fit, minmax(128px, 1fr)); gap:8px; }
+.rep-chip { background:var(--panel-raised); border:1px solid var(--border); border-radius:8px; padding:9px 11px; display:grid; gap:2px; }
+.rep-chip b { font-size:17px; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; }
+.rep-chip span { font-size:11.5px; color:var(--ink-dim); }
+.rep-chip em { font-style:normal; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint); }
+.rep-chip.top em { color:var(--amber); }
+.rep-cols { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px 28px; }
+.rep-cols h4 { margin:0 0 8px; font-family:'IBM Plex Mono', monospace; font-size:11.5px; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink); }
+.rep-cols ul { margin:0; padding:0; list-style:none; display:grid; gap:10px; }
+.rep-cols li { position:relative; padding-left:16px; font-size:14px; line-height:1.55; color:var(--ink-dim); max-width:62ch; }
+.rep-cols li::before { content:''; position:absolute; left:0; top:0.62em; width:6px; height:6px; border-radius:50%; background:var(--ink-faint); }
+.rep-cols .bad li::before { background:var(--amber); }
+.rep-links { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-faint); }
+.rep-links button { font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-dim);
+  background:none; border:1px solid var(--border); border-radius:999px; padding:6px 11px; cursor:pointer; }
+.rep-links button:hover { color:var(--ink); border-color:var(--ink-faint); }
+.rep-links button:focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
+</style>
+<div class="wrap">
+  <div class="hero">
+    <span class="eyebrow">Defensive structure analysis</span>
+    <h1>Defensive Structure Monitor</h1>
+    <p>Renders a full match and reads each team's defensive structure whenever they're out of possession —
+      where the space and gaps are, what's working, and how it could be exploited. Live phase classification,
+      a pressure-on-ball-carrier score, an inter-line band, and a danger heatmap, all updating frame by frame.</p>
+    <div class="matchup">{{MATCHUP}}</div>
+  </div>
+
+  <div>
+    <p class="section-label">Watch the match</p>
+    <div class="picker">
+      <div class="field">
+        <label for="matchSelect"><span class="step">Step 1</span> · Match</label>
+        <select id="matchSelect">
+          <option value="" selected disabled>Select a match…</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="versionSelect"><span class="step">Step 2</span> · Phase-detection definition</label>
+        <select id="versionSelect" disabled>
+          <option value="" selected>Select a match first…</option>
+        </select>
+        <p class="version-note" id="versionNote" hidden></p>
+      </div>
+      <div class="field">
+        <label for="chapterSelect"><span class="step">Step 3</span> · Chapter</label>
+        <select id="chapterSelect" disabled>
+          <option value="" selected>Select a definition first…</option>
+        </select>
+      </div>
+      <div class="preview" id="preview" hidden>
+        <span class="preview-period" id="previewPeriod"></span>
+        <span class="preview-clock" id="previewClock"></span>
+        <span class="preview-coverage" id="previewCoverage"></span>
+      </div>
+      <a class="open-btn" id="openBtn" href="#" aria-disabled="true">Open chapter &rarr;</a>
+      <p class="picker-note">Each match is split into ~5-minute chapters aligned to period breaks — a full
+        match at full quality runs past what a single page can hold. Every chapter links to the next and
+        previous one so you can keep watching straight through. <b>Ball tracked</b> is the share of that
+        chapter's frames with a real tracked ball position; broadcast tracking has real gaps, so it varies
+        chapter to chapter. <b>Phase-detection definition</b> lets you pick which version of the classification
+        logic is driving the High Press / Mid Block / Low Block / Transition calls — useful for comparing an
+        earlier definition against a later one once more than one exists.</p>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Analysis</p>
+    <p class="picker-note" style="margin-top:-8px">Every match with a 2-D animation, read ten ways from the same kind of tracking,
+      each team attacking left to right. Pick a match, then an analysis.</p>
+    <div class="lanes analysis" id="analysis">
+      <div class="lane-tabs" role="tablist" aria-label="Match">{{MATCH_TABS}}</div>
+      <p class="lane-empty">Pick a match to open its analysis.</p>
+      <div class="an-kinds" role="tablist" aria-label="Analysis" hidden><button type="button" class="an-kind" role="tab" aria-selected="false">Where they attacked</button><button type="button" class="an-kind" role="tab" aria-selected="false">Team heatmap</button><button type="button" class="an-kind" role="tab" aria-selected="false">In &amp; out of possession</button><button type="button" class="an-kind" role="tab" aria-selected="false">Shape over time</button><button type="button" class="an-kind" role="tab" aria-selected="false">Where the gaps open</button><button type="button" class="an-kind" role="tab" aria-selected="false">Line-breaking passes</button><button type="button" class="an-kind" role="tab" aria-selected="false">Chances conceded</button><button type="button" class="an-kind" role="tab" aria-selected="false">Turnovers</button><button type="button" class="an-kind" role="tab" aria-selected="false">Pressing</button><button type="button" class="an-kind" role="tab" aria-selected="false">Player heatmaps</button></div>
+      <p class="an-desc" hidden></p>
+      <figure class="lane-figure" hidden><img alt=""></figure>
+      <div class="lane-foot" hidden><span class="lane-cap"></span><a class="lane-full" href="#" target="_blank" rel="noopener">Open full size &rarr;</a></div>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Scouting Reports</p>
+    <p class="picker-note" style="margin-top:-8px">One report per team per match: what it did well without the ball, and how it can be got at, drawn from the analyses above.</p>
+    <div class="rep" id="rep">
+      <div class="lane-tabs" role="tablist" aria-label="Team">{{TEAM_TABS}}</div>
+      <p class="lane-empty">Pick a team to read its report.</p>
+      <article class="rep-body" hidden></article>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Team Comparison</p>
+    <p class="picker-note" style="margin-top:-8px">All {{N_TEAMS}} teams from the {{N_MATCHES}} 2-D matches side by side, live play only. Click a column to rank the teams by it.</p>
+    <div class="cmp" id="cmp">
+      <button type="button" class="cmp-toggle" aria-expanded="false" aria-controls="cmpBody">Show the comparison</button>
+      <div class="cmp-body" id="cmpBody" hidden>
+        <div class="cmp-scroll"><table class="cmp-table"><thead>
+          <tr class="cmp-group"><th></th><th>With the ball</th><th colspan="5">Without the ball</th><th colspan="3">Winning it back</th><th colspan="2">Shots</th></tr>
+          <tr class="cmp-head"><th scope="col">Team</th><th scope="col"><button type="button" data-col="possession" title="Share of live play with the ball"><span class="dir"></span>Possession</button></th><th scope="col"><button type="button" data-col="back_line" title="Median height of the deepest four outfielders without the ball, metres from own goal"><span class="dir"></span>Back line</button></th><th scope="col"><button type="button" data-col="length" title="Median block length without the ball"><span class="dir"></span>Length</button></th><th scope="col"><button type="button" data-col="width" title="Median block width without the ball"><span class="dir"></span>Width</button></th><th scope="col"><button type="button" data-col="holes" title="Average open space inside the block, square metres"><span class="dir"></span>Holes</button></th><th scope="col"><button type="button" data-col="free" title="Opponents free inside the block at any moment"><span class="dir"></span>Free opp.</button></th><th scope="col"><button type="button" data-col="wins" title="Open-play ball wins"><span class="dir"></span>Ball wins</button></th><th scope="col"><button type="button" data-col="wins_high" title="Share of ball wins in the opponents' half"><span class="dir"></span>Opp. half</button></th><th scope="col"><button type="button" data-col="fast" title="Ball wins that were in or into the final third within 10 s"><span class="dir"></span>Fast att.</button></th><th scope="col"><button type="button" data-col="shots_for" title="Shots taken"><span class="dir"></span>For</button></th><th scope="col"><button type="button" data-col="shots_against" title="Shots conceded"><span class="dir"></span>Against</button></th></tr>
+        </thead><tbody></tbody></table></div>
+        <p class="cmp-note">Back line: deepest four outfielders, metres from own goal. Length and width: outfield spread. Holes: open space inside the block more than 8 m from every defender.
+          Free opponents: attackers inside the block with no defender within 5 m. Fast attacks: ball wins where the team was in or into the final third within 10 s.
+          All medians or totals over live play; shots from the event feed (extra time included for the two 120-minute matches).</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Live Broadcast Animations</p>
+    <p class="picker-note" style="margin-top:-8px">The model run on real match footage, reading the defensive shape on the actual pitch.</p>
+    <div class="companions">
+      <a class="companion-card" href="https://claude.ai/artifact/1jQby5kPduHnx2VtbTMrk1"><span class="companion-icon">🔍</span><span class="companion-title">Broadcast vs 2-D Animation</span><span class="companion-blurb">Morocco vs France, first 6 minutes. The model on the real broadcast beside the published 2-D animation, in sync, with the 2-D's danger glow and readout carried onto the footage.</span><span class="companion-go">Open &rarr;</span></a>
+      <a class="companion-card" href="https://claude.ai/artifact/W5TEsSEVt9Em5qnGboRckW"><span class="companion-icon">⚽</span><span class="companion-title">Beach vs LAFC</span><span class="companion-blurb">Club game, ECRL, 15 min 50 s of Veo footage in three parts. Both teams' defensive read drawn on the grass beside a 2-D map rebuilt from the same footage, with no tracking data behind it.</span><span class="companion-go">Open &rarr;</span></a>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Behind the Model</p>
+    <p class="picker-note" style="margin-top:-8px">The research and checks that went into building the model. Scoped to the test case, <b>Morocco vs Spain</b>, only.</p>
+    <div class="companions">
+      <a class="companion-card" href="https://claude.ai/code/artifact/56e3112f-e014-4ea8-8de0-d64539289eb4"><span class="companion-icon">📈</span><span class="companion-title">PPDA Timeline</span><span class="companion-blurb">Passes allowed per defensive action for both teams across the full match, in 5-minute windows, plus every turnover sized by how many passes came before it.</span><span class="companion-go">Open &rarr;</span></a>
+      <a class="companion-card" href="https://claude.ai/code/artifact/75d6a1ea-6984-4486-a2f7-13afb028bd96"><span class="companion-icon">🕳️</span><span class="companion-title">Space in Behind</span><span class="companion-blurb">How much dangerous, pass-accessible space each team leaves behind its own back line, broken down by defensive phase, with the six riskiest moments flagged for review.</span><span class="companion-go">Open &rarr;</span></a>
+      <a class="companion-card" href="https://claude.ai/code/artifact/e03e03e1-f3a2-4a3b-9237-46308b26cb09"><span class="companion-icon">🔀</span><span class="companion-title">PPDA vs. Phase Detector</span><span class="companion-blurb">Overlays the geometric phase detector against PPDA on one shared, corrected time axis with a synchronized hover crosshair — resolving PPDA cleanly by dominant defensive phase for both teams across the full match.</span><span class="companion-go">Open &rarr;</span></a>
+      <a class="companion-card" href="https://claude.ai/code/artifact/dce35fa2-8885-46f9-8bd1-d128bc454c21"><span class="companion-icon">🎯</span><span class="companion-title">Engaged vs. Passive Defense</span><span class="companion-blurb">Splits each geometric phase into real 1v1 engagement vs. passive shape-holding, using a pressure threshold validated against PFF's own analyst-tagged pressure events — every phase turns out to be a genuine mix for both teams.</span><span class="companion-go">Open &rarr;</span></a>
+      <a class="companion-card" href="https://claude.ai/code/artifact/905de7ea-08a1-46fe-8ee2-b9fb6d4e1562"><span class="companion-icon">🧲</span><span class="companion-title">Ball-Proximal Compactness</span><span class="companion-blurb">Tests whether how tightly the 5 players nearest the ball are grouped predicts winning it back sooner, using turnovers straight from the event feed as an independent outcome — it doesn't clear the bar for a third classification variable, so it ships as a descriptive tag.</span><span class="companion-go">Open &rarr;</span></a>
+    </div>
+  </div>
+
+  <footer class="credit">World Cup: PFF FC tracking data &middot; ~30Hz broadcast tracking, ball ~15Hz effective<br>Bundesliga: DFL open data (Bassek et al. 2025, <i>Scientific Data</i>) &middot; &copy; DFL, CC-BY 4.0 &middot; 25Hz optical tracking</footer>
+</div>
+<script>
+var AN_KINDS = {{AN_KINDS}};
+(function () {
+  var box = document.getElementById('analysis');
+  var mtabs = box.querySelectorAll('.lane-tab'), ktabs = box.querySelectorAll('.an-kind'),
+      kinds = box.querySelector('.an-kinds'), desc = box.querySelector('.an-desc'),
+      fig = box.querySelector('.lane-figure'), img = fig.querySelector('img'),
+      foot = box.querySelector('.lane-foot'), empty = box.querySelector('.lane-empty'),
+      cap = box.querySelector('.lane-cap'), full = box.querySelector('.lane-full'), cur = -1, kind = 0;
+  function render() {
+    mtabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === cur ? 'true' : 'false'); });
+    ktabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === kind ? 'true' : 'false'); t.tabIndex = j === kind ? 0 : -1; });
+    var open = cur >= 0;
+    fig.hidden = foot.hidden = kinds.hidden = desc.hidden = !open; empty.hidden = open;
+    if (!open) return;
+    var K = AN_KINDS[kind], L = K.data[cur];
+    desc.textContent = K.desc;
+    img.width = L.w; img.height = L.h; img.src = L.src; img.alt = L.alt; full.href = L.src;
+    cap.textContent = L.label + ' · ' + L.cap + ' · ' + K.name;
+  }
+  function pickMatch(k) { cur = (k === cur) ? -1 : k; render(); }   // clicking the open match closes it
+  window.openAnalysis = function (slug, name) {
+    var m = AN_KINDS[0].data.findIndex(function (d) { return d.slug === slug; });
+    var k = AN_KINDS.findIndex(function (d) { return d.name === name; });
+    if (m < 0 || k < 0) return;
+    cur = m; kind = k; render();
+    box.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  };
+  function pickKind(k) { kind = k; render(); }
+  mtabs.forEach(function (t, k) {
+    t.addEventListener('click', function () { pickMatch(k); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        var n = ((cur < 0 ? k : cur) + (e.key === 'ArrowRight' ? 1 : mtabs.length - 1)) % mtabs.length;
+        cur = n; render(); mtabs[n].focus(); e.preventDefault();
+      }
+    });
+  });
+  ktabs.forEach(function (t, k) {
+    t.addEventListener('click', function () { pickKind(k); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        var n = (kind + (e.key === 'ArrowRight' ? 1 : ktabs.length - 1)) % ktabs.length; pickKind(n); ktabs[n].focus(); e.preventDefault();
+      }
+    });
+  });
+})();
+
+var CMP = {{CMP}};
+(function () {
+  var box = document.getElementById('cmp'), btn = box.querySelector('.cmp-toggle'), body = document.getElementById('cmpBody');
+  var tbody = box.querySelector('tbody'), heads = box.querySelectorAll('.cmp-head button');
+  var COLS = ['possession', 'back_line', 'length', 'width', 'holes', 'free', 'wins', 'wins_high', 'fast', 'shots_for', 'shots_against'];
+  var FMT = {possession: function (v) { return v + '%'; }, wins_high: function (v) { return v + '%'; }, free: function (v) { return v.toFixed(1); },
+             back_line: function (v) { return v.toFixed(0) + ' m'; }, length: function (v) { return v.toFixed(0) + ' m'; }, width: function (v) { return v.toFixed(0) + ' m'; },
+             holes: function (v) { return v + ' m²'; }};
+  var rng = {}; COLS.forEach(function (c) { var v = CMP.map(function (r) { return r[c]; }); rng[c] = [Math.min.apply(null, v), Math.max.apply(null, v)]; });
+  var sortCol = null, dir = 1, order = CMP.map(function (_, i) { return i; });
+  function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function render() {
+    tbody.innerHTML = order.map(function (i) {
+      var r = CMP[i];
+      return '<tr><td><span class="cmp-team"><i style="background:' + r.color + '"></i><span>' + esc(r.team) + '<small>vs ' + esc(r.opp) + '</small></span></span></td>' +
+        COLS.map(function (c) {
+          var lo = rng[c][0], hi = rng[c][1], w = hi > lo ? 12 + 88 * (r[c] - lo) / (hi - lo) : 100;
+          return '<td class="' + (c === sortCol ? 'on' : '') + '"><span class="cmp-v">' + (FMT[c] ? FMT[c](r[c]) : r[c]) +
+                 '<span class="cmp-bar"><b style="width:' + w.toFixed(0) + '%"></b></span></span></td>';
+        }).join('') + '</tr>';
+    }).join('');
+    heads.forEach(function (h) {
+      var on = h.getAttribute('data-col') === sortCol;
+      if (on) h.setAttribute('aria-sort', dir > 0 ? 'ascending' : 'descending'); else h.removeAttribute('aria-sort');
+      h.querySelector('.dir').textContent = on ? (dir > 0 ? '↑' : '↓') : '';
+    });
+  }
+  heads.forEach(function (h) {
+    h.addEventListener('click', function () {
+      var c = h.getAttribute('data-col');
+      if (sortCol === c) dir = -dir; else { sortCol = c; dir = -1; }
+      order.sort(function (a, b) { return dir * (CMP[a][c] - CMP[b][c]) || a - b; });
+      render();
+    });
+  });
+  btn.addEventListener('click', function () {
+    var open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false'); body.hidden = !open;
+    btn.textContent = open ? 'Hide the comparison' : 'Show the comparison';
+  });
+  render();
+})();
+
+var REPORTS = {{REPORTS}};
+(function () {
+  var box = document.getElementById('rep'), tabs = box.querySelectorAll('.lane-tab'), body = box.querySelector('.rep-body'),
+      empty = box.querySelector('.lane-empty'), cur = -1;
+  function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function render() {
+    tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === cur ? 'true' : 'false'); });
+    body.hidden = cur < 0; empty.hidden = cur >= 0;
+    if (cur < 0) return;
+    var r = REPORTS[cur];
+    body.innerHTML = '<div><p class="rep-kicker">' + esc(r.team) + ' without the ball &middot; ' + esc(r.match) + ' &middot; ' + esc(r.sub) + '</p>' +
+      '<h3 class="rep-head">' + esc(r.headline) + '</h3></div>' +
+      '<div class="rep-chips">' + r.chips.map(function (c) {
+        return '<div class="rep-chip' + (c.rank <= 2 ? ' top' : '') + '"><b>' + esc(c.value) + '</b><span>' + esc(c.label) + '</span><em>' + esc(c.rank_text) + '</em></div>';
+      }).join('') + '</div>' +
+      '<div class="rep-cols"><div><h4>What it did well</h4><ul>' + r.good.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ul></div>' +
+      '<div class="bad"><h4>How to get at it</h4><ul>' + r.exploit.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ul></div></div>' +
+      '<div class="rep-links">See it in the analysis: ' + r.views.map(function (v) { return '<button type="button" data-view="' + esc(v) + '">' + esc(v) + '</button>'; }).join('') + '</div>';
+    body.querySelectorAll('[data-view]').forEach(function (b) {
+      b.addEventListener('click', function () { if (window.openAnalysis) window.openAnalysis(r.slug, b.getAttribute('data-view')); });
+    });
+  }
+  tabs.forEach(function (t, k) {
+    t.addEventListener('click', function () { cur = (k === cur) ? -1 : k; render(); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        var n = ((cur < 0 ? k : cur) + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length; cur = n; render(); tabs[n].focus(); e.preventDefault();
+      }
+    });
+  });
+})();
+var MATCHES = {{MATCHES}};
+
+var matchSelect = document.getElementById('matchSelect');
+var versionSelect = document.getElementById('versionSelect');
+var versionNote = document.getElementById('versionNote');
+var chapterSelect = document.getElementById('chapterSelect');
+var preview = document.getElementById('preview');
+var previewPeriod = document.getElementById('previewPeriod');
+var previewClock = document.getElementById('previewClock');
+var previewCoverage = document.getElementById('previewCoverage');
+var openBtn = document.getElementById('openBtn');
+
+MATCHES.forEach(function (m) {
+  var opt = document.createElement('option');
+  opt.value = m.id;
+  opt.textContent = m.label + ' — ' + m.competition;
+  matchSelect.appendChild(opt);
+});
+
+function findMatch(id) {
+  for (var i = 0; i < MATCHES.length; i++) if (MATCHES[i].id === id) return MATCHES[i];
+  return null;
+}
+
+function findVersion(match, id) {
+  if (!match) return null;
+  for (var i = 0; i < match.versions.length; i++) if (match.versions[i].id === id) return match.versions[i];
+  return null;
+}
+
+function resetChapterPicker(message) {
+  chapterSelect.innerHTML = '<option value="" selected>' + message + '</option>';
+  chapterSelect.disabled = true;
+  preview.hidden = true;
+  openBtn.setAttribute('aria-disabled', 'true');
+  openBtn.href = '#';
+}
+
+function resetVersionPicker() {
+  versionSelect.innerHTML = '<option value="" selected>Select a match first…</option>';
+  versionSelect.disabled = true;
+  versionNote.hidden = true;
+  resetChapterPicker('Select a definition first…');
+}
+
+function populateVersions(match) {
+  versionSelect.innerHTML = '';
+  var placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.selected = true;
+  placeholder.disabled = true;
+  placeholder.textContent = 'Select a definition…';
+  versionSelect.appendChild(placeholder);
+
+  match.versions.forEach(function (v) {
+    var opt = document.createElement('option');
+    opt.value = v.id;
+    opt.textContent = v.label;
+    versionSelect.appendChild(opt);
+  });
+  versionSelect.disabled = false;
+}
+
+function populateChapters(version) {
+  chapterSelect.innerHTML = '';
+  var placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.selected = true;
+  placeholder.disabled = true;
+  placeholder.textContent = 'Select a chapter…';
+  chapterSelect.appendChild(placeholder);
+
+  var currentGroup = null, groupEl = null;
+  version.chapters.forEach(function (ch) {
+    if (ch.period !== currentGroup) {
+      currentGroup = ch.period;
+      groupEl = document.createElement('optgroup');
+      groupEl.label = currentGroup;
+      chapterSelect.appendChild(groupEl);
+    }
+    var opt = document.createElement('option');
+    opt.value = String(ch.idx);
+    var num = ch.idx < 10 ? '0' + ch.idx : String(ch.idx);
+    opt.textContent = num + '  ·  ' + ch.clock + '  ·  ball tracked ' + ch.coverage + '%';
+    groupEl.appendChild(opt);
+  });
+  chapterSelect.disabled = false;
+}
+
+function showPreview(version, ch) {
+  previewPeriod.textContent = ch.period;
+  previewClock.textContent = ch.clock;
+  previewCoverage.textContent = 'Ball tracked ' + ch.coverage + '%';
+  previewCoverage.className = 'preview-coverage' + (ch.coverage < 70 ? ' low' : '');
+  preview.hidden = false;
+  openBtn.href = ch.url;
+  openBtn.removeAttribute('aria-disabled');
+}
+
+function selectFirstChapter(version) {
+  if (!version.chapters.length) return;
+  chapterSelect.value = String(version.chapters[0].idx);
+  showPreview(version, version.chapters[0]);
+}
+
+matchSelect.addEventListener('change', function () {
+  var match = findMatch(matchSelect.value);
+  if (!match) { resetVersionPicker(); return; }
+  populateVersions(match);
+  // Default to the first (baseline) definition so the chapter dropdown is
+  // usable immediately, while still leaving the version picker in place for
+  // whenever a second definition is added to compare against.
+  if (match.versions.length) {
+    versionSelect.value = match.versions[0].id;
+    versionSelect.dispatchEvent(new Event('change'));
+  }
+});
+
+versionSelect.addEventListener('change', function () {
+  var match = findMatch(matchSelect.value);
+  var version = findVersion(match, versionSelect.value);
+  if (!version) { resetChapterPicker('Select a definition first…'); versionNote.hidden = true; return; }
+  if (version.note) {
+    versionNote.textContent = version.note;
+    versionNote.hidden = false;
+  } else {
+    versionNote.hidden = true;
+  }
+  populateChapters(version);
+  preview.hidden = true;
+  openBtn.setAttribute('aria-disabled', 'true');
+  openBtn.href = '#';
+  selectFirstChapter(version);
+});
+
+chapterSelect.addEventListener('change', function () {
+  var match = findMatch(matchSelect.value);
+  var version = findVersion(match, versionSelect.value);
+  if (!version || !chapterSelect.value) return;
+  var idx = parseInt(chapterSelect.value, 10);
+  var ch = version.chapters.filter(function (c) { return c.idx === idx; })[0];
+  if (ch) showPreview(version, ch);
+});
+
+// Single match today: pick it automatically so the rest of the picker is
+// usable immediately, while still leaving the UI in place for when a
+// second match is added.
+if (MATCHES.length === 1) {
+  matchSelect.value = MATCHES[0].id;
+  matchSelect.dispatchEvent(new Event('change'));
+}
+</script>
+
+</body></html>
