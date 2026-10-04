@@ -1,0 +1,12 @@
+{
+ "_about": "Published companion pages and where they live in the static site. Chapters and the hub are mapped automatically (content/hub_matches.json and HUB_URL in pipeline/config.py).",
+ "https://claude.ai/artifact/1jQby5kPduHnx2VtbTMrk1": "broadcast/morocco-france/index.html",
+ "https://claude.ai/artifact/W5TEsSEVt9Em5qnGboRckW": "broadcast/beach-lafc/part-1/index.html",
+ "https://claude.ai/artifact/77C4f7fKbJytsCsVnT4STe": "broadcast/beach-lafc/part-2/index.html",
+ "https://claude.ai/artifact/QHL5sT438raLp7cnDUECJM": "broadcast/beach-lafc/part-3/index.html",
+ "https://claude.ai/code/artifact/56e3112f-e014-4ea8-8de0-d64539289eb4": "behind-the-model/ppda-timeline.html",
+ "https://claude.ai/code/artifact/75d6a1ea-6984-4486-a2f7-13afb028bd96": "behind-the-model/space-in-behind.html",
+ "https://claude.ai/code/artifact/e03e03e1-f3a2-4a3b-9237-46308b26cb09": "behind-the-model/ppda-vs-phase-detector.html",
+ "https://claude.ai/code/artifact/dce35fa2-8885-46f9-8bd1-d128bc454c21": "behind-the-model/engaged-vs-passive.html",
+ "https://claude.ai/code/artifact/905de7ea-08a1-46fe-8ee2-b9fb6d4e1562": "behind-the-model/ball-proximal-compactness.html"
+}
