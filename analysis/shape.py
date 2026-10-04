@@ -1,4 +1,4 @@
-"""IN & OUT OF POSSESSION: how each team's shape changes when it loses the ball, from the 5 Hz positions.
+"""In and out of possession: how each team's shape changes when it loses the ball, from the 5 Hz positions.
 
 Definitions (each team in its own frame attacking left to right; every 5 Hz sample, every period, live or
 dead ball: that reproduces the published figures, live play alone does not):

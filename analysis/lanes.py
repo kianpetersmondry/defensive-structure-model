@@ -1,4 +1,4 @@
-"""WHERE THEY ATTACKED: which flank each team attacked down, from the ball track in the core features table.
+"""Where they attacked: which flank each team attacked down, from the ball track in the core features table.
 
 Definitions (every tracking frame, every period including stoppage and extra time):
 - Each team is shown in its own frame, attacking left to right; left and right are from the attacker's view.

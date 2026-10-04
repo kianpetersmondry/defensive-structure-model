@@ -83,6 +83,37 @@ How it's rendered:
 - It's log-scaled with `log1p(mass / floor)`, because raw values span about 8 orders of magnitude.
 - Brightness is capped at each match's own 99.5th percentile. A single ceiling taken from one 5-minute window had over-saturated every full match.
 
+## Match-level analysis (`analysis/`)
+
+Ten views read a whole match at once. Each team is drawn attacking left to right, and each script's docstring
+gives its full definitions.
+
+- **Live play** (`inplay.py`): from an on-the-ball event until the next, if the next starts within 5 s of the
+  last touch and the ball didn't go out in between; otherwise until 1.5 s after the touch. 53-77 live minutes
+  per match.
+- **Where they attacked:** the share of the ball's forward movement down each third of the pitch's width, in
+  the middle and final thirds while in possession, plus final-third entries.
+- **Team and player heatmaps; in and out of possession:** 5 Hz positions, keepers left out of team views;
+  back line = mean distance of the deepest four outfielders from their own goal; width and length = the
+  outfield spread per moment, as medians.
+- **Shape over time:** back-line height, block length and width without the ball, live play only, as a
+  10-minute rolling median.
+- **Where the gaps open:** every live defending moment lined up on the back line. A hole is a 1 m cell inside
+  the outfielders' convex hull with no defender within 8 m; a free opponent stands inside the block with no
+  defender within 5 m.
+- **Line-breaking passes:** a completed pass or cross in live play, moving the ball 5 m or more towards goal,
+  that bypasses three or more of the defending team's deepest seven outfielders.
+- **Turnovers:** a switch of possession (flickers under 1 s absorbed) with the ball live for the 2 s before
+  it. Fast = in or into the final third within 10 s; diamonds led to a shot within 15 s.
+- **Chances conceded:** every shot faced, rewound to the start of the attack (the shooting team's possession
+  start or the last restart, at most 20 s back) and classed as after a turnover, after a restart or long
+  possession.
+- **Pressing:** pressure on the carrier above the match's engaged threshold, by the defending team, for at
+  least 1/3 s (gaps under 1 s merged); won = the ball changes hands within 5 s; triggers are counter-press,
+  back pass, pass out wide, other pass, or carry.
+- **Comparison board and scouting reports:** the board takes one row per team-match from the views; the
+  reports are written by hand from the views' numbers, with five stat chips ranked across every team.
+
 ## Cross-checks
 
 - **PPDA:** passes allowed per defensive action, from events only. Morocco 18.44 (passive), Spain 4.04 (aggressive). Restricted to organised-defence time, PPDA rises from High Press to Mid Block to Low Block for both teams. That independent event-based measure agrees with the tracking-based phases.

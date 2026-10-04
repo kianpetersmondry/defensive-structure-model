@@ -1,4 +1,4 @@
-"""TEAM HEATMAPS: where each team's outfield players spent the match, from the 5 Hz positions.
+"""Team heatmaps: where each team's outfield players spent the match, from the 5 Hz positions.
 
 Definitions (every 5 Hz sample, every period, each team in its own frame attacking left to right):
 - Glow: all outfield players' positions pooled (keepers left out so they don't swamp the scale).

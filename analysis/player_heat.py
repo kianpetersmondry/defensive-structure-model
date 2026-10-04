@@ -1,4 +1,4 @@
-"""PLAYER HEATMAPS: one small pitch per player who played 5+ minutes, from the 5 Hz positions.
+"""Player heatmaps: one small pitch per player who played 5+ minutes, from the 5 Hz positions.
 
 Definitions (every 5 Hz sample, every period, each team in its own frame attacking left to right):
 - Minutes on the pitch: samples with a position / (29.97 / 6) / 60.

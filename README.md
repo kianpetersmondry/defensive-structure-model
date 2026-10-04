@@ -47,21 +47,36 @@ All of it is rendered as an animated 2-D match, split into five-minute chapters,
   - pressure correlation 0.74
 - **Bundesliga converter vs DFL's own possession flag:** they agree on 87% of live frames, and all 21 shots and 3 goals come through.
 
-Full details: [docs/METHODOLOGY.md](docs/METHODOLOGY.md). Research basis: [docs/LITERATURE.md](docs/LITERATURE.md). The original write-up: [docs/WRITE-UP.md](docs/WRITE-UP.md).
+Full details: [docs/METHODOLOGY.md](docs/METHODOLOGY.md). Checks on the rebuilt analysis code: [docs/VERIFICATION.md](docs/VERIFICATION.md). Research basis: [docs/LITERATURE.md](docs/LITERATURE.md). The original write-up: [docs/WRITE-UP.md](docs/WRITE-UP.md).
 
 ## Repository layout
 
 ```
 pipeline/    tracking cleanup (Kalman + RTS smoother), team shape, phase classification,
              pressure, engaged/passive, marking, danger heatmap, chapter export and build,
-             match hub, the companion analyses (PPDA, space in behind, compactness)
-templates/   HTML/JS shells the chapter and companion pages are built from
+             the match registry and validator, the one-command runner, hub and site builders,
+             the companion analyses (PPDA, space in behind, compactness)
+analysis/    the ten match-level Analysis views, the comparison board and the scouting-report chips
+content/     hand-written scouting reports and the record of published chapter pages
+templates/   HTML/JS shells the chapter, hub and companion pages are built from
 providers/   converters from other data formats into the layout the pipeline reads (DFL)
 footage/     running the model on broadcast video: detection, camera calibration from
              pitch lines, team split, tracking, overlay rendering, benchmark vs PFF
-docs/        methodology, literature, original write-up
+docs/        methodology, adding a match, checks on the rebuilt code, literature, original write-up
 examples/    sample outputs
 ```
+
+## Running it
+
+```
+pip install -r requirements.txt
+python3 pipeline/run_match.py 3823          # raw files in data/3823/ -> chapters + the ten Analysis views
+python3 pipeline/run_match.py hub           # comparison board, scouting reports, hub page
+python3 pipeline/build_site.py              # self-contained static site in output/site/
+```
+
+Raw data goes in `data/<match id>/` and everything generated goes in `output/`; set `DSM_DATA` or `DSM_OUT`
+to put them elsewhere. [docs/ADDING-A-MATCH.md](docs/ADDING-A-MATCH.md) walks through adding a new match.
 
 ## Data
 
@@ -72,12 +87,12 @@ No match data is included in this repository.
 
 ## Status
 
-This repository is being assembled from project backups.
-- **Rebuilding:** the match-level analysis views, the per-team scouting reports and the one-command match runner are being re-added.
-- **Paths:** file paths in `pipeline/config.py` still point at the original working environment and are being made configurable.
+The analysis code was rebuilt from the published outputs after the original working copy was lost; every
+view was checked against what is live ([docs/VERIFICATION.md](docs/VERIFICATION.md)). Morocco vs Spain and
+France vs Morocco are re-checked once their raw files are back.
 
 Planned next: an Opta converter, and carrying PFF's "estimated position" flag into the animation.
 
-## License
+## Licence
 
-Code: MIT (see [LICENSE](LICENSE)). Data and the images derived from it remain under their providers' terms.
+Code under the [MIT licence](LICENSE). Match data stays under its providers' terms (see Data above).
