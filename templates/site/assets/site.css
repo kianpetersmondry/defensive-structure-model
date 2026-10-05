@@ -338,3 +338,24 @@ details.help a { color: var(--accent); }
   .pitch-caption { flex-direction: column; gap: 4px; }
 }
 @media (prefers-reduced-motion: reduce) { .match, .view { transition: none; } .match:hover { transform: none; } }
+
+/* Data-quality notes: German league (best tracking) vs World Cup (ball tracking gaps) */
+.psection + .psection { margin-top: 40px; }
+.datanote { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 14px 18px; margin: 0 0 22px; max-width: 880px; }
+.datanote .dn-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 6px; }
+.datanote h3 { margin: 0; font: 600 20px/1.1 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+.datanote p { margin: 0; color: var(--dim); font-size: 14px; line-height: 1.55; max-width: 78ch; }
+.dn-tag { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 10px; font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+.datanote.good .dn-tag { background: rgba(79,191,122,.14); color: #6fd39a; }
+.datanote.good .dn-tag::before { content: '●'; font-size: 8px; }
+.datanote.warn { border-color: rgba(255,176,32,.35); }
+.datanote.warn .dn-tag, .trackbar .dn-tag { background: rgba(255,176,32,.14); color: var(--accent); }
+.datanote.warn .dn-tag::before, .trackbar .dn-tag::before { content: '!'; font-weight: 700; }
+.match-block + .datanote { margin-top: 44px; }
+.msep { flex: none; align-self: center; font: 500 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); padding: 0 4px 0 2px; }
+.msep:not(:first-child) { margin-left: 10px; padding-left: 12px; border-left: 1px solid var(--line); }
+.trackbar { background: rgba(255,176,32,.06); border-bottom: 1px solid rgba(255,176,32,.25); font-size: 13px; color: var(--dim); }
+.trackbar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding-top: 9px; padding-bottom: 9px; }
+.trackbar b { color: var(--ink); font-weight: 600; }
+.trackbar a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.jumpnav .psection + .psection { margin-top: 0; }

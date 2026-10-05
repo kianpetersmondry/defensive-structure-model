@@ -1,205 +1,5 @@
 [
  {
-  "slug": "mar-esp",
-  "team": "Morocco",
-  "headline": "The tightest block in the set: deep, short and very hard to play through the middle, but it gave Spain the flanks.",
-  "good": [
-   "Most compact team of the 24: 18 m from front to back and 51 m² of open holes inside the block on average, with only about one Spain player free inside it at a time.",
-   "Held its shape for 120 minutes. Block length was 19 m in the first 15 minutes and 18 m in the last 15 of normal time, and the back line barely moved (29 to 31 m).",
-   "Kept Spain to 14 shots on 28% possession, and only 2 came within 15 s of Morocco losing the ball."
-  ],
-  "exploit": [
-   "Go wide. Spain played through Morocco's lines 103 times, and 64 of those passes arrived on a touchline against 13 through the centre. The block squeezes the middle and gives up the wings.",
-   "Get in behind: 48 of those 103 line-breaking passes were received behind the back line. Pedri (23), Jordi Alba (16) and Busquets (12) found the way through most often.",
-   "Don't fear the counter-press. Only 28% of Morocco's presses won the ball within 5 s, and just 16% of its ball wins came in Spain's half, so it rarely hurts you high up."
-  ],
-  "views": [
-   "Where the gaps open",
-   "Line-breaking passes",
-   "Pressing"
-  ]
- },
- {
-  "slug": "mar-esp",
-  "team": "Spain",
-  "headline": "A high line and a fierce counter-press kept Morocco to 6 shots, but the block behind the press was loose.",
-  "good": [
-   "Counter-pressed relentlessly: 170 of its 252 presses came within 3 s of losing the ball, 62 of them winning it straight back. Only Germany pressed more often per minute of defending.",
-   "Faced just 6 shots, the fewest of the 24 teams, with a back line pushed 48 m from its own goal (second highest).",
-   "Lost the ball in its own half only 22 times all game, so Morocco rarely got to counter from close range."
-  ],
-  "exploit": [
-   "Survive the first 3 seconds after winning it. Once the counter-press is beaten there is room: 162 m² of holes inside the block (18th of 24) and about 1.6 Morocco players free inside it.",
-   "Play in behind the high line. 33 of the 58 passes through Spain's lines were received behind the back line, often from Hakimi (10) or long from Bono (7).",
-   "Attack the wings. Most line-breaks arrived on the flanks (19 on Spain's left, 16 on its right, 8 through the centre)."
-  ],
-  "views": [
-   "Pressing",
-   "Line-breaking passes",
-   "Where the gaps open"
-  ]
- },
- {
-  "slug": "fra-mar",
-  "team": "France",
-  "headline": "Went ahead early, sat in a compact block, dropped deeper as the game went on and struck on the break.",
-  "good": [
-   "Third most compact team of the 24: 98 m² of holes and a 26 m block, with about 1.3 Morocco players free inside it.",
-   "Lethal from ball wins: 9 shots within 15 s of winning it (joint third most of the 24), and 37 of 108 ball wins were in or into the final third inside 10 s.",
-   "No shots conceded from restarts all game."
-  ],
-  "exploit": [
-   "Attack France's left side: 30 of the 67 passes through its lines were received on its left wing, Hakimi's flank. Ounahi (15) and Hakimi (14) broke the lines most often.",
-   "Be patient. 8 of the 15 shots France faced came from sustained possession rather than quick breaks.",
-   "Push it back: France's back line fell from 41 m in the first 15 minutes to 29 m in the last 15, so late on it defends on the edge of its own box."
-  ],
-  "views": [
-   "Line-breaking passes",
-   "Shape over time",
-   "Chances conceded"
-  ]
- },
- {
-  "slug": "fra-mar",
-  "team": "Morocco",
-  "headline": "Took the ball, pushed up and counter-pressed well, but paid for losing it: 10 of the 16 shots it faced came after turnovers.",
-  "good": [
-   "Won the ball high: 41% of its ball wins came in France's half, and 39% of its presses there won it back within 5 s.",
-   "Counter-pressed hard: 117 of 220 presses came straight after losing the ball, and 53 won it back. Ounahi and Ziyech led the way.",
-   "Had 59% of the ball against the eventual finalists."
-  ],
-  "exploit": [
-   "Win it and break. 10 of the 16 shots Morocco faced came after it lost the ball, and 9 of the 16 came within 10 s of the attack starting.",
-   "Find the pocket 16-24 m ahead of Morocco's back line: that's where France's players most often stood free inside the block. It was looser here than against Spain (125 m² of holes against 51).",
-   "Wait for it to stretch: chasing the game, Morocco's block grew from 25 m to 30 m long in the last 15 minutes and its back line rose from 34 to 40 m."
-  ],
-  "views": [
-   "Chances conceded",
-   "Where the gaps open",
-   "Shape over time"
-  ]
- },
- {
-  "slug": "ger-jpn",
-  "team": "Germany",
-  "headline": "The most aggressive press and highest line of the 24, and one of the loosest blocks behind it.",
-  "good": [
-   "Best press in the set: 42% of presses won the ball within 5 s (46% in Japan's half). Havertz (38 presses) and Musiala (32, winning it back 53% of the time) led it.",
-   "Won 53% of its ball wins in Japan's half, the highest share of the 24, with a back line 48 m from its own goal (also the highest).",
-   "Kept Japan to 13 shots on 70% possession."
-  ],
-  "exploit": [
-   "Beat the first press and the block is wide open: about 1.9 Japan players free inside it (the most of the 24), 169 m² of holes and a 32 m block (19th and 18th of 24).",
-   "Run in behind. Germany's back line didn't drop at all without the ball, and half of the 44 passes through its lines (22) were received behind it.",
-   "Attack Germany's left: 17 of those 44 arrived there, most often from Sakai (9). Late on, chasing the game, its back line went past 60 m."
-  ],
-  "views": [
-   "Where the gaps open",
-   "Pressing",
-   "Shape over time"
-  ]
- },
- {
-  "slug": "ger-jpn",
-  "team": "Japan",
-  "headline": "A deep, compact block that bent a long way (27 shots faced) but didn't break, then turned the game in transition.",
-  "good": [
-   "Second most compact team of the 24: 80 m² of holes, a 25 m block and about 1.3 Germany players free inside it.",
-   "Dropped deeper and tighter once ahead: its back line went from 34 m to 26 m and the block from 25 m to 22 m long in the last 15 minutes.",
-   "Stayed patient: 111 ball wins, 30 of them in or into the final third inside 10 s."
-  ],
-  "exploit": [
-   "Press its build-up. Japan faced 27 shots, the most of the 24, and 13 came after it lost the ball. 6 of those were won by Germany in Japan's own third.",
-   "Japan's press rarely worked: 26% of presses won the ball within 5 s, the lowest of the 24, and just 1 in 48 against a carry or first touch.",
-   "Switch play to its right side: 26 of 90 line-breaking passes arrived there, with Gündoğan (16), Kimmich (15) and Raum (12) the main sources."
-  ],
-  "views": [
-   "Chances conceded",
-   "Pressing",
-   "Line-breaking passes"
-  ]
- },
- {
-  "slug": "bel-can",
-  "team": "Belgium",
-  "headline": "Passive and deep: rarely won the ball high, relied on sitting in its own half, and was got behind easily.",
-  "good": [
-   "Tightened up late: its block shrank from 33 m to 29 m long and its back line dropped from 32 m to 28 m in the last 15 minutes to protect the lead.",
-   "Held on for the win despite facing 22 shots.",
-   "De Bruyne was its most active presser (39 presses)."
-  ],
-  "exploit": [
-   "Run in behind: 38 of the 50 passes through Belgium's lines were received behind the back line, the highest share of any team. Johnston (12) and Eustaquio (11) found them most.",
-   "Press it without fear of the counter: only 16% of Belgium's ball wins came in Canada's half and it had 21 fast attacks, both the second lowest of the 24.",
-   "Win it in midfield: 10 of the 22 shots Belgium faced came after it lost the ball, 5 of them won by Canada in the middle third."
-  ],
-  "views": [
-   "Line-breaking passes",
-   "Turnovers",
-   "Chances conceded"
-  ]
- },
- {
-  "slug": "bel-can",
-  "team": "Canada",
-  "headline": "Front-foot and brave: a high line, lots of high ball wins and 22 shots, but the block stretched as the game went on.",
-  "good": [
-   "Won the ball high: 49% of its ball wins came in Belgium's half, with 47 fast attacks (third and joint second best of the 24) and a back line 46 m from goal.",
-   "Jonathan David led the press: 44 presses, and half of them won the ball back within 5 s.",
-   "Faced only 10 shots, joint fourth fewest of the 24."
-  ],
-  "exploit": [
-   "Wait for it to stretch: Canada's block grew from 31 m to 35 m long in the last 15 minutes, and it had 161 m² of holes on average (17th of 24).",
-   "Go long from the back. Belgium's line-breaks came through Castagne (9), Alderweireld (7) and De Bruyne (7), often straight over the press.",
-   "Use set pieces: 5 of the 10 shots Canada faced came after a restart."
-  ],
-  "views": [
-   "Shape over time",
-   "Pressing",
-   "Chances conceded"
-  ]
- },
- {
-  "slug": "arg-fra",
-  "team": "Argentina",
-  "headline": "Balanced and ruthless in transition: 12 shots straight from ball wins, more than any team in the set.",
-  "good": [
-   "Counter-pressed very well: 41% of presses won the ball within 5 s (78 wins from 169 counter-presses). Álvarez (71 presses) and Messi (52) led it.",
-   "Deadly from ball wins: 12 shots within 15 s of winning it, the most of the 24.",
-   "Faced only 12 shots over 120 minutes."
-  ],
-  "exploit": [
-   "Press its build-up: 10 of the 12 shots Argentina faced came within 10 s of the attack starting, and 5 came from France winning it high in Argentina's third.",
-   "Attack its right side: 20 of the 58 passes through its lines arrived on its right wing, with Theo Hernández (9) the main source.",
-   "Pin it back: its back line dropped from 37 m to 32 m late in normal time, the spell when France scored twice in two minutes."
-  ],
-  "views": [
-   "Chances conceded",
-   "Line-breaking passes",
-   "Pressing"
-  ]
- },
- {
-  "slug": "arg-fra",
-  "team": "France",
-  "headline": "Carved open for long spells: Argentina played through France's lines 101 times, and 64 of those passes got in behind, more than against any other team.",
-  "good": [
-   "Most fast attacks of the 24: 50 ball wins were in or into the final third inside 10 s.",
-   "Pressed well when it chose to: 40% won the ball within 5 s. Mbappé (57 presses) and Kolo Muani (43) led it.",
-   "Kept its shape across normal time: back line 36 m in the first 15 minutes and 38 m in the last 15, block 30 m to 28 m long."
-  ],
-  "exploit": [
-   "Get in behind: 64 of 101 line-breaking passes were received behind France's back line. Messi (24), Enzo Fernández (14) and Mac Allister (11) played them.",
-   "Win it in midfield and go: France faced 23 shots, 15 after losing the ball, 8 of them won by Argentina in the middle third.",
-   "Find the space between the lines: about 1.7 Argentina players were free inside France's block at any moment (21st of 24), most often 16-24 m ahead of its back line."
-  ],
-  "views": [
-   "Line-breaking passes",
-   "Chances conceded",
-   "Where the gaps open"
-  ]
- },
- {
   "slug": "koe-fcb",
   "team": "Köln",
   "headline": "Stood a high line and pressed a lot, but the press rarely won the ball and the block stretched as the game went on.",
@@ -477,6 +277,206 @@
    "Line-breaking passes",
    "Chances conceded",
    "Turnovers"
+  ]
+ },
+ {
+  "slug": "mar-esp",
+  "team": "Morocco",
+  "headline": "The tightest block in the set: deep, short and very hard to play through the middle, but it gave Spain the flanks.",
+  "good": [
+   "Most compact team of the 24: 18 m from front to back and 51 m² of open holes inside the block on average, with only about one Spain player free inside it at a time.",
+   "Held its shape for 120 minutes. Block length was 19 m in the first 15 minutes and 18 m in the last 15 of normal time, and the back line barely moved (29 to 31 m).",
+   "Kept Spain to 14 shots on 28% possession, and only 2 came within 15 s of Morocco losing the ball."
+  ],
+  "exploit": [
+   "Go wide. Spain played through Morocco's lines 103 times, and 64 of those passes arrived on a touchline against 13 through the centre. The block squeezes the middle and gives up the wings.",
+   "Get in behind: 48 of those 103 line-breaking passes were received behind the back line. Pedri (23), Jordi Alba (16) and Busquets (12) found the way through most often.",
+   "Don't fear the counter-press. Only 28% of Morocco's presses won the ball within 5 s, and just 16% of its ball wins came in Spain's half, so it rarely hurts you high up."
+  ],
+  "views": [
+   "Where the gaps open",
+   "Line-breaking passes",
+   "Pressing"
+  ]
+ },
+ {
+  "slug": "mar-esp",
+  "team": "Spain",
+  "headline": "A high line and a fierce counter-press kept Morocco to 6 shots, but the block behind the press was loose.",
+  "good": [
+   "Counter-pressed relentlessly: 170 of its 252 presses came within 3 s of losing the ball, 62 of them winning it straight back. Only Germany pressed more often per minute of defending.",
+   "Faced just 6 shots, the fewest of the 24 teams, with a back line pushed 48 m from its own goal (second highest).",
+   "Lost the ball in its own half only 22 times all game, so Morocco rarely got to counter from close range."
+  ],
+  "exploit": [
+   "Survive the first 3 seconds after winning it. Once the counter-press is beaten there is room: 162 m² of holes inside the block (18th of 24) and about 1.6 Morocco players free inside it.",
+   "Play in behind the high line. 33 of the 58 passes through Spain's lines were received behind the back line, often from Hakimi (10) or long from Bono (7).",
+   "Attack the wings. Most line-breaks arrived on the flanks (19 on Spain's left, 16 on its right, 8 through the centre)."
+  ],
+  "views": [
+   "Pressing",
+   "Line-breaking passes",
+   "Where the gaps open"
+  ]
+ },
+ {
+  "slug": "fra-mar",
+  "team": "France",
+  "headline": "Went ahead early, sat in a compact block, dropped deeper as the game went on and struck on the break.",
+  "good": [
+   "Third most compact team of the 24: 98 m² of holes and a 26 m block, with about 1.3 Morocco players free inside it.",
+   "Lethal from ball wins: 9 shots within 15 s of winning it (joint third most of the 24), and 37 of 108 ball wins were in or into the final third inside 10 s.",
+   "No shots conceded from restarts all game."
+  ],
+  "exploit": [
+   "Attack France's left side: 30 of the 67 passes through its lines were received on its left wing, Hakimi's flank. Ounahi (15) and Hakimi (14) broke the lines most often.",
+   "Be patient. 8 of the 15 shots France faced came from sustained possession rather than quick breaks.",
+   "Push it back: France's back line fell from 41 m in the first 15 minutes to 29 m in the last 15, so late on it defends on the edge of its own box."
+  ],
+  "views": [
+   "Line-breaking passes",
+   "Shape over time",
+   "Chances conceded"
+  ]
+ },
+ {
+  "slug": "fra-mar",
+  "team": "Morocco",
+  "headline": "Took the ball, pushed up and counter-pressed well, but paid for losing it: 10 of the 16 shots it faced came after turnovers.",
+  "good": [
+   "Won the ball high: 41% of its ball wins came in France's half, and 39% of its presses there won it back within 5 s.",
+   "Counter-pressed hard: 117 of 220 presses came straight after losing the ball, and 53 won it back. Ounahi and Ziyech led the way.",
+   "Had 59% of the ball against the eventual finalists."
+  ],
+  "exploit": [
+   "Win it and break. 10 of the 16 shots Morocco faced came after it lost the ball, and 9 of the 16 came within 10 s of the attack starting.",
+   "Find the pocket 16-24 m ahead of Morocco's back line: that's where France's players most often stood free inside the block. It was looser here than against Spain (125 m² of holes against 51).",
+   "Wait for it to stretch: chasing the game, Morocco's block grew from 25 m to 30 m long in the last 15 minutes and its back line rose from 34 to 40 m."
+  ],
+  "views": [
+   "Chances conceded",
+   "Where the gaps open",
+   "Shape over time"
+  ]
+ },
+ {
+  "slug": "ger-jpn",
+  "team": "Germany",
+  "headline": "The most aggressive press and highest line of the 24, and one of the loosest blocks behind it.",
+  "good": [
+   "Best press in the set: 42% of presses won the ball within 5 s (46% in Japan's half). Havertz (38 presses) and Musiala (32, winning it back 53% of the time) led it.",
+   "Won 53% of its ball wins in Japan's half, the highest share of the 24, with a back line 48 m from its own goal (also the highest).",
+   "Kept Japan to 13 shots on 70% possession."
+  ],
+  "exploit": [
+   "Beat the first press and the block is wide open: about 1.9 Japan players free inside it (the most of the 24), 169 m² of holes and a 32 m block (19th and 18th of 24).",
+   "Run in behind. Germany's back line didn't drop at all without the ball, and half of the 44 passes through its lines (22) were received behind it.",
+   "Attack Germany's left: 17 of those 44 arrived there, most often from Sakai (9). Late on, chasing the game, its back line went past 60 m."
+  ],
+  "views": [
+   "Where the gaps open",
+   "Pressing",
+   "Shape over time"
+  ]
+ },
+ {
+  "slug": "ger-jpn",
+  "team": "Japan",
+  "headline": "A deep, compact block that bent a long way (27 shots faced) but didn't break, then turned the game in transition.",
+  "good": [
+   "Second most compact team of the 24: 80 m² of holes, a 25 m block and about 1.3 Germany players free inside it.",
+   "Dropped deeper and tighter once ahead: its back line went from 34 m to 26 m and the block from 25 m to 22 m long in the last 15 minutes.",
+   "Stayed patient: 111 ball wins, 30 of them in or into the final third inside 10 s."
+  ],
+  "exploit": [
+   "Press its build-up. Japan faced 27 shots, the most of the 24, and 13 came after it lost the ball. 6 of those were won by Germany in Japan's own third.",
+   "Japan's press rarely worked: 26% of presses won the ball within 5 s, the lowest of the 24, and just 1 in 48 against a carry or first touch.",
+   "Switch play to its right side: 26 of 90 line-breaking passes arrived there, with Gündoğan (16), Kimmich (15) and Raum (12) the main sources."
+  ],
+  "views": [
+   "Chances conceded",
+   "Pressing",
+   "Line-breaking passes"
+  ]
+ },
+ {
+  "slug": "bel-can",
+  "team": "Belgium",
+  "headline": "Passive and deep: rarely won the ball high, relied on sitting in its own half, and was got behind easily.",
+  "good": [
+   "Tightened up late: its block shrank from 33 m to 29 m long and its back line dropped from 32 m to 28 m in the last 15 minutes to protect the lead.",
+   "Held on for the win despite facing 22 shots.",
+   "De Bruyne was its most active presser (39 presses)."
+  ],
+  "exploit": [
+   "Run in behind: 38 of the 50 passes through Belgium's lines were received behind the back line, the highest share of any team. Johnston (12) and Eustaquio (11) found them most.",
+   "Press it without fear of the counter: only 16% of Belgium's ball wins came in Canada's half and it had 21 fast attacks, both the second lowest of the 24.",
+   "Win it in midfield: 10 of the 22 shots Belgium faced came after it lost the ball, 5 of them won by Canada in the middle third."
+  ],
+  "views": [
+   "Line-breaking passes",
+   "Turnovers",
+   "Chances conceded"
+  ]
+ },
+ {
+  "slug": "bel-can",
+  "team": "Canada",
+  "headline": "Front-foot and brave: a high line, lots of high ball wins and 22 shots, but the block stretched as the game went on.",
+  "good": [
+   "Won the ball high: 49% of its ball wins came in Belgium's half, with 47 fast attacks (third and joint second best of the 24) and a back line 46 m from goal.",
+   "Jonathan David led the press: 44 presses, and half of them won the ball back within 5 s.",
+   "Faced only 10 shots, joint fourth fewest of the 24."
+  ],
+  "exploit": [
+   "Wait for it to stretch: Canada's block grew from 31 m to 35 m long in the last 15 minutes, and it had 161 m² of holes on average (17th of 24).",
+   "Go long from the back. Belgium's line-breaks came through Castagne (9), Alderweireld (7) and De Bruyne (7), often straight over the press.",
+   "Use set pieces: 5 of the 10 shots Canada faced came after a restart."
+  ],
+  "views": [
+   "Shape over time",
+   "Pressing",
+   "Chances conceded"
+  ]
+ },
+ {
+  "slug": "arg-fra",
+  "team": "Argentina",
+  "headline": "Balanced and ruthless in transition: 12 shots straight from ball wins, more than any team in the set.",
+  "good": [
+   "Counter-pressed very well: 41% of presses won the ball within 5 s (78 wins from 169 counter-presses). Álvarez (71 presses) and Messi (52) led it.",
+   "Deadly from ball wins: 12 shots within 15 s of winning it, the most of the 24.",
+   "Faced only 12 shots over 120 minutes."
+  ],
+  "exploit": [
+   "Press its build-up: 10 of the 12 shots Argentina faced came within 10 s of the attack starting, and 5 came from France winning it high in Argentina's third.",
+   "Attack its right side: 20 of the 58 passes through its lines arrived on its right wing, with Theo Hernández (9) the main source.",
+   "Pin it back: its back line dropped from 37 m to 32 m late in normal time, the spell when France scored twice in two minutes."
+  ],
+  "views": [
+   "Chances conceded",
+   "Line-breaking passes",
+   "Pressing"
+  ]
+ },
+ {
+  "slug": "arg-fra",
+  "team": "France",
+  "headline": "Carved open for long spells: Argentina played through France's lines 101 times, and 64 of those passes got in behind, more than against any other team.",
+  "good": [
+   "Most fast attacks of the 24: 50 ball wins were in or into the final third inside 10 s.",
+   "Pressed well when it chose to: 40% won the ball within 5 s. Mbappé (57 presses) and Kolo Muani (43) led it.",
+   "Kept its shape across normal time: back line 36 m in the first 15 minutes and 38 m in the last 15, block 30 m to 28 m long."
+  ],
+  "exploit": [
+   "Get in behind: 64 of 101 line-breaking passes were received behind France's back line. Messi (24), Enzo Fernández (14) and Mac Allister (11) played them.",
+   "Win it in midfield and go: France faced 23 shots, 15 after losing the ball, 8 of them won by Argentina in the middle third.",
+   "Find the space between the lines: about 1.7 Argentina players were free inside France's block at any moment (21st of 24), most often 16-24 m ahead of its back line."
+  ],
+  "views": [
+   "Line-breaking passes",
+   "Chances conceded",
+   "Where the gaps open"
   ]
  }
 ]

@@ -122,15 +122,54 @@ def competition(m):
     return m['competition'].split(' · ')[0].replace('FIFA ', '')
 
 
-def grouped(ms, render, wrap_cls):
-    """Matches in registry order, one labelled group per competition."""
-    groups = []
+def coverage_range(ms, provider):
+    """Lowest and highest per-match average share of frames with a tracked ball, for one data provider."""
+    avgs = [sum(c['coverage'] for c in m['chapters']) / len(m['chapters']) for m in ms if m['provider'] == provider]
+    return round(min(avgs)), round(max(avgs))
+
+
+def data_note(ms, provider):
+    """The tracking-quality note shown above each data provider's matches."""
+    if provider == 'dfl':
+        return ('Best tracking', 'German league · DFL optical tracking',
+                'Our best data: the league’s own camera system tracks every player and the ball 25 times a second, '
+                'and the ball is tracked in every frame of every chapter. Start here.')
+    lo, hi = coverage_range(ms, provider)
+    return ('Ball tracking gaps', 'World Cup 2022 · broadcast tracking',
+            f'These games come from tracking built off the TV broadcast, and the ball is often lost: it is tracked in only '
+            f'{lo}–{hi}% of frames on average, and in some chapters under half. While it is missing, the ball, the pressure ring '
+            f'and the danger heatmap can’t be drawn, though the players keep moving. Each chapter lists its ball coverage.')
+
+
+def provider_head(ms, provider):
+    tag, title, text = data_note(ms, provider)
+    cls = 'good' if provider == 'dfl' else 'warn'
+    return (f'<div class="datanote {cls}"><div class="dn-top"><span class="dn-tag">{e(tag)}</span><h3>{e(title)}</h3></div>'
+            f'<p>{e(text)}</p></div>')
+
+
+def grouped(ms, render, wrap_cls, notes=True):
+    """Matches in registry order: one section per data provider (with its tracking note), one labelled group
+    per competition inside it."""
+    out, prov, comp = [], None, None
     for m in ms:
-        if not groups or groups[-1][0] != competition(m):
-            groups.append((competition(m), []))
-        groups[-1][1].append(m)
-    return ''.join(f'<div class="mgroup"><h3 class="glabel">{e(name)} <span>{len(g)} match{"es" if len(g) > 1 else ""}</span></h3>'
-                   f'<div class="{wrap_cls}">{"".join(render(m) for m in g)}</div></div>' for name, g in groups)
+        if m['provider'] != prov:
+            if comp is not None:
+                out.append('</div></div>')
+                comp = None
+            if prov is not None:
+                out.append('</div>')
+            prov = m['provider']
+            out.append(f'<div class="psection {prov}">' + (provider_head(ms, prov) if notes else ''))
+        if competition(m) != comp:
+            if comp is not None:
+                out.append('</div></div>')
+            comp = competition(m)
+            n = sum(1 for x in ms if competition(x) == comp)
+            out.append(f'<div class="mgroup"><h3 class="glabel">{e(comp)} <span>{n} match{"es" if n > 1 else ""}</span></h3><div class="{wrap_cls}">')
+        out.append(render(m))
+    out.append('</div></div></div>')
+    return ''.join(out)
 
 
 def match_card(m):
@@ -189,7 +228,7 @@ def home(ms, kinds, reports, clip, thumbs):
 <div class="pitch-caption"><span><b>{e(cm['homeTeam'])} vs {e(cm['awayTeam'])}</b> · {e(clip.get('caption', ''))}</span><a href="matches/{clip['folder']}/{clip.get('chapter', 'chapter-01.html')}" class="link">Watch this chapter →</a></div></div>
 </div></header>
 <div class="strip"><div class="wrap">
-<div class="stat"><div class="n">{len(ms)}</div><div class="l">full matches, World Cup and German league</div></div>
+<div class="stat"><div class="n">{len(ms)}</div><div class="l">full matches, German league and World Cup</div></div>
 <div class="stat"><div class="n">{n_ch}</div><div class="l">five-minute chapters of 2-D animation</div></div>
 <div class="stat"><div class="n">{len(kinds)}</div><div class="l">match-level analysis views</div></div>
 <div class="stat"><div class="n">{len(reports)}</div><div class="l">team scouting reports</div></div>
@@ -229,8 +268,11 @@ def jump(m):
 
 
 def matches_page(ms):
-    blocks = []
+    blocks, prov = [], None
     for m in ms:
+        if m['provider'] != prov:
+            prov = m['provider']
+            blocks.append(provider_head(ms, prov))
         items = ''.join(f'<a class="chitem" href="matches/{m["folder"]}/chapter-{c["idx"]:02d}.html"><b>Chapter {c["idx"]}</b>'
                         f'<span>{e(c["period"])} · {e(c["clock"])} · ball {c["coverage"]}%</span></a>' for c in m['chapters'])
         note = f' · {e(m["note"])}' if m['note'] else ''
@@ -240,7 +282,7 @@ def matches_page(ms):
     body = (f'<header class="page-head"><div class="wrap"><div class="eyebrow">Watch the match</div><h1>Matches</h1>'
             f'<p>Each match is split into chapters of about five minutes, aligned to the period breaks. Every chapter links to the next, so you can watch straight through. '
             f'The ball percentage is the share of a chapter’s frames with a tracked ball.</p></div></header>'
-            f'<section class="block" style="padding-top:28px"><div class="wrap"><nav class="jumpnav" aria-label="Jump to a match">{grouped(ms, jump, "jumps")}</nav>'
+            f'<section class="block" style="padding-top:28px"><div class="wrap"><nav class="jumpnav" aria-label="Jump to a match">{grouped(ms, jump, "jumps", notes=False)}</nav>'
             f'{"".join(blocks)}</div></section>')
     return page('Matches · Defensive Structure Model', 'Matches', body)
 
@@ -300,8 +342,9 @@ def broadcast_page():
     return page('Broadcast · Defensive Structure Model', 'Broadcast', body)
 
 
-def method_page():
+def method_page(ms):
     cards = ''.join(f'<a class="mcard" href="behind-the-model/{href}"><div class="num">Morocco vs Spain</div><h3>{e(t)}</h3><p>{e(p)}</p></a>' for href, t, p in COMPANIONS)
+    pff_lo, pff_hi = coverage_range(ms, 'pff')
     body = f'''<header class="page-head"><div class="wrap"><div class="eyebrow">Behind the model</div><h1>How it works</h1>
 <p>Everything runs on tracking data: the position of every player and the ball, about 30 times a second, for the whole match.</p></div></header>
 <section class="block" style="padding-top:20px"><div class="wrap"><div class="prose">
@@ -311,6 +354,8 @@ def method_page():
 <p>Each defender near the ball gets a time to intercept the carrier, from his position, current velocity, reaction time and his own top speed. The times combine into one 0–100% pressure score. Against PFF’s analyst-tagged pressure events, the score averages 0.74 on tagged moments and 0.54 elsewhere, and a per-match threshold splits each phase into <b>engaged</b> (someone is really closing the ball down) and <b>passive</b> shape-holding. A second tag, <b>tight</b> or <b>loose</b>, reads how closely the five players nearest the ball are grouped.</p>
 <h2 id="space">Space to exploit</h2>
 <p>The danger heatmap is Dangerous Accessible Space: a physics-based pass simulation combined with a danger model, showing where the team on the ball could reach dangerous space with one realistic pass, right now. The match-level views add where the gaps open inside the block, which passes break its lines, and how each chance conceded began.</p>
+<h2 id="data">The data</h2>
+<p>Two sources, and they are not equally good. The <b>German league games</b> (Bundesliga and 2. Bundesliga, 2022/23) use the DFL’s open data: optical tracking from the league’s own camera system, every player and the ball 25 times a second, with the ball tracked in every frame. They are the best place to watch the model work, so they come first. The <b>World Cup games</b> use PFF FC’s tracking, which is built from the TV broadcast: players are tracked throughout, but the ball is lost for long stretches (it is tracked in {pff_lo}–{pff_hi}% of frames on average), so in those stretches the ball, the pressure ring and the danger heatmap can’t be drawn. Every chapter lists its ball coverage.</p>
 <h2>Checks</h2>
 <p>The phases were checked against PPDA, a pressing statistic that uses only events: in organised defence it rises from high press to mid block to low block for both teams, as pressing theory predicts. The broadcast-footage prototype agrees with PFF’s tracking to a median 0.83 m per player. The full methodology, the literature behind it and every check are in the <a href="{GITHUB}">GitHub repository</a>.</p>
 </div></div></section>
@@ -342,18 +387,32 @@ def chapter_data(m, idx, src_dir):
 
 def match_tabs_js(ms):
     """assets/match-tabs.js: the match strip on every chapter page, written from one list."""
-    data = [dict(f=m['folder'], h=m['hcode'], a=m['acode'], hc=m['hc'], ac=m['ac'], s=score(m)) for m in ms]
+    data = [dict(f=m['folder'], h=m['hcode'], a=m['acode'], hc=m['hc'], ac=m['ac'], s=score(m), p=m['provider'],
+                 c=[c['coverage'] for c in m['chapters']] if m['provider'] != 'dfl' else None) for m in ms]
     return ('/* Match strip for the chapter pages, generated by pipeline/build_web.py. */\n(function () {\n'
             f'  var M = {json.dumps(data, ensure_ascii=False)};\n'
             "  var box = document.getElementById('matchTabs'); if (!box) return;\n"
             "  var cur = box.getAttribute('data-current');\n"
-            "  box.innerHTML = M.map(function (m) {\n"
-            "    return '<a class=\"mtab\" href=\"../' + m.f + '/chapter-01.html\"' + (m.f === cur ? ' aria-current=\"page\"' : '') + '>' +\n"
+            "  var LAB = { dfl: 'German league', pff: 'World Cup' };\n"
+            "  box.innerHTML = M.map(function (m, i) {\n"
+            "    var sep = (i === 0 || M[i - 1].p !== m.p) ? '<span class=\"msep\">' + (LAB[m.p] || '') + '</span>' : '';\n"
+            "    return sep + '<a class=\"mtab\" href=\"../' + m.f + '/chapter-01.html\"' + (m.f === cur ? ' aria-current=\"page\"' : '') + '>' +\n"
             "      '<span class=\"dot\" style=\"background:' + m.hc + '\"></span>' + m.h + ' <span class=\"sc\">' + m.s + '</span> ' + m.a +\n"
             "      '<span class=\"dot\" style=\"background:' + m.ac + '\"></span></a>';\n"
             "  }).join('');\n"
             "  var c = box.querySelector('[aria-current]');\n"
             "  if (c && box.scrollWidth > box.clientWidth) box.scrollLeft = c.offsetLeft - box.offsetLeft - 16;\n"
+            "  // World Cup chapters: say plainly that the ball tracking has gaps, with this chapter's coverage\n"
+            "  var me = M.filter(function (m) { return m.f === cur; })[0];\n"
+            "  var num = +((window.location.pathname.match(/chapter-(\\d+)\\.html/) || [])[1] || 0);\n"
+            "  if (me && me.c) {\n"
+            "    var cov = num && me.c[num - 1] != null ? me.c[num - 1] : null;\n"
+            "    var bar = document.createElement('div'); bar.className = 'trackbar';\n"
+            "    bar.innerHTML = '<div class=\"wrap\"><span class=\"dn-tag\">Ball tracking gaps</span><span>World Cup tracking comes from the TV broadcast, so the ball is lost at times' +\n"
+            "      (cov != null ? ': it is tracked in <b>' + cov + '%</b> of this chapter' : '') + '. While it is missing, the ball, pressure ring and heatmap can’t be drawn. ' +\n"
+            "      'For the cleanest tracking, watch the <a href=\"../' + M[0].f + '/chapter-01.html\">German league games</a>.</span></div>';\n"
+            "    box.parentNode.parentNode.insertBefore(bar, box.parentNode.nextSibling);\n"
+            "  }\n"
             "})();\n")
 
 
@@ -452,6 +511,11 @@ def main():
     kinds = load_kinds(a.analysis)
     board = json.load(open(os.path.join(a.analysis, 'compare.json'), encoding='utf-8'))
     reports = json.load(open(os.path.join(a.analysis, 'reports.json'), encoding='utf-8'))
+    # board rows and reports follow the registry order (German league first), home team before away
+    rank = {m['slug']: (i, m['home']) for i, m in enumerate(ms)}
+    key = lambda r: (rank[r['slug']][0], r['team'] != rank[r['slug']][1])
+    board.sort(key=key)
+    reports.sort(key=key)
     order = [m['slug'] for m in ms]
     for k in kinds:
         k['data'].sort(key=lambda d: order.index(d['slug']))
@@ -468,7 +532,7 @@ def main():
     clip = json.load(open(root('templates', 'site', 'hero-clip.json'), encoding='utf-8'))
     pages = {'index.html': home(ms, kinds, reports, clip, thumbs), 'matches.html': matches_page(ms),
              'analysis.html': analysis_page(ms, kinds), 'reports.html': reports_page(reports, kinds, ms),
-             'compare.html': compare_page(board), 'broadcast.html': broadcast_page(), 'method.html': method_page()}
+             'compare.html': compare_page(board), 'broadcast.html': broadcast_page(), 'method.html': method_page(ms)}
     for name, text in pages.items():
         open(os.path.join(a.out, name), 'w', encoding='utf-8').write(text)
     if a.extra:

@@ -1,241 +1,6 @@
 {
- "_about": "One entry per match, in the order the hub shows them. Every per-match fact the pipeline needs lives here. raw_dir is relative to the data folder's parent (the project root by default; see pipeline/paths.py). chapter_urls files live in the output folder. See docs/ADDING-A-MATCH.md.",
+ "_about": "One entry per match, in the order the site shows them (DFL matches first: they have the better tracking). Every per-match fact the pipeline needs lives here. raw_dir is relative to the data folder's parent (the project root by default; see pipeline/paths.py). chapter_urls files live in the output folder. See docs/ADDING-A-MATCH.md.",
  "matches": [
-  {
-   "id": "10508",
-   "slug": "mar-esp",
-   "hub_id": "mar-esp-2022-r16",
-   "raw_dir": "data/10508",
-   "provider": "pff",
-   "title": "Morocco vs Spain",
-   "sub": "World Cup round of 16 · 0-0 after extra time, Morocco won 3-0 on penalties",
-   "competition": "FIFA World Cup 2022 · Round of 16 · Education City Stadium",
-   "label": "Morocco vs Spain (Round of 16)",
-   "home": {
-    "id": 374,
-    "name": "Morocco",
-    "code": "MAR",
-    "color": "#e8323a",
-    "color_dim": "#7a2226"
-   },
-   "away": {
-    "id": 52,
-    "name": "Spain",
-    "code": "ESP",
-    "color": "#4fd8d0",
-    "color_dim": "#235e59"
-   },
-   "goals": [],
-   "head_template": "templates/artifact_head.html",
-   "heatmap_vmax_log": 5.1933,
-   "press_threshold_override": 0.66,
-   "quirks": {},
-   "hub_note": "Classifies each team's out-of-possession phase (High Press / Mid Block / Low Block / Transition) from back-line depth and inter-line compactness only.",
-   "chapter_urls": "final_urls.json",
-   "site_folder": "morocco-spain"
-  },
-  {
-   "id": "10515",
-   "slug": "fra-mar",
-   "hub_id": "fra-mar-2022-sf",
-   "raw_dir": "data/10515",
-   "provider": "pff",
-   "title": "France vs Morocco",
-   "sub": "World Cup semifinal · France won 2-0",
-   "competition": "FIFA World Cup 2022 · Semifinal · Al Bayt Stadium",
-   "label": "Morocco vs France (Semifinal)",
-   "home": {
-    "id": 363,
-    "name": "France",
-    "code": "FRA",
-    "color": "#2f6fe0",
-    "color_dim": "#1f3a66"
-   },
-   "away": {
-    "id": 374,
-    "name": "Morocco",
-    "code": "MAR",
-    "color": "#e8323a",
-    "color_dim": "#7a2226"
-   },
-   "goals": [
-    [
-     "France",
-     5,
-     ""
-    ],
-    [
-     "France",
-     79,
-     ""
-    ]
-   ],
-   "head_template": "templates/artifact_head_10515.html",
-   "heatmap_vmax_log": 5.3972,
-   "quirks": {},
-   "hub_note": "Same classification logic as the Morocco vs Spain baseline: back-line depth + inter-line compactness only. This match's raw tracking data has no per-player speed field (unlike 10508), so the pressure-on-ball-carrier score falls back to a fixed max-speed assumption per player instead of an empirically-derived one -- see the methodology doc.",
-   "chapter_urls": "chapter_urls_10515.json",
-   "site_folder": "france-morocco"
-  },
-  {
-   "id": "3821",
-   "slug": "ger-jpn",
-   "hub_id": "ger-jpn-2022-grp",
-   "raw_dir": "data/3821",
-   "provider": "pff",
-   "title": "Germany vs Japan",
-   "sub": "World Cup group stage · Japan won 2-1",
-   "competition": "FIFA World Cup 2022 · Group Stage · Khalifa International Stadium",
-   "label": "Japan vs Germany (Group Stage)",
-   "home": {
-    "id": 368,
-    "name": "Germany",
-    "code": "GER",
-    "color": "#f2c14e",
-    "color_dim": "#7d6320"
-   },
-   "away": {
-    "id": 57,
-    "name": "Japan",
-    "code": "JPN",
-    "color": "#3399ff",
-    "color_dim": "#1f4d80"
-   },
-   "goals": [
-    [
-     "Germany",
-     33,
-     "pen"
-    ],
-    [
-     "Japan",
-     75,
-     ""
-    ],
-    [
-     "Japan",
-     83,
-     ""
-    ]
-   ],
-   "head_template": "templates/artifact_head_3821.html",
-   "heatmap_vmax_log": 5.6386,
-   "quirks": {},
-   "hub_note": "Same classification logic as the other two matches: back-line depth + inter-line compactness only. Like 10515, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed (from smoothed-position deltas) rather than a flat assumption -- see the methodology doc. Japan came back from 0-1 down to win 2-1.",
-   "chapter_urls": "chapter_urls_3821.json",
-   "site_folder": "germany-japan"
-  },
-  {
-   "id": "3823",
-   "slug": "bel-can",
-   "hub_id": "bel-can-2022-grp",
-   "raw_dir": "data/3823",
-   "provider": "pff",
-   "title": "Belgium vs Canada",
-   "sub": "World Cup group stage · Belgium won 1-0",
-   "competition": "FIFA World Cup 2022 · Group Stage · Ahmad Bin Ali Stadium",
-   "label": "Belgium vs Canada (Group Stage)",
-   "home": {
-    "id": 362,
-    "name": "Belgium",
-    "code": "BEL",
-    "color": "#e33b4d",
-    "color_dim": "#6b1620"
-   },
-   "away": {
-    "id": 380,
-    "name": "Canada",
-    "code": "CAN",
-    "color": "#7c9fff",
-    "color_dim": "#2a3866"
-   },
-   "goals": [
-    [
-     "Belgium",
-     44,
-     ""
-    ]
-   ],
-   "head_template": "templates/artifact_head_3823.html",
-   "heatmap_vmax_log": 5.1722,
-   "quirks": {},
-   "hub_note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Like Germany vs Japan, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed rather than a flat assumption -- see the methodology doc. Belgium sat deep to protect an early goal; Canada dominated territorially and missed a penalty, and lost 1-0.",
-   "chapter_urls": "chapter_urls_3823.json",
-   "site_folder": "belgium-canada"
-  },
-  {
-   "id": "10517",
-   "slug": "arg-fra",
-   "hub_id": "arg-fra-2022-final",
-   "raw_dir": "data/10517",
-   "provider": "pff",
-   "title": "Argentina vs France",
-   "sub": "World Cup final · 3-3 after extra time, Argentina won 4-2 on penalties",
-   "competition": "FIFA World Cup 2022 · Final · Lusail Stadium",
-   "label": "Argentina vs France (Final)",
-   "home": {
-    "id": 364,
-    "name": "Argentina",
-    "code": "ARG",
-    "color": "#5fb8ea",
-    "color_dim": "#1d3f52"
-   },
-   "away": {
-    "id": 363,
-    "name": "France",
-    "code": "FRA",
-    "color": "#e63946",
-    "color_dim": "#712024"
-   },
-   "goals": [
-    [
-     "Argentina",
-     23,
-     "pen"
-    ],
-    [
-     "Argentina",
-     36,
-     ""
-    ],
-    [
-     "France",
-     80,
-     "pen"
-    ],
-    [
-     "France",
-     81,
-     ""
-    ],
-    [
-     "Argentina",
-     108,
-     ""
-    ],
-    [
-     "France",
-     118,
-     "pen"
-    ]
-   ],
-   "head_template": "templates/artifact_head_10517.html",
-   "heatmap_vmax_log": 6.2112,
-   "quirks": {
-    "keeper_swap": {
-     "periods": [
-      3,
-      4
-     ],
-     "home": "23",
-     "away": "1",
-     "why": "tracking labels the two keepers the wrong way round in extra time (checked against shots and Mbappe's 118' penalty)"
-    }
-   },
-   "hub_note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Unlike matches 2-4, this match's raw tracking DOES carry a per-player speed field (like the Morocco vs Spain baseline), so the pressure-on-ball-carrier score uses each player's own real tracked max speed -- see the methodology doc. One of the wildest finals in World Cup history: Argentina led 2-0, France drew level 2-2 in a two-minute Mbappe burst late in regulation, Argentina led again in extra time, Mbappe completed his hat-trick to make it 3-3, and Argentina won 4-2 on penalties.",
-   "chapter_urls": "chapter_urls_10517.json",
-   "site_folder": "argentina-france"
-  },
   {
    "id": "182265",
    "slug": "koe-fcb",
@@ -596,6 +361,241 @@
    "hub_note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
    "chapter_urls": "chapter_urls_182421.json",
    "site_folder": "dusseldorf-kaiserslautern"
+  },
+  {
+   "id": "10508",
+   "slug": "mar-esp",
+   "hub_id": "mar-esp-2022-r16",
+   "raw_dir": "data/10508",
+   "provider": "pff",
+   "title": "Morocco vs Spain",
+   "sub": "World Cup round of 16 · 0-0 after extra time, Morocco won 3-0 on penalties",
+   "competition": "FIFA World Cup 2022 · Round of 16 · Education City Stadium",
+   "label": "Morocco vs Spain (Round of 16)",
+   "home": {
+    "id": 374,
+    "name": "Morocco",
+    "code": "MAR",
+    "color": "#e8323a",
+    "color_dim": "#7a2226"
+   },
+   "away": {
+    "id": 52,
+    "name": "Spain",
+    "code": "ESP",
+    "color": "#4fd8d0",
+    "color_dim": "#235e59"
+   },
+   "goals": [],
+   "head_template": "templates/artifact_head.html",
+   "heatmap_vmax_log": 5.1933,
+   "press_threshold_override": 0.66,
+   "quirks": {},
+   "hub_note": "Classifies each team's out-of-possession phase (High Press / Mid Block / Low Block / Transition) from back-line depth and inter-line compactness only.",
+   "chapter_urls": "final_urls.json",
+   "site_folder": "morocco-spain"
+  },
+  {
+   "id": "10515",
+   "slug": "fra-mar",
+   "hub_id": "fra-mar-2022-sf",
+   "raw_dir": "data/10515",
+   "provider": "pff",
+   "title": "France vs Morocco",
+   "sub": "World Cup semifinal · France won 2-0",
+   "competition": "FIFA World Cup 2022 · Semifinal · Al Bayt Stadium",
+   "label": "Morocco vs France (Semifinal)",
+   "home": {
+    "id": 363,
+    "name": "France",
+    "code": "FRA",
+    "color": "#2f6fe0",
+    "color_dim": "#1f3a66"
+   },
+   "away": {
+    "id": 374,
+    "name": "Morocco",
+    "code": "MAR",
+    "color": "#e8323a",
+    "color_dim": "#7a2226"
+   },
+   "goals": [
+    [
+     "France",
+     5,
+     ""
+    ],
+    [
+     "France",
+     79,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_10515.html",
+   "heatmap_vmax_log": 5.3972,
+   "quirks": {},
+   "hub_note": "Same classification logic as the Morocco vs Spain baseline: back-line depth + inter-line compactness only. This match's raw tracking data has no per-player speed field (unlike 10508), so the pressure-on-ball-carrier score falls back to a fixed max-speed assumption per player instead of an empirically-derived one -- see the methodology doc.",
+   "chapter_urls": "chapter_urls_10515.json",
+   "site_folder": "france-morocco"
+  },
+  {
+   "id": "3821",
+   "slug": "ger-jpn",
+   "hub_id": "ger-jpn-2022-grp",
+   "raw_dir": "data/3821",
+   "provider": "pff",
+   "title": "Germany vs Japan",
+   "sub": "World Cup group stage · Japan won 2-1",
+   "competition": "FIFA World Cup 2022 · Group Stage · Khalifa International Stadium",
+   "label": "Japan vs Germany (Group Stage)",
+   "home": {
+    "id": 368,
+    "name": "Germany",
+    "code": "GER",
+    "color": "#f2c14e",
+    "color_dim": "#7d6320"
+   },
+   "away": {
+    "id": 57,
+    "name": "Japan",
+    "code": "JPN",
+    "color": "#3399ff",
+    "color_dim": "#1f4d80"
+   },
+   "goals": [
+    [
+     "Germany",
+     33,
+     "pen"
+    ],
+    [
+     "Japan",
+     75,
+     ""
+    ],
+    [
+     "Japan",
+     83,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_3821.html",
+   "heatmap_vmax_log": 5.6386,
+   "quirks": {},
+   "hub_note": "Same classification logic as the other two matches: back-line depth + inter-line compactness only. Like 10515, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed (from smoothed-position deltas) rather than a flat assumption -- see the methodology doc. Japan came back from 0-1 down to win 2-1.",
+   "chapter_urls": "chapter_urls_3821.json",
+   "site_folder": "germany-japan"
+  },
+  {
+   "id": "3823",
+   "slug": "bel-can",
+   "hub_id": "bel-can-2022-grp",
+   "raw_dir": "data/3823",
+   "provider": "pff",
+   "title": "Belgium vs Canada",
+   "sub": "World Cup group stage · Belgium won 1-0",
+   "competition": "FIFA World Cup 2022 · Group Stage · Ahmad Bin Ali Stadium",
+   "label": "Belgium vs Canada (Group Stage)",
+   "home": {
+    "id": 362,
+    "name": "Belgium",
+    "code": "BEL",
+    "color": "#e33b4d",
+    "color_dim": "#6b1620"
+   },
+   "away": {
+    "id": 380,
+    "name": "Canada",
+    "code": "CAN",
+    "color": "#7c9fff",
+    "color_dim": "#2a3866"
+   },
+   "goals": [
+    [
+     "Belgium",
+     44,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_3823.html",
+   "heatmap_vmax_log": 5.1722,
+   "quirks": {},
+   "hub_note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Like Germany vs Japan, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed rather than a flat assumption -- see the methodology doc. Belgium sat deep to protect an early goal; Canada dominated territorially and missed a penalty, and lost 1-0.",
+   "chapter_urls": "chapter_urls_3823.json",
+   "site_folder": "belgium-canada"
+  },
+  {
+   "id": "10517",
+   "slug": "arg-fra",
+   "hub_id": "arg-fra-2022-final",
+   "raw_dir": "data/10517",
+   "provider": "pff",
+   "title": "Argentina vs France",
+   "sub": "World Cup final · 3-3 after extra time, Argentina won 4-2 on penalties",
+   "competition": "FIFA World Cup 2022 · Final · Lusail Stadium",
+   "label": "Argentina vs France (Final)",
+   "home": {
+    "id": 364,
+    "name": "Argentina",
+    "code": "ARG",
+    "color": "#5fb8ea",
+    "color_dim": "#1d3f52"
+   },
+   "away": {
+    "id": 363,
+    "name": "France",
+    "code": "FRA",
+    "color": "#e63946",
+    "color_dim": "#712024"
+   },
+   "goals": [
+    [
+     "Argentina",
+     23,
+     "pen"
+    ],
+    [
+     "Argentina",
+     36,
+     ""
+    ],
+    [
+     "France",
+     80,
+     "pen"
+    ],
+    [
+     "France",
+     81,
+     ""
+    ],
+    [
+     "Argentina",
+     108,
+     ""
+    ],
+    [
+     "France",
+     118,
+     "pen"
+    ]
+   ],
+   "head_template": "templates/artifact_head_10517.html",
+   "heatmap_vmax_log": 6.2112,
+   "quirks": {
+    "keeper_swap": {
+     "periods": [
+      3,
+      4
+     ],
+     "home": "23",
+     "away": "1",
+     "why": "tracking labels the two keepers the wrong way round in extra time (checked against shots and Mbappe's 118' penalty)"
+    }
+   },
+   "hub_note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Unlike matches 2-4, this match's raw tracking DOES carry a per-player speed field (like the Morocco vs Spain baseline), so the pressure-on-ball-carrier score uses each player's own real tracked max speed -- see the methodology doc. One of the wildest finals in World Cup history: Argentina led 2-0, France drew level 2-2 in a two-minute Mbappe burst late in regulation, Argentina led again in extra time, Mbappe completed his hat-trick to make it 3-3, and Argentina won 4-2 on penalties.",
+   "chapter_urls": "chapter_urls_10517.json",
+   "site_folder": "argentina-france"
   }
  ]
 }

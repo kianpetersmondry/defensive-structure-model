@@ -19,13 +19,10 @@ All of it is rendered as an animated 2-D match, split into five-minute chapters,
 
 ## Matches
 
+The German league games have the better tracking, so they come first. The World Cup games have gaps in the ball tracking (see below).
+
 | Match | Competition | Data |
 |---|---|---|
-| Morocco vs Spain | World Cup 2022, Round of 16 | PFF FC |
-| France vs Morocco | World Cup 2022, Semifinal | PFF FC |
-| Germany vs Japan | World Cup 2022, Group stage | PFF FC |
-| Belgium vs Canada | World Cup 2022, Group stage | PFF FC |
-| Argentina vs France | World Cup 2022, Final | PFF FC |
 | Köln vs Bayern Munich | Bundesliga 2022/23, Matchday 34 | DFL open data |
 | Bochum vs Bayer Leverkusen | Bundesliga 2022/23, Matchday 34 | DFL open data |
 | Fortuna Düsseldorf vs Jahn Regensburg | 2. Bundesliga 2022/23, Matchday 6 | DFL open data |
@@ -33,8 +30,15 @@ All of it is rendered as an animated 2-D match, split into five-minute chapters,
 | Fortuna Düsseldorf vs Nürnberg | 2. Bundesliga 2022/23, Matchday 12 | DFL open data |
 | Fortuna Düsseldorf vs St. Pauli | 2. Bundesliga 2022/23, Matchday 15 | DFL open data |
 | Fortuna Düsseldorf vs Kaiserslautern | 2. Bundesliga 2022/23, Matchday 17 | DFL open data |
+| Morocco vs Spain | World Cup 2022, Round of 16 | PFF FC |
+| France vs Morocco | World Cup 2022, Semifinal | PFF FC |
+| Germany vs Japan | World Cup 2022, Group stage | PFF FC |
+| Belgium vs Canada | World Cup 2022, Group stage | PFF FC |
+| Argentina vs France | World Cup 2022, Final | PFF FC |
 
 All seven matches in the DFL open dataset are in, so Fortuna Düsseldorf can be followed across five games.
+
+**Tracking quality.** The DFL games are optical tracking from the league's camera system: every player and the ball at 25 Hz, with the ball tracked in 100% of frames. The World Cup games are PFF FC's broadcast-based tracking: players throughout, but the ball is tracked in only 60-72% of frames on average (under half in some chapters), so the ball, the pressure ring and the danger heatmap drop out in places. The site lists the ball coverage of every chapter.
 
 ## Example outputs
 

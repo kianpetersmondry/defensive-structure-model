@@ -1,897 +1,5 @@
 [
  {
-  "id": "mar-esp-2022-r16",
-  "home": "Morocco",
-  "away": "Spain",
-  "label": "Morocco vs Spain",
-  "competition": "FIFA World Cup 2022 · Round of 16 · Education City Stadium",
-  "versions": [
-   {
-    "id": "v1-depth-interline",
-    "label": "Baseline — depth + inter-line",
-    "note": "Classifies each team's out-of-possession phase (High Press / Mid Block / Low Block / Transition) from back-line depth and inter-line compactness only.",
-    "chapters": [
-     {
-      "idx": 1,
-      "period": "1st half",
-      "clock": "0:00–5:07",
-      "coverage": 82,
-      "url": "https://claude.ai/code/artifact/1a8c1a63-8cb9-41b6-92bf-0a91637d499f"
-     },
-     {
-      "idx": 2,
-      "period": "1st half",
-      "clock": "5:07–10:14",
-      "coverage": 77,
-      "url": "https://claude.ai/code/artifact/813c8931-b3ad-461f-8a16-ced5c2977567"
-     },
-     {
-      "idx": 3,
-      "period": "1st half",
-      "clock": "10:14–15:20",
-      "coverage": 68,
-      "url": "https://claude.ai/code/artifact/bcaa6806-5d5f-4a38-a468-d1eed609ab99"
-     },
-     {
-      "idx": 4,
-      "period": "1st half",
-      "clock": "15:20–20:27",
-      "coverage": 89,
-      "url": "https://claude.ai/code/artifact/64afa7fc-e888-4143-a2f1-04bd5e2f8f1f"
-     },
-     {
-      "idx": 5,
-      "period": "1st half",
-      "clock": "20:27–25:34",
-      "coverage": 55,
-      "url": "https://claude.ai/code/artifact/10dda1a1-366f-4b30-8c76-c4c1b38616ea"
-     },
-     {
-      "idx": 6,
-      "period": "1st half",
-      "clock": "25:34–30:41",
-      "coverage": 83,
-      "url": "https://claude.ai/code/artifact/c311e5ce-d6ea-4574-b73b-1d9d7ce4e6fc"
-     },
-     {
-      "idx": 7,
-      "period": "1st half",
-      "clock": "30:41–35:47",
-      "coverage": 80,
-      "url": "https://claude.ai/code/artifact/c697ad8c-04a2-487e-8894-a4a849ab50c9"
-     },
-     {
-      "idx": 8,
-      "period": "1st half",
-      "clock": "35:47–40:54",
-      "coverage": 81,
-      "url": "https://claude.ai/code/artifact/edf526b6-ee5f-4443-ac5a-eaef84e501ac"
-     },
-     {
-      "idx": 9,
-      "period": "1st half",
-      "clock": "40:54–46:01",
-      "coverage": 62,
-      "url": "https://claude.ai/code/artifact/93d23fff-7355-4f00-8814-d0116af41485"
-     },
-     {
-      "idx": 10,
-      "period": "2nd half",
-      "clock": "0:00–5:01",
-      "coverage": 78,
-      "url": "https://claude.ai/code/artifact/962f61ba-4844-42d5-a951-51a5208f4a9a"
-     },
-     {
-      "idx": 11,
-      "period": "2nd half",
-      "clock": "5:01–10:02",
-      "coverage": 65,
-      "url": "https://claude.ai/code/artifact/f2327079-0485-480c-b631-81df2389b056"
-     },
-     {
-      "idx": 12,
-      "period": "2nd half",
-      "clock": "10:02–15:04",
-      "coverage": 80,
-      "url": "https://claude.ai/code/artifact/2456d0ac-74a7-4a01-9934-4532b0f50026"
-     },
-     {
-      "idx": 13,
-      "period": "2nd half",
-      "clock": "15:04–20:05",
-      "coverage": 61,
-      "url": "https://claude.ai/code/artifact/935b92ef-e77a-4084-8cfb-19ef1c422039"
-     },
-     {
-      "idx": 14,
-      "period": "2nd half",
-      "clock": "20:05–25:06",
-      "coverage": 67,
-      "url": "https://claude.ai/code/artifact/dfcae35c-ae41-4e9a-bc55-907286c078f5"
-     },
-     {
-      "idx": 15,
-      "period": "2nd half",
-      "clock": "25:06–30:07",
-      "coverage": 87,
-      "url": "https://claude.ai/code/artifact/f4585e25-51ca-4d48-9395-a34b7ac0529c"
-     },
-     {
-      "idx": 16,
-      "period": "2nd half",
-      "clock": "30:07–35:08",
-      "coverage": 65,
-      "url": "https://claude.ai/code/artifact/6859ec7d-d34b-4a55-bec2-00ff37c1991c"
-     },
-     {
-      "idx": 17,
-      "period": "2nd half",
-      "clock": "35:08–40:09",
-      "coverage": 38,
-      "url": "https://claude.ai/code/artifact/f860493a-a315-45ca-88b7-fb454dd1c639"
-     },
-     {
-      "idx": 18,
-      "period": "2nd half",
-      "clock": "40:10–45:11",
-      "coverage": 50,
-      "url": "https://claude.ai/code/artifact/f6e17f77-8cea-4f40-9c42-010a63050776"
-     },
-     {
-      "idx": 19,
-      "period": "2nd half",
-      "clock": "45:11–50:12",
-      "coverage": 52,
-      "url": "https://claude.ai/code/artifact/5ba3bb34-6611-45d6-9164-67406e534c78"
-     },
-     {
-      "idx": 20,
-      "period": "Extra time 1",
-      "clock": "0:00–5:27",
-      "coverage": 90,
-      "url": "https://claude.ai/code/artifact/696590a3-8de1-4331-b7ca-7f178b69a02a"
-     },
-     {
-      "idx": 21,
-      "period": "Extra time 1",
-      "clock": "5:27–10:53",
-      "coverage": 71,
-      "url": "https://claude.ai/code/artifact/72642ba0-2c8b-483d-b391-bb8ba019d413"
-     },
-     {
-      "idx": 22,
-      "period": "Extra time 1",
-      "clock": "10:53–16:20",
-      "coverage": 63,
-      "url": "https://claude.ai/code/artifact/e65a24e2-7987-4382-ad09-318be8e0f046"
-     },
-     {
-      "idx": 23,
-      "period": "Extra time 2",
-      "clock": "0:00–4:31",
-      "coverage": 75,
-      "url": "https://claude.ai/code/artifact/39aed031-42bc-4547-8fbf-32143e143985"
-     },
-     {
-      "idx": 24,
-      "period": "Extra time 2",
-      "clock": "4:31–9:02",
-      "coverage": 71,
-      "url": "https://claude.ai/code/artifact/d8f71bd2-4726-4fe7-b354-4cc26649caa1"
-     },
-     {
-      "idx": 25,
-      "period": "Extra time 2",
-      "clock": "9:02–13:33",
-      "coverage": 38,
-      "url": "https://claude.ai/code/artifact/1014c268-90a7-44f8-a5f3-9a931dde27dc"
-     },
-     {
-      "idx": 26,
-      "period": "Extra time 2",
-      "clock": "13:33–18:05",
-      "coverage": 61,
-      "url": "https://claude.ai/code/artifact/18b2addf-9848-47d2-a821-b6dfbfcafbe2"
-     }
-    ]
-   }
-  ]
- },
- {
-  "id": "fra-mar-2022-sf",
-  "home": "France",
-  "away": "Morocco",
-  "label": "France vs Morocco",
-  "competition": "FIFA World Cup 2022 · Semifinal · Al Bayt Stadium",
-  "versions": [
-   {
-    "id": "v1-depth-interline",
-    "label": "Baseline — depth + inter-line",
-    "note": "Same classification logic as the Morocco vs Spain baseline: back-line depth + inter-line compactness only. This match's raw tracking data has no per-player speed field (unlike 10508), so the pressure-on-ball-carrier score falls back to a fixed max-speed assumption per player instead of an empirically-derived one -- see the methodology doc.",
-    "chapters": [
-     {
-      "idx": 1,
-      "period": "1st half",
-      "clock": "0:00–4:50",
-      "coverage": 92,
-      "url": "https://claude.ai/code/artifact/992e6ed6-4cf4-4b5a-b751-40f9cb658d6d"
-     },
-     {
-      "idx": 2,
-      "period": "1st half",
-      "clock": "4:50–9:39",
-      "coverage": 62,
-      "url": "https://claude.ai/code/artifact/e78a052c-3e60-4a7f-80a2-9877d35f79ec"
-     },
-     {
-      "idx": 3,
-      "period": "1st half",
-      "clock": "9:39–14:29",
-      "coverage": 75,
-      "url": "https://claude.ai/code/artifact/e2785740-323e-4b7d-830e-af017b9783ef"
-     },
-     {
-      "idx": 4,
-      "period": "1st half",
-      "clock": "14:29–19:18",
-      "coverage": 76,
-      "url": "https://claude.ai/code/artifact/d9a9f24b-6068-46b6-938d-2c38a068cf91"
-     },
-     {
-      "idx": 5,
-      "period": "1st half",
-      "clock": "19:19–24:08",
-      "coverage": 77,
-      "url": "https://claude.ai/code/artifact/a6cc3592-5af6-4f23-9db4-97dfabf84aee"
-     },
-     {
-      "idx": 6,
-      "period": "1st half",
-      "clock": "24:08–28:58",
-      "coverage": 50,
-      "url": "https://claude.ai/code/artifact/04e7975e-a1de-4b2d-a79d-ab05edcbaf96"
-     },
-     {
-      "idx": 7,
-      "period": "1st half",
-      "clock": "28:58–33:47",
-      "coverage": 66,
-      "url": "https://claude.ai/code/artifact/cb20c9d0-df09-4000-ba3e-c7761485305e"
-     },
-     {
-      "idx": 8,
-      "period": "1st half",
-      "clock": "33:47–38:37",
-      "coverage": 74,
-      "url": "https://claude.ai/code/artifact/bfd7c2f1-3c0d-44df-99ea-0d3c773cb2c5"
-     },
-     {
-      "idx": 9,
-      "period": "1st half",
-      "clock": "38:37–43:27",
-      "coverage": 65,
-      "url": "https://claude.ai/code/artifact/4e0678fa-7f40-4060-887b-40ccce46ad5b"
-     },
-     {
-      "idx": 10,
-      "period": "1st half",
-      "clock": "43:27–48:16",
-      "coverage": 49,
-      "url": "https://claude.ai/code/artifact/b0163cfc-9f61-4007-ac82-499a9cdf4a36"
-     },
-     {
-      "idx": 11,
-      "period": "2nd half",
-      "clock": "0:00–5:06",
-      "coverage": 83,
-      "url": "https://claude.ai/code/artifact/86c9f4ab-e6a2-4cb6-bec3-18688845b430"
-     },
-     {
-      "idx": 12,
-      "period": "2nd half",
-      "clock": "5:06–10:12",
-      "coverage": 62,
-      "url": "https://claude.ai/code/artifact/e8981200-4686-404f-ac7f-b13470cd1bf6"
-     },
-     {
-      "idx": 13,
-      "period": "2nd half",
-      "clock": "10:12–15:18",
-      "coverage": 66,
-      "url": "https://claude.ai/code/artifact/3eb7c519-5fa7-4ef4-88a0-ab10ed54ffc5"
-     },
-     {
-      "idx": 14,
-      "period": "2nd half",
-      "clock": "15:18–20:24",
-      "coverage": 76,
-      "url": "https://claude.ai/code/artifact/14c2f7af-4f82-4e6f-99e7-e32d68e3de05"
-     },
-     {
-      "idx": 15,
-      "period": "2nd half",
-      "clock": "20:24–25:30",
-      "coverage": 55,
-      "url": "https://claude.ai/code/artifact/22cdd858-5c81-4729-a768-a674076b4356"
-     },
-     {
-      "idx": 16,
-      "period": "2nd half",
-      "clock": "25:30–30:35",
-      "coverage": 88,
-      "url": "https://claude.ai/code/artifact/bfc8e105-a166-4231-9ec7-be3a7af8d859"
-     },
-     {
-      "idx": 17,
-      "period": "2nd half",
-      "clock": "30:35–35:41",
-      "coverage": 41,
-      "url": "https://claude.ai/code/artifact/dd1f95bd-8443-4da8-85b0-3c4a538d0e15"
-     },
-     {
-      "idx": 18,
-      "period": "2nd half",
-      "clock": "35:41–40:47",
-      "coverage": 74,
-      "url": "https://claude.ai/code/artifact/07457fd6-70c5-44a4-bedc-64c6ee96055e"
-     },
-     {
-      "idx": 19,
-      "period": "2nd half",
-      "clock": "40:47–45:53",
-      "coverage": 65,
-      "url": "https://claude.ai/code/artifact/e0e08c2d-1410-40e9-a1cd-3e6bf2bae68d"
-     },
-     {
-      "idx": 20,
-      "period": "2nd half",
-      "clock": "45:53–50:59",
-      "coverage": 73,
-      "url": "https://claude.ai/code/artifact/dc726175-5be0-4cf7-8149-036129c883e5"
-     }
-    ]
-   }
-  ]
- },
- {
-  "id": "ger-jpn-2022-grp",
-  "home": "Germany",
-  "away": "Japan",
-  "label": "Germany vs Japan",
-  "competition": "FIFA World Cup 2022 · Group Stage · Khalifa International Stadium",
-  "versions": [
-   {
-    "id": "v1-depth-interline",
-    "label": "Baseline — depth + inter-line",
-    "note": "Same classification logic as the other two matches: back-line depth + inter-line compactness only. Like 10515, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed (from smoothed-position deltas) rather than a flat assumption -- see the methodology doc. Japan came back from 0-1 down to win 2-1.",
-    "chapters": [
-     {
-      "idx": 1,
-      "period": "1st half",
-      "clock": "0:00–5:06",
-      "coverage": 76,
-      "url": "https://claude.ai/artifact/XhE1L9NEE96AENjvwHxxvJ"
-     },
-     {
-      "idx": 2,
-      "period": "1st half",
-      "clock": "5:06–10:12",
-      "coverage": 72,
-      "url": "https://claude.ai/artifact/MQdugd82TiLA6a9sFqoqwY"
-     },
-     {
-      "idx": 3,
-      "period": "1st half",
-      "clock": "10:12–15:18",
-      "coverage": 85,
-      "url": "https://claude.ai/artifact/Dmzb7tLuANXERTQz7ARfHu"
-     },
-     {
-      "idx": 4,
-      "period": "1st half",
-      "clock": "15:18–20:24",
-      "coverage": 55,
-      "url": "https://claude.ai/artifact/Q812Xnfq58jDWCEeFPv5pr"
-     },
-     {
-      "idx": 5,
-      "period": "1st half",
-      "clock": "20:24–25:29",
-      "coverage": 64,
-      "url": "https://claude.ai/artifact/2qo9BKnrouwuD5s8rxzDcS"
-     },
-     {
-      "idx": 6,
-      "period": "1st half",
-      "clock": "25:29–30:35",
-      "coverage": 88,
-      "url": "https://claude.ai/artifact/MfpAWvdgg3ERgrL3BvZozE"
-     },
-     {
-      "idx": 7,
-      "period": "1st half",
-      "clock": "30:35–35:41",
-      "coverage": 41,
-      "url": "https://claude.ai/artifact/LSkgtthcNbziQUTUPZdKeG"
-     },
-     {
-      "idx": 8,
-      "period": "1st half",
-      "clock": "35:41–40:47",
-      "coverage": 95,
-      "url": "https://claude.ai/artifact/Q6mL85roXFtdvgrztDxqsP"
-     },
-     {
-      "idx": 9,
-      "period": "1st half",
-      "clock": "40:47–45:53",
-      "coverage": 61,
-      "url": "https://claude.ai/artifact/XUcdF4QXDJaVba9kgrJfDY"
-     },
-     {
-      "idx": 10,
-      "period": "1st half",
-      "clock": "45:53–50:59",
-      "coverage": 62,
-      "url": "https://claude.ai/artifact/SznJdSdrHgk2H4m7auJfCD"
-     },
-     {
-      "idx": 11,
-      "period": "2nd half",
-      "clock": "0:00–4:50",
-      "coverage": 83,
-      "url": "https://claude.ai/artifact/VaKnhBWJYejU9dagR9NucW"
-     },
-     {
-      "idx": 12,
-      "period": "2nd half",
-      "clock": "4:50–9:40",
-      "coverage": 66,
-      "url": "https://claude.ai/artifact/D77R9392QAauw1qZZ29b8q"
-     },
-     {
-      "idx": 13,
-      "period": "2nd half",
-      "clock": "9:40–14:30",
-      "coverage": 72,
-      "url": "https://claude.ai/artifact/MtZsicHb7nZFpJzkKRq8G6"
-     },
-     {
-      "idx": 14,
-      "period": "2nd half",
-      "clock": "14:30–19:20",
-      "coverage": 63,
-      "url": "https://claude.ai/artifact/QdqATsE3fpRKYiCvqGHo96"
-     },
-     {
-      "idx": 15,
-      "period": "2nd half",
-      "clock": "19:20–24:10",
-      "coverage": 56,
-      "url": "https://claude.ai/artifact/Lvuuf7aaaijffbBb6Ac1En"
-     },
-     {
-      "idx": 16,
-      "period": "2nd half",
-      "clock": "24:10–29:00",
-      "coverage": 62,
-      "url": "https://claude.ai/artifact/HVsAevp2SWfqZBBpy282FC"
-     },
-     {
-      "idx": 17,
-      "period": "2nd half",
-      "clock": "29:00–33:50",
-      "coverage": 56,
-      "url": "https://claude.ai/artifact/PvSKapwPkYG8tufsnTr5LZ"
-     },
-     {
-      "idx": 18,
-      "period": "2nd half",
-      "clock": "33:50–38:40",
-      "coverage": 48,
-      "url": "https://claude.ai/artifact/B2xoyHheha883LmQkvZgik"
-     },
-     {
-      "idx": 19,
-      "period": "2nd half",
-      "clock": "38:40–43:30",
-      "coverage": 52,
-      "url": "https://claude.ai/artifact/Dg1TxLXX4WSViSyGGSFzGt"
-     },
-     {
-      "idx": 20,
-      "period": "2nd half",
-      "clock": "43:30–48:20",
-      "coverage": 74,
-      "url": "https://claude.ai/artifact/1Z7HTe9WQ8NQWM7KwAkFdH"
-     },
-     {
-      "idx": 21,
-      "period": "2nd half",
-      "clock": "48:20–53:10",
-      "coverage": 61,
-      "url": "https://claude.ai/artifact/QM8kxm1jrvSzSMPb8qt9T2"
-     }
-    ]
-   }
-  ]
- },
- {
-  "id": "bel-can-2022-grp",
-  "home": "Belgium",
-  "away": "Canada",
-  "label": "Belgium vs Canada",
-  "competition": "FIFA World Cup 2022 · Group Stage · Ahmad Bin Ali Stadium",
-  "versions": [
-   {
-    "id": "v1-depth-interline",
-    "label": "Baseline — depth + inter-line",
-    "note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Like Germany vs Japan, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed rather than a flat assumption -- see the methodology doc. Belgium sat deep to protect an early goal; Canada dominated territorially and missed a penalty, and lost 1-0.",
-    "chapters": [
-     {
-      "idx": 1,
-      "period": "1st half",
-      "clock": "0:00–5:00",
-      "coverage": 73,
-      "url": "https://claude.ai/artifact/FJmmxcaFx7ZgPwEEUB5fPL"
-     },
-     {
-      "idx": 2,
-      "period": "1st half",
-      "clock": "5:00–10:00",
-      "coverage": 49,
-      "url": "https://claude.ai/artifact/82uGQGJGaj5JkQMvH7DJJ2"
-     },
-     {
-      "idx": 3,
-      "period": "1st half",
-      "clock": "10:00–15:00",
-      "coverage": 65,
-      "url": "https://claude.ai/artifact/NgBuyBKzYqMrV8nssdWuFR"
-     },
-     {
-      "idx": 4,
-      "period": "1st half",
-      "clock": "15:00–20:00",
-      "coverage": 83,
-      "url": "https://claude.ai/artifact/9UrKvSj4LDEt5MnUpC3qYp"
-     },
-     {
-      "idx": 5,
-      "period": "1st half",
-      "clock": "20:00–24:59",
-      "coverage": 76,
-      "url": "https://claude.ai/artifact/WuLL2gt8NNfqv9z3mtJFZE"
-     },
-     {
-      "idx": 6,
-      "period": "1st half",
-      "clock": "25:00–29:59",
-      "coverage": 75,
-      "url": "https://claude.ai/artifact/Txo8EqptCN4jYujS2JVDRN"
-     },
-     {
-      "idx": 7,
-      "period": "1st half",
-      "clock": "29:59–34:59",
-      "coverage": 71,
-      "url": "https://claude.ai/artifact/LMYxXhNHPMP1WGUr6xXUEN"
-     },
-     {
-      "idx": 8,
-      "period": "1st half",
-      "clock": "34:59–39:59",
-      "coverage": 81,
-      "url": "https://claude.ai/artifact/9KyDsXjejrS4Dztqcw954w"
-     },
-     {
-      "idx": 9,
-      "period": "1st half",
-      "clock": "39:59–44:59",
-      "coverage": 73,
-      "url": "https://claude.ai/artifact/5jzYBDJLcyADDfCBquxwHj"
-     },
-     {
-      "idx": 10,
-      "period": "1st half",
-      "clock": "44:59–49:59",
-      "coverage": 72,
-      "url": "https://claude.ai/artifact/74XcikPundhgKWWVmZoTGB"
-     },
-     {
-      "idx": 11,
-      "period": "2nd half",
-      "clock": "0:00–5:00",
-      "coverage": 78,
-      "url": "https://claude.ai/artifact/GzSkNech1CW1or7N1CJHcs"
-     },
-     {
-      "idx": 12,
-      "period": "2nd half",
-      "clock": "5:00–10:00",
-      "coverage": 67,
-      "url": "https://claude.ai/artifact/RCMLccXz8JPEQCkWTsJHME"
-     },
-     {
-      "idx": 13,
-      "period": "2nd half",
-      "clock": "10:00–15:01",
-      "coverage": 64,
-      "url": "https://claude.ai/artifact/6FpdtQtXiiMgxKT8hKRnAB"
-     },
-     {
-      "idx": 14,
-      "period": "2nd half",
-      "clock": "15:01–20:01",
-      "coverage": 69,
-      "url": "https://claude.ai/artifact/97KeAs3wf3em3GUBTS3TBJ"
-     },
-     {
-      "idx": 15,
-      "period": "2nd half",
-      "clock": "20:01–25:01",
-      "coverage": 84,
-      "url": "https://claude.ai/artifact/VQo44SWuF9z6jwwALq8QC1"
-     },
-     {
-      "idx": 16,
-      "period": "2nd half",
-      "clock": "25:01–30:01",
-      "coverage": 84,
-      "url": "https://claude.ai/artifact/WrgFyVW9TxR9Vzog5Pvdqj"
-     },
-     {
-      "idx": 17,
-      "period": "2nd half",
-      "clock": "30:01–35:01",
-      "coverage": 84,
-      "url": "https://claude.ai/artifact/Y3x7pAktJTAa39eehSm1BA"
-     },
-     {
-      "idx": 18,
-      "period": "2nd half",
-      "clock": "35:01–40:02",
-      "coverage": 42,
-      "url": "https://claude.ai/artifact/GWkELTBpiVUMK4fncNJiWZ"
-     },
-     {
-      "idx": 19,
-      "period": "2nd half",
-      "clock": "40:02–45:02",
-      "coverage": 73,
-      "url": "https://claude.ai/artifact/VUTndjD2qeo1kP58bgT4m9"
-     },
-     {
-      "idx": 20,
-      "period": "2nd half",
-      "clock": "45:02–50:02",
-      "coverage": 75,
-      "url": "https://claude.ai/artifact/Xcet53XBELMCKEqk26EGW8"
-     }
-    ]
-   }
-  ]
- },
- {
-  "id": "arg-fra-2022-final",
-  "home": "Argentina",
-  "away": "France",
-  "label": "Argentina vs France",
-  "competition": "FIFA World Cup 2022 · Final · Lusail Stadium",
-  "versions": [
-   {
-    "id": "v1-depth-interline",
-    "label": "Baseline — depth + inter-line",
-    "note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Unlike matches 2-4, this match's raw tracking DOES carry a per-player speed field (like the Morocco vs Spain baseline), so the pressure-on-ball-carrier score uses each player's own real tracked max speed -- see the methodology doc. One of the wildest finals in World Cup history: Argentina led 2-0, France drew level 2-2 in a two-minute Mbappe burst late in regulation, Argentina led again in extra time, Mbappe completed his hat-trick to make it 3-3, and Argentina won 4-2 on penalties.",
-    "chapters": [
-     {
-      "idx": 1,
-      "period": "1st half",
-      "clock": "0:00–4:47",
-      "coverage": 72,
-      "url": "https://claude.ai/artifact/Jz6oYLThYvzuaVzN1JWDwL"
-     },
-     {
-      "idx": 2,
-      "period": "1st half",
-      "clock": "4:47–9:33",
-      "coverage": 62,
-      "url": "https://claude.ai/artifact/1cBGbVPUt68UbqH95DJU1U"
-     },
-     {
-      "idx": 3,
-      "period": "1st half",
-      "clock": "9:33–14:20",
-      "coverage": 49,
-      "url": "https://claude.ai/artifact/VDPgFzuqXLmC48PEyVMugd"
-     },
-     {
-      "idx": 4,
-      "period": "1st half",
-      "clock": "14:20–19:06",
-      "coverage": 72,
-      "url": "https://claude.ai/artifact/LdJxCzbPovkDTPnq3DCJkW"
-     },
-     {
-      "idx": 5,
-      "period": "1st half",
-      "clock": "19:07–23:53",
-      "coverage": 42,
-      "url": "https://claude.ai/artifact/LnMYT7DVx482Xf9ziR52zN"
-     },
-     {
-      "idx": 6,
-      "period": "1st half",
-      "clock": "23:53–28:40",
-      "coverage": 55,
-      "url": "https://claude.ai/artifact/HhUQTZBJcRpD1qJgjLZ5bt"
-     },
-     {
-      "idx": 7,
-      "period": "1st half",
-      "clock": "28:40–33:26",
-      "coverage": 60,
-      "url": "https://claude.ai/artifact/SLq8kcdPimEKAxV8SBuMaz"
-     },
-     {
-      "idx": 8,
-      "period": "1st half",
-      "clock": "33:26–38:13",
-      "coverage": 66,
-      "url": "https://claude.ai/artifact/4uFdZuRhEZy6rREzACSPEx"
-     },
-     {
-      "idx": 9,
-      "period": "1st half",
-      "clock": "38:13–43:00",
-      "coverage": 71,
-      "url": "https://claude.ai/artifact/7B4n2Nu8NXSoouWNPhwket"
-     },
-     {
-      "idx": 10,
-      "period": "1st half",
-      "clock": "43:00–47:46",
-      "coverage": 79,
-      "url": "https://claude.ai/artifact/SD3KnMRDdSd238DVDgPB7h"
-     },
-     {
-      "idx": 11,
-      "period": "1st half",
-      "clock": "47:46–52:33",
-      "coverage": 66,
-      "url": "https://claude.ai/artifact/ACLqgjX2SL29TQDqjyR1wR"
-     },
-     {
-      "idx": 12,
-      "period": "2nd half",
-      "clock": "0:00–4:52",
-      "coverage": 84,
-      "url": "https://claude.ai/artifact/Trgt1HGe7BYdH9S6fitgE9"
-     },
-     {
-      "idx": 13,
-      "period": "2nd half",
-      "clock": "4:52–9:45",
-      "coverage": 61,
-      "url": "https://claude.ai/artifact/NT9vCQTHNAmGuGiAE1hYjD"
-     },
-     {
-      "idx": 14,
-      "period": "2nd half",
-      "clock": "9:45–14:37",
-      "coverage": 55,
-      "url": "https://claude.ai/artifact/LWCxRSGGb4PaQDvZ2Mqi2r"
-     },
-     {
-      "idx": 15,
-      "period": "2nd half",
-      "clock": "14:37–19:30",
-      "coverage": 62,
-      "url": "https://claude.ai/artifact/KNs4X3vx5YMvQvaFyhmhxx"
-     },
-     {
-      "idx": 16,
-      "period": "2nd half",
-      "clock": "19:30–24:22",
-      "coverage": 70,
-      "url": "https://claude.ai/artifact/87wve5gJNpkHKoeJnr6ihD"
-     },
-     {
-      "idx": 17,
-      "period": "2nd half",
-      "clock": "24:22–29:15",
-      "coverage": 71,
-      "url": "https://claude.ai/artifact/7Se1pvPA5CEvATmeQkJSzq"
-     },
-     {
-      "idx": 18,
-      "period": "2nd half",
-      "clock": "29:15–34:07",
-      "coverage": 61,
-      "url": "https://claude.ai/artifact/2fu9nX6YFjbfEzRpE423e2"
-     },
-     {
-      "idx": 19,
-      "period": "2nd half",
-      "clock": "34:07–38:59",
-      "coverage": 51,
-      "url": "https://claude.ai/artifact/W38hYrdy8cNQZhrgt3DBjG"
-     },
-     {
-      "idx": 20,
-      "period": "2nd half",
-      "clock": "38:59–43:52",
-      "coverage": 38,
-      "url": "https://claude.ai/artifact/MfAzzshGjAfRBByce6816V"
-     },
-     {
-      "idx": 21,
-      "period": "2nd half",
-      "clock": "43:52–48:44",
-      "coverage": 58,
-      "url": "https://claude.ai/artifact/8HbL5hWZW6aoCj3vveQTrj"
-     },
-     {
-      "idx": 22,
-      "period": "2nd half",
-      "clock": "48:44–53:37",
-      "coverage": 59,
-      "url": "https://claude.ai/artifact/Ne8YbdDjfi1BYAwNUSSSQ1"
-     },
-     {
-      "idx": 23,
-      "period": "Extra time 1",
-      "clock": "0:00–5:22",
-      "coverage": 78,
-      "url": "https://claude.ai/artifact/VrjLRDeQoHLgBuJECGLLHv"
-     },
-     {
-      "idx": 24,
-      "period": "Extra time 1",
-      "clock": "5:22–10:43",
-      "coverage": 64,
-      "url": "https://claude.ai/artifact/VR4pFRDTEXpJCwF9vFvqJj"
-     },
-     {
-      "idx": 25,
-      "period": "Extra time 1",
-      "clock": "10:44–16:05",
-      "coverage": 61,
-      "url": "https://claude.ai/artifact/8zuna1apr4okiiP8cP1khk"
-     },
-     {
-      "idx": 26,
-      "period": "Extra time 2",
-      "clock": "0:00–4:47",
-      "coverage": 41,
-      "url": "https://claude.ai/artifact/6Qeu1vzggYp2xNYzCaK1uk"
-     },
-     {
-      "idx": 27,
-      "period": "Extra time 2",
-      "clock": "4:47–9:34",
-      "coverage": 52,
-      "url": "https://claude.ai/artifact/QfWCkje9rqWVYA5CcEcz4e"
-     },
-     {
-      "idx": 28,
-      "period": "Extra time 2",
-      "clock": "9:34–14:21",
-      "coverage": 36,
-      "url": "https://claude.ai/artifact/U3Y7tZXwDF5FbNBzce9zvu"
-     },
-     {
-      "idx": 29,
-      "period": "Extra time 2",
-      "clock": "14:22–19:09",
-      "coverage": 51,
-      "url": "https://claude.ai/artifact/GNXSXJ8k2yQEyhzUSkAmT3"
-     }
-    ]
-   }
-  ]
- },
- {
   "id": "koe-fcb-2023-bl",
   "home": "Köln",
   "away": "Bayern Munich",
@@ -1922,6 +1030,898 @@
       "clock": "47:04–52:18",
       "coverage": 100,
       "url": "matches/dusseldorf-kaiserslautern/chapter-19.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "mar-esp-2022-r16",
+  "home": "Morocco",
+  "away": "Spain",
+  "label": "Morocco vs Spain",
+  "competition": "FIFA World Cup 2022 · Round of 16 · Education City Stadium",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "Classifies each team's out-of-possession phase (High Press / Mid Block / Low Block / Transition) from back-line depth and inter-line compactness only.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:07",
+      "coverage": 82,
+      "url": "https://claude.ai/code/artifact/1a8c1a63-8cb9-41b6-92bf-0a91637d499f"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:07–10:14",
+      "coverage": 77,
+      "url": "https://claude.ai/code/artifact/813c8931-b3ad-461f-8a16-ced5c2977567"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:14–15:20",
+      "coverage": 68,
+      "url": "https://claude.ai/code/artifact/bcaa6806-5d5f-4a38-a468-d1eed609ab99"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:20–20:27",
+      "coverage": 89,
+      "url": "https://claude.ai/code/artifact/64afa7fc-e888-4143-a2f1-04bd5e2f8f1f"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:27–25:34",
+      "coverage": 55,
+      "url": "https://claude.ai/code/artifact/10dda1a1-366f-4b30-8c76-c4c1b38616ea"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:34–30:41",
+      "coverage": 83,
+      "url": "https://claude.ai/code/artifact/c311e5ce-d6ea-4574-b73b-1d9d7ce4e6fc"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:41–35:47",
+      "coverage": 80,
+      "url": "https://claude.ai/code/artifact/c697ad8c-04a2-487e-8894-a4a849ab50c9"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "35:47–40:54",
+      "coverage": 81,
+      "url": "https://claude.ai/code/artifact/edf526b6-ee5f-4443-ac5a-eaef84e501ac"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "40:54–46:01",
+      "coverage": 62,
+      "url": "https://claude.ai/code/artifact/93d23fff-7355-4f00-8814-d0116af41485"
+     },
+     {
+      "idx": 10,
+      "period": "2nd half",
+      "clock": "0:00–5:01",
+      "coverage": 78,
+      "url": "https://claude.ai/code/artifact/962f61ba-4844-42d5-a951-51a5208f4a9a"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "5:01–10:02",
+      "coverage": 65,
+      "url": "https://claude.ai/code/artifact/f2327079-0485-480c-b631-81df2389b056"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "10:02–15:04",
+      "coverage": 80,
+      "url": "https://claude.ai/code/artifact/2456d0ac-74a7-4a01-9934-4532b0f50026"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "15:04–20:05",
+      "coverage": 61,
+      "url": "https://claude.ai/code/artifact/935b92ef-e77a-4084-8cfb-19ef1c422039"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "20:05–25:06",
+      "coverage": 67,
+      "url": "https://claude.ai/code/artifact/dfcae35c-ae41-4e9a-bc55-907286c078f5"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "25:06–30:07",
+      "coverage": 87,
+      "url": "https://claude.ai/code/artifact/f4585e25-51ca-4d48-9395-a34b7ac0529c"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "30:07–35:08",
+      "coverage": 65,
+      "url": "https://claude.ai/code/artifact/6859ec7d-d34b-4a55-bec2-00ff37c1991c"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "35:08–40:09",
+      "coverage": 38,
+      "url": "https://claude.ai/code/artifact/f860493a-a315-45ca-88b7-fb454dd1c639"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "40:10–45:11",
+      "coverage": 50,
+      "url": "https://claude.ai/code/artifact/f6e17f77-8cea-4f40-9c42-010a63050776"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "45:11–50:12",
+      "coverage": 52,
+      "url": "https://claude.ai/code/artifact/5ba3bb34-6611-45d6-9164-67406e534c78"
+     },
+     {
+      "idx": 20,
+      "period": "Extra time 1",
+      "clock": "0:00–5:27",
+      "coverage": 90,
+      "url": "https://claude.ai/code/artifact/696590a3-8de1-4331-b7ca-7f178b69a02a"
+     },
+     {
+      "idx": 21,
+      "period": "Extra time 1",
+      "clock": "5:27–10:53",
+      "coverage": 71,
+      "url": "https://claude.ai/code/artifact/72642ba0-2c8b-483d-b391-bb8ba019d413"
+     },
+     {
+      "idx": 22,
+      "period": "Extra time 1",
+      "clock": "10:53–16:20",
+      "coverage": 63,
+      "url": "https://claude.ai/code/artifact/e65a24e2-7987-4382-ad09-318be8e0f046"
+     },
+     {
+      "idx": 23,
+      "period": "Extra time 2",
+      "clock": "0:00–4:31",
+      "coverage": 75,
+      "url": "https://claude.ai/code/artifact/39aed031-42bc-4547-8fbf-32143e143985"
+     },
+     {
+      "idx": 24,
+      "period": "Extra time 2",
+      "clock": "4:31–9:02",
+      "coverage": 71,
+      "url": "https://claude.ai/code/artifact/d8f71bd2-4726-4fe7-b354-4cc26649caa1"
+     },
+     {
+      "idx": 25,
+      "period": "Extra time 2",
+      "clock": "9:02–13:33",
+      "coverage": 38,
+      "url": "https://claude.ai/code/artifact/1014c268-90a7-44f8-a5f3-9a931dde27dc"
+     },
+     {
+      "idx": 26,
+      "period": "Extra time 2",
+      "clock": "13:33–18:05",
+      "coverage": 61,
+      "url": "https://claude.ai/code/artifact/18b2addf-9848-47d2-a821-b6dfbfcafbe2"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "fra-mar-2022-sf",
+  "home": "France",
+  "away": "Morocco",
+  "label": "France vs Morocco",
+  "competition": "FIFA World Cup 2022 · Semifinal · Al Bayt Stadium",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "Same classification logic as the Morocco vs Spain baseline: back-line depth + inter-line compactness only. This match's raw tracking data has no per-player speed field (unlike 10508), so the pressure-on-ball-carrier score falls back to a fixed max-speed assumption per player instead of an empirically-derived one -- see the methodology doc.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–4:50",
+      "coverage": 92,
+      "url": "https://claude.ai/code/artifact/992e6ed6-4cf4-4b5a-b751-40f9cb658d6d"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "4:50–9:39",
+      "coverage": 62,
+      "url": "https://claude.ai/code/artifact/e78a052c-3e60-4a7f-80a2-9877d35f79ec"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "9:39–14:29",
+      "coverage": 75,
+      "url": "https://claude.ai/code/artifact/e2785740-323e-4b7d-830e-af017b9783ef"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "14:29–19:18",
+      "coverage": 76,
+      "url": "https://claude.ai/code/artifact/d9a9f24b-6068-46b6-938d-2c38a068cf91"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "19:19–24:08",
+      "coverage": 77,
+      "url": "https://claude.ai/code/artifact/a6cc3592-5af6-4f23-9db4-97dfabf84aee"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "24:08–28:58",
+      "coverage": 50,
+      "url": "https://claude.ai/code/artifact/04e7975e-a1de-4b2d-a79d-ab05edcbaf96"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "28:58–33:47",
+      "coverage": 66,
+      "url": "https://claude.ai/code/artifact/cb20c9d0-df09-4000-ba3e-c7761485305e"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "33:47–38:37",
+      "coverage": 74,
+      "url": "https://claude.ai/code/artifact/bfd7c2f1-3c0d-44df-99ea-0d3c773cb2c5"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "38:37–43:27",
+      "coverage": 65,
+      "url": "https://claude.ai/code/artifact/4e0678fa-7f40-4060-887b-40ccce46ad5b"
+     },
+     {
+      "idx": 10,
+      "period": "1st half",
+      "clock": "43:27–48:16",
+      "coverage": 49,
+      "url": "https://claude.ai/code/artifact/b0163cfc-9f61-4007-ac82-499a9cdf4a36"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "0:00–5:06",
+      "coverage": 83,
+      "url": "https://claude.ai/code/artifact/86c9f4ab-e6a2-4cb6-bec3-18688845b430"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "5:06–10:12",
+      "coverage": 62,
+      "url": "https://claude.ai/code/artifact/e8981200-4686-404f-ac7f-b13470cd1bf6"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "10:12–15:18",
+      "coverage": 66,
+      "url": "https://claude.ai/code/artifact/3eb7c519-5fa7-4ef4-88a0-ab10ed54ffc5"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "15:18–20:24",
+      "coverage": 76,
+      "url": "https://claude.ai/code/artifact/14c2f7af-4f82-4e6f-99e7-e32d68e3de05"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "20:24–25:30",
+      "coverage": 55,
+      "url": "https://claude.ai/code/artifact/22cdd858-5c81-4729-a768-a674076b4356"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "25:30–30:35",
+      "coverage": 88,
+      "url": "https://claude.ai/code/artifact/bfc8e105-a166-4231-9ec7-be3a7af8d859"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "30:35–35:41",
+      "coverage": 41,
+      "url": "https://claude.ai/code/artifact/dd1f95bd-8443-4da8-85b0-3c4a538d0e15"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "35:41–40:47",
+      "coverage": 74,
+      "url": "https://claude.ai/code/artifact/07457fd6-70c5-44a4-bedc-64c6ee96055e"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "40:47–45:53",
+      "coverage": 65,
+      "url": "https://claude.ai/code/artifact/e0e08c2d-1410-40e9-a1cd-3e6bf2bae68d"
+     },
+     {
+      "idx": 20,
+      "period": "2nd half",
+      "clock": "45:53–50:59",
+      "coverage": 73,
+      "url": "https://claude.ai/code/artifact/dc726175-5be0-4cf7-8149-036129c883e5"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "ger-jpn-2022-grp",
+  "home": "Germany",
+  "away": "Japan",
+  "label": "Germany vs Japan",
+  "competition": "FIFA World Cup 2022 · Group Stage · Khalifa International Stadium",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "Same classification logic as the other two matches: back-line depth + inter-line compactness only. Like 10515, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed (from smoothed-position deltas) rather than a flat assumption -- see the methodology doc. Japan came back from 0-1 down to win 2-1.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:06",
+      "coverage": 76,
+      "url": "https://claude.ai/artifact/XhE1L9NEE96AENjvwHxxvJ"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:06–10:12",
+      "coverage": 72,
+      "url": "https://claude.ai/artifact/MQdugd82TiLA6a9sFqoqwY"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:12–15:18",
+      "coverage": 85,
+      "url": "https://claude.ai/artifact/Dmzb7tLuANXERTQz7ARfHu"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:18–20:24",
+      "coverage": 55,
+      "url": "https://claude.ai/artifact/Q812Xnfq58jDWCEeFPv5pr"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:24–25:29",
+      "coverage": 64,
+      "url": "https://claude.ai/artifact/2qo9BKnrouwuD5s8rxzDcS"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:29–30:35",
+      "coverage": 88,
+      "url": "https://claude.ai/artifact/MfpAWvdgg3ERgrL3BvZozE"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:35–35:41",
+      "coverage": 41,
+      "url": "https://claude.ai/artifact/LSkgtthcNbziQUTUPZdKeG"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "35:41–40:47",
+      "coverage": 95,
+      "url": "https://claude.ai/artifact/Q6mL85roXFtdvgrztDxqsP"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "40:47–45:53",
+      "coverage": 61,
+      "url": "https://claude.ai/artifact/XUcdF4QXDJaVba9kgrJfDY"
+     },
+     {
+      "idx": 10,
+      "period": "1st half",
+      "clock": "45:53–50:59",
+      "coverage": 62,
+      "url": "https://claude.ai/artifact/SznJdSdrHgk2H4m7auJfCD"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "0:00–4:50",
+      "coverage": 83,
+      "url": "https://claude.ai/artifact/VaKnhBWJYejU9dagR9NucW"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "4:50–9:40",
+      "coverage": 66,
+      "url": "https://claude.ai/artifact/D77R9392QAauw1qZZ29b8q"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "9:40–14:30",
+      "coverage": 72,
+      "url": "https://claude.ai/artifact/MtZsicHb7nZFpJzkKRq8G6"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "14:30–19:20",
+      "coverage": 63,
+      "url": "https://claude.ai/artifact/QdqATsE3fpRKYiCvqGHo96"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "19:20–24:10",
+      "coverage": 56,
+      "url": "https://claude.ai/artifact/Lvuuf7aaaijffbBb6Ac1En"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "24:10–29:00",
+      "coverage": 62,
+      "url": "https://claude.ai/artifact/HVsAevp2SWfqZBBpy282FC"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "29:00–33:50",
+      "coverage": 56,
+      "url": "https://claude.ai/artifact/PvSKapwPkYG8tufsnTr5LZ"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "33:50–38:40",
+      "coverage": 48,
+      "url": "https://claude.ai/artifact/B2xoyHheha883LmQkvZgik"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "38:40–43:30",
+      "coverage": 52,
+      "url": "https://claude.ai/artifact/Dg1TxLXX4WSViSyGGSFzGt"
+     },
+     {
+      "idx": 20,
+      "period": "2nd half",
+      "clock": "43:30–48:20",
+      "coverage": 74,
+      "url": "https://claude.ai/artifact/1Z7HTe9WQ8NQWM7KwAkFdH"
+     },
+     {
+      "idx": 21,
+      "period": "2nd half",
+      "clock": "48:20–53:10",
+      "coverage": 61,
+      "url": "https://claude.ai/artifact/QM8kxm1jrvSzSMPb8qt9T2"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "bel-can-2022-grp",
+  "home": "Belgium",
+  "away": "Canada",
+  "label": "Belgium vs Canada",
+  "competition": "FIFA World Cup 2022 · Group Stage · Ahmad Bin Ali Stadium",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Like Germany vs Japan, this match's raw tracking has no per-player speed field, so the pressure-on-ball-carrier score uses each player's own empirically derived max speed rather than a flat assumption -- see the methodology doc. Belgium sat deep to protect an early goal; Canada dominated territorially and missed a penalty, and lost 1-0.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:00",
+      "coverage": 73,
+      "url": "https://claude.ai/artifact/FJmmxcaFx7ZgPwEEUB5fPL"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:00–10:00",
+      "coverage": 49,
+      "url": "https://claude.ai/artifact/82uGQGJGaj5JkQMvH7DJJ2"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:00–15:00",
+      "coverage": 65,
+      "url": "https://claude.ai/artifact/NgBuyBKzYqMrV8nssdWuFR"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:00–20:00",
+      "coverage": 83,
+      "url": "https://claude.ai/artifact/9UrKvSj4LDEt5MnUpC3qYp"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:00–24:59",
+      "coverage": 76,
+      "url": "https://claude.ai/artifact/WuLL2gt8NNfqv9z3mtJFZE"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:00–29:59",
+      "coverage": 75,
+      "url": "https://claude.ai/artifact/Txo8EqptCN4jYujS2JVDRN"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "29:59–34:59",
+      "coverage": 71,
+      "url": "https://claude.ai/artifact/LMYxXhNHPMP1WGUr6xXUEN"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "34:59–39:59",
+      "coverage": 81,
+      "url": "https://claude.ai/artifact/9KyDsXjejrS4Dztqcw954w"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "39:59–44:59",
+      "coverage": 73,
+      "url": "https://claude.ai/artifact/5jzYBDJLcyADDfCBquxwHj"
+     },
+     {
+      "idx": 10,
+      "period": "1st half",
+      "clock": "44:59–49:59",
+      "coverage": 72,
+      "url": "https://claude.ai/artifact/74XcikPundhgKWWVmZoTGB"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "0:00–5:00",
+      "coverage": 78,
+      "url": "https://claude.ai/artifact/GzSkNech1CW1or7N1CJHcs"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "5:00–10:00",
+      "coverage": 67,
+      "url": "https://claude.ai/artifact/RCMLccXz8JPEQCkWTsJHME"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "10:00–15:01",
+      "coverage": 64,
+      "url": "https://claude.ai/artifact/6FpdtQtXiiMgxKT8hKRnAB"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "15:01–20:01",
+      "coverage": 69,
+      "url": "https://claude.ai/artifact/97KeAs3wf3em3GUBTS3TBJ"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "20:01–25:01",
+      "coverage": 84,
+      "url": "https://claude.ai/artifact/VQo44SWuF9z6jwwALq8QC1"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "25:01–30:01",
+      "coverage": 84,
+      "url": "https://claude.ai/artifact/WrgFyVW9TxR9Vzog5Pvdqj"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "30:01–35:01",
+      "coverage": 84,
+      "url": "https://claude.ai/artifact/Y3x7pAktJTAa39eehSm1BA"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "35:01–40:02",
+      "coverage": 42,
+      "url": "https://claude.ai/artifact/GWkELTBpiVUMK4fncNJiWZ"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "40:02–45:02",
+      "coverage": 73,
+      "url": "https://claude.ai/artifact/VUTndjD2qeo1kP58bgT4m9"
+     },
+     {
+      "idx": 20,
+      "period": "2nd half",
+      "clock": "45:02–50:02",
+      "coverage": 75,
+      "url": "https://claude.ai/artifact/Xcet53XBELMCKEqk26EGW8"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "arg-fra-2022-final",
+  "home": "Argentina",
+  "away": "France",
+  "label": "Argentina vs France",
+  "competition": "FIFA World Cup 2022 · Final · Lusail Stadium",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "Same classification logic as the other matches: back-line depth + inter-line compactness only. Unlike matches 2-4, this match's raw tracking DOES carry a per-player speed field (like the Morocco vs Spain baseline), so the pressure-on-ball-carrier score uses each player's own real tracked max speed -- see the methodology doc. One of the wildest finals in World Cup history: Argentina led 2-0, France drew level 2-2 in a two-minute Mbappe burst late in regulation, Argentina led again in extra time, Mbappe completed his hat-trick to make it 3-3, and Argentina won 4-2 on penalties.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–4:47",
+      "coverage": 72,
+      "url": "https://claude.ai/artifact/Jz6oYLThYvzuaVzN1JWDwL"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "4:47–9:33",
+      "coverage": 62,
+      "url": "https://claude.ai/artifact/1cBGbVPUt68UbqH95DJU1U"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "9:33–14:20",
+      "coverage": 49,
+      "url": "https://claude.ai/artifact/VDPgFzuqXLmC48PEyVMugd"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "14:20–19:06",
+      "coverage": 72,
+      "url": "https://claude.ai/artifact/LdJxCzbPovkDTPnq3DCJkW"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "19:07–23:53",
+      "coverage": 42,
+      "url": "https://claude.ai/artifact/LnMYT7DVx482Xf9ziR52zN"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "23:53–28:40",
+      "coverage": 55,
+      "url": "https://claude.ai/artifact/HhUQTZBJcRpD1qJgjLZ5bt"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "28:40–33:26",
+      "coverage": 60,
+      "url": "https://claude.ai/artifact/SLq8kcdPimEKAxV8SBuMaz"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "33:26–38:13",
+      "coverage": 66,
+      "url": "https://claude.ai/artifact/4uFdZuRhEZy6rREzACSPEx"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "38:13–43:00",
+      "coverage": 71,
+      "url": "https://claude.ai/artifact/7B4n2Nu8NXSoouWNPhwket"
+     },
+     {
+      "idx": 10,
+      "period": "1st half",
+      "clock": "43:00–47:46",
+      "coverage": 79,
+      "url": "https://claude.ai/artifact/SD3KnMRDdSd238DVDgPB7h"
+     },
+     {
+      "idx": 11,
+      "period": "1st half",
+      "clock": "47:46–52:33",
+      "coverage": 66,
+      "url": "https://claude.ai/artifact/ACLqgjX2SL29TQDqjyR1wR"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "0:00–4:52",
+      "coverage": 84,
+      "url": "https://claude.ai/artifact/Trgt1HGe7BYdH9S6fitgE9"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "4:52–9:45",
+      "coverage": 61,
+      "url": "https://claude.ai/artifact/NT9vCQTHNAmGuGiAE1hYjD"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "9:45–14:37",
+      "coverage": 55,
+      "url": "https://claude.ai/artifact/LWCxRSGGb4PaQDvZ2Mqi2r"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "14:37–19:30",
+      "coverage": 62,
+      "url": "https://claude.ai/artifact/KNs4X3vx5YMvQvaFyhmhxx"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "19:30–24:22",
+      "coverage": 70,
+      "url": "https://claude.ai/artifact/87wve5gJNpkHKoeJnr6ihD"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "24:22–29:15",
+      "coverage": 71,
+      "url": "https://claude.ai/artifact/7Se1pvPA5CEvATmeQkJSzq"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "29:15–34:07",
+      "coverage": 61,
+      "url": "https://claude.ai/artifact/2fu9nX6YFjbfEzRpE423e2"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "34:07–38:59",
+      "coverage": 51,
+      "url": "https://claude.ai/artifact/W38hYrdy8cNQZhrgt3DBjG"
+     },
+     {
+      "idx": 20,
+      "period": "2nd half",
+      "clock": "38:59–43:52",
+      "coverage": 38,
+      "url": "https://claude.ai/artifact/MfAzzshGjAfRBByce6816V"
+     },
+     {
+      "idx": 21,
+      "period": "2nd half",
+      "clock": "43:52–48:44",
+      "coverage": 58,
+      "url": "https://claude.ai/artifact/8HbL5hWZW6aoCj3vveQTrj"
+     },
+     {
+      "idx": 22,
+      "period": "2nd half",
+      "clock": "48:44–53:37",
+      "coverage": 59,
+      "url": "https://claude.ai/artifact/Ne8YbdDjfi1BYAwNUSSSQ1"
+     },
+     {
+      "idx": 23,
+      "period": "Extra time 1",
+      "clock": "0:00–5:22",
+      "coverage": 78,
+      "url": "https://claude.ai/artifact/VrjLRDeQoHLgBuJECGLLHv"
+     },
+     {
+      "idx": 24,
+      "period": "Extra time 1",
+      "clock": "5:22–10:43",
+      "coverage": 64,
+      "url": "https://claude.ai/artifact/VR4pFRDTEXpJCwF9vFvqJj"
+     },
+     {
+      "idx": 25,
+      "period": "Extra time 1",
+      "clock": "10:44–16:05",
+      "coverage": 61,
+      "url": "https://claude.ai/artifact/8zuna1apr4okiiP8cP1khk"
+     },
+     {
+      "idx": 26,
+      "period": "Extra time 2",
+      "clock": "0:00–4:47",
+      "coverage": 41,
+      "url": "https://claude.ai/artifact/6Qeu1vzggYp2xNYzCaK1uk"
+     },
+     {
+      "idx": 27,
+      "period": "Extra time 2",
+      "clock": "4:47–9:34",
+      "coverage": 52,
+      "url": "https://claude.ai/artifact/QfWCkje9rqWVYA5CcEcz4e"
+     },
+     {
+      "idx": 28,
+      "period": "Extra time 2",
+      "clock": "9:34–14:21",
+      "coverage": 36,
+      "url": "https://claude.ai/artifact/U3Y7tZXwDF5FbNBzce9zvu"
+     },
+     {
+      "idx": 29,
+      "period": "Extra time 2",
+      "clock": "14:22–19:09",
+      "coverage": 51,
+      "url": "https://claude.ai/artifact/GNXSXJ8k2yQEyhzUSkAmT3"
      }
     ]
    }
