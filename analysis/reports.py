@@ -41,7 +41,7 @@ def chips(row, board):
             continue
         rank = 1 + sum((x > v) if high_first else (x < v) for x in vals)
         text = f'{ordinal(rank)} of {len(vals)}' + (f' ({best})' if rank == 1 else '')
-        out.append(dict(label=label, value=fmt.format(v), rank=rank, rank_text=text))
+        out.append(dict(label=label, value=fmt.format(v), rank=rank, of=len(vals), rank_text=text))
     return out
 
 

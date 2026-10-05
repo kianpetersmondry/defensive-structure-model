@@ -4,7 +4,7 @@
   "team": "Morocco",
   "headline": "The tightest block in the set: deep, short and very hard to play through the middle, but it gave Spain the flanks.",
   "good": [
-   "Most compact team of the twelve: 18 m from front to back and 51 m² of open holes inside the block on average, with only about one Spain player free inside it at a time.",
+   "Most compact team of the 24: 18 m from front to back and 51 m² of open holes inside the block on average, with only about one Spain player free inside it at a time.",
    "Held its shape for 120 minutes. Block length was 19 m in the first 15 minutes and 18 m in the last 15 of normal time, and the back line barely moved (29 to 31 m).",
    "Kept Spain to 14 shots on 28% possession, and only 2 came within 15 s of Morocco losing the ball."
   ],
@@ -25,11 +25,11 @@
   "headline": "A high line and a fierce counter-press kept Morocco to 6 shots, but the block behind the press was loose.",
   "good": [
    "Counter-pressed relentlessly: 170 of its 252 presses came within 3 s of losing the ball, 62 of them winning it straight back. Only Germany pressed more often per minute of defending.",
-   "Faced just 6 shots, the fewest of the twelve teams, with a back line pushed 48 m from its own goal (second highest).",
+   "Faced just 6 shots, the fewest of the 24 teams, with a back line pushed 48 m from its own goal (second highest).",
    "Lost the ball in its own half only 22 times all game, so Morocco rarely got to counter from close range."
   ],
   "exploit": [
-   "Survive the first 3 seconds after winning it. Once the counter-press is beaten there is room: 162 m² of holes inside the block (10th of 12) and about 1.6 Morocco players free inside it.",
+   "Survive the first 3 seconds after winning it. Once the counter-press is beaten there is room: 162 m² of holes inside the block (18th of 24) and about 1.6 Morocco players free inside it.",
    "Play in behind the high line. 33 of the 58 passes through Spain's lines were received behind the back line, often from Hakimi (10) or long from Bono (7).",
    "Attack the wings. Most line-breaks arrived on the flanks (19 on Spain's left, 16 on its right, 8 through the centre)."
   ],
@@ -44,8 +44,8 @@
   "team": "France",
   "headline": "Went ahead early, sat in a compact block, dropped deeper as the game went on and struck on the break.",
   "good": [
-   "Third most compact team of the twelve: 98 m² of holes and a 26 m block, with about 1.3 Morocco players free inside it.",
-   "Lethal from ball wins: 9 shots within 15 s of winning it (second most of the twelve), and 37 of 108 ball wins were in or into the final third inside 10 s.",
+   "Third most compact team of the 24: 98 m² of holes and a 26 m block, with about 1.3 Morocco players free inside it.",
+   "Lethal from ball wins: 9 shots within 15 s of winning it (joint third most of the 24), and 37 of 108 ball wins were in or into the final third inside 10 s.",
    "No shots conceded from restarts all game."
   ],
   "exploit": [
@@ -82,14 +82,14 @@
  {
   "slug": "ger-jpn",
   "team": "Germany",
-  "headline": "The most aggressive press and highest line of the twelve, and one of the loosest blocks behind it.",
+  "headline": "The most aggressive press and highest line of the 24, and one of the loosest blocks behind it.",
   "good": [
    "Best press in the set: 42% of presses won the ball within 5 s (46% in Japan's half). Havertz (38 presses) and Musiala (32, winning it back 53% of the time) led it.",
-   "Won 53% of its ball wins in Japan's half, the highest share of the twelve, with a back line 48 m from its own goal (also the highest).",
+   "Won 53% of its ball wins in Japan's half, the highest share of the 24, with a back line 48 m from its own goal (also the highest).",
    "Kept Japan to 13 shots on 70% possession."
   ],
   "exploit": [
-   "Beat the first press and the block is wide open: about 1.9 Japan players free inside it (the most of the twelve), 169 m² of holes and a 32 m block (both second worst).",
+   "Beat the first press and the block is wide open: about 1.9 Japan players free inside it (the most of the 24), 169 m² of holes and a 32 m block (19th and 18th of 24).",
    "Run in behind. Germany's back line didn't drop at all without the ball, and half of the 44 passes through its lines (22) were received behind it.",
    "Attack Germany's left: 17 of those 44 arrived there, most often from Sakai (9). Late on, chasing the game, its back line went past 60 m."
   ],
@@ -104,13 +104,13 @@
   "team": "Japan",
   "headline": "A deep, compact block that bent a long way (27 shots faced) but didn't break, then turned the game in transition.",
   "good": [
-   "Second most compact team of the twelve: 80 m² of holes, a 25 m block and about 1.3 Germany players free inside it.",
+   "Second most compact team of the 24: 80 m² of holes, a 25 m block and about 1.3 Germany players free inside it.",
    "Dropped deeper and tighter once ahead: its back line went from 34 m to 26 m and the block from 25 m to 22 m long in the last 15 minutes.",
    "Stayed patient: 111 ball wins, 30 of them in or into the final third inside 10 s."
   ],
   "exploit": [
-   "Press its build-up. Japan faced 27 shots, the most of the twelve, and 13 came after it lost the ball. 6 of those were won by Germany in Japan's own third.",
-   "Japan's press rarely worked: 26% of presses won the ball within 5 s, the lowest of the twelve, and just 1 in 48 against a carry or first touch.",
+   "Press its build-up. Japan faced 27 shots, the most of the 24, and 13 came after it lost the ball. 6 of those were won by Germany in Japan's own third.",
+   "Japan's press rarely worked: 26% of presses won the ball within 5 s, the lowest of the 24, and just 1 in 48 against a carry or first touch.",
    "Switch play to its right side: 26 of 90 line-breaking passes arrived there, with Gündoğan (16), Kimmich (15) and Raum (12) the main sources."
   ],
   "views": [
@@ -130,7 +130,7 @@
   ],
   "exploit": [
    "Run in behind: 38 of the 50 passes through Belgium's lines were received behind the back line, the highest share of any team. Johnston (12) and Eustaquio (11) found them most.",
-   "Press it without fear of the counter: only 16% of Belgium's ball wins came in Canada's half and it had 21 fast attacks, both the lowest of the twelve.",
+   "Press it without fear of the counter: only 16% of Belgium's ball wins came in Canada's half and it had 21 fast attacks, both the second lowest of the 24.",
    "Win it in midfield: 10 of the 22 shots Belgium faced came after it lost the ball, 5 of them won by Canada in the middle third."
   ],
   "views": [
@@ -144,12 +144,12 @@
   "team": "Canada",
   "headline": "Front-foot and brave: a high line, lots of high ball wins and 22 shots, but the block stretched as the game went on.",
   "good": [
-   "Won the ball high: 49% of its ball wins came in Belgium's half, with 47 fast attacks (both second best of the twelve) and a back line 46 m from goal.",
+   "Won the ball high: 49% of its ball wins came in Belgium's half, with 47 fast attacks (third and joint second best of the 24) and a back line 46 m from goal.",
    "Jonathan David led the press: 44 presses, and half of them won the ball back within 5 s.",
-   "Faced only 10 shots, the third fewest of the twelve."
+   "Faced only 10 shots, joint fourth fewest of the 24."
   ],
   "exploit": [
-   "Wait for it to stretch: Canada's block grew from 31 m to 35 m long in the last 15 minutes, and it had 161 m² of holes on average (9th of 12).",
+   "Wait for it to stretch: Canada's block grew from 31 m to 35 m long in the last 15 minutes, and it had 161 m² of holes on average (17th of 24).",
    "Go long from the back. Belgium's line-breaks came through Castagne (9), Alderweireld (7) and De Bruyne (7), often straight over the press.",
    "Use set pieces: 5 of the 10 shots Canada faced came after a restart."
   ],
@@ -165,7 +165,7 @@
   "headline": "Balanced and ruthless in transition: 12 shots straight from ball wins, more than any team in the set.",
   "good": [
    "Counter-pressed very well: 41% of presses won the ball within 5 s (78 wins from 169 counter-presses). Álvarez (71 presses) and Messi (52) led it.",
-   "Deadly from ball wins: 12 shots within 15 s of winning it, the most of the twelve.",
+   "Deadly from ball wins: 12 shots within 15 s of winning it, the most of the 24.",
    "Faced only 12 shots over 120 minutes."
   ],
   "exploit": [
@@ -184,14 +184,14 @@
   "team": "France",
   "headline": "Carved open for long spells: Argentina played through France's lines 101 times, and 64 of those passes got in behind, more than against any other team.",
   "good": [
-   "Most fast attacks of the twelve: 50 ball wins were in or into the final third inside 10 s.",
+   "Most fast attacks of the 24: 50 ball wins were in or into the final third inside 10 s.",
    "Pressed well when it chose to: 40% won the ball within 5 s. Mbappé (57 presses) and Kolo Muani (43) led it.",
    "Kept its shape across normal time: back line 36 m in the first 15 minutes and 38 m in the last 15, block 30 m to 28 m long."
   ],
   "exploit": [
    "Get in behind: 64 of 101 line-breaking passes were received behind France's back line. Messi (24), Enzo Fernández (14) and Mac Allister (11) played them.",
    "Win it in midfield and go: France faced 23 shots, 15 after losing the ball, 8 of them won by Argentina in the middle third.",
-   "Find the space between the lines: about 1.7 Argentina players were free inside France's block at any moment (10th of 12), most often 16-24 m ahead of its back line."
+   "Find the space between the lines: about 1.7 Argentina players were free inside France's block at any moment (21st of 24), most often 16-24 m ahead of its back line."
   ],
   "views": [
    "Line-breaking passes",
@@ -202,15 +202,15 @@
  {
   "slug": "koe-fcb",
   "team": "Köln",
-  "headline": "Stood a high line and pressed a lot, but the press rarely won the ball and the block was the longest of the twelve.",
+  "headline": "Stood a high line and pressed a lot, but the press rarely won the ball and the block stretched as the game went on.",
   "good": [
-   "Held its back line 40 m from its own goal (4th highest of the twelve) and pushed it 3 m further up when Bayern had the ball.",
+   "Held its back line 40 m from its own goal (6th highest of the 24) and pushed it 3 m further up when Bayern had the ball.",
    "Rarely punished for losing it: only 2 of the 117 times it lost the ball led to a Bayern shot within 15 s.",
    "Maina (57 presses) and Ljubicic (55, winning it back 15 times) drove the press, and 40 of its 112 ball wins came in Bayern's half."
   ],
   "exploit": [
-   "Play through the first press: only 28% of Köln's presses won the ball within 5 s, among the three lowest of the twelve.",
-   "Stretch it: at 32.5 m from front to back, Köln's block was the longest of the twelve, and it grew from 29 m in the first 15 minutes to 34 m in the last 15.",
+   "Play through the first press: only 28% of Köln's presses won the ball within 5 s, in the bottom five of the 24.",
+   "Stretch it: Köln's block averaged 32.5 m from front to back (19th of 24), and it grew from 29 m in the first 15 minutes to 34 m in the last 15.",
    "Use restarts: 7 of the 12 shots Köln faced came after a restart. Mazraoui (13) broke its lines most often from open play."
   ],
   "views": [
@@ -222,14 +222,14 @@
  {
   "slug": "koe-fcb",
   "team": "Bayern Munich",
-  "headline": "Gave Köln few shots, but left more open space inside its block than any of the twelve teams.",
+  "headline": "Gave Köln few shots, but left more open space inside its block than all but one of the 24 teams.",
   "good": [
-   "Faced just 9 shots, the second fewest of the twelve.",
-   "Counter-pressed well: 72 of its 157 counter-presses won the ball back within 5 s, and 38% of all its presses did (5th of the twelve).",
+   "Faced just 9 shots, joint second fewest of the 24.",
+   "Counter-pressed well: 72 of its 157 counter-presses won the ball back within 5 s, and 38% of all its presses did (joint 9th of the 24).",
    "Sané's pressing paid off most (19 ball wins from 51 presses); Gnabry pressed most often (56)."
   ],
   "exploit": [
-   "Get between the lines: 174 m² of holes inside the block, the most of the twelve, and about 1.8 Köln players free inside it (second most), most often in the centre just ahead of the back line.",
+   "Get between the lines: 174 m² of holes inside the block, second most of the 24, and about 1.8 Köln players free inside it (also second most), most often in the centre just ahead of the back line.",
    "Attack Bayern's left: 30 of the 48 passes through its lines were received on that side (20 on the wing), and 29 of the 48 were received behind the back line. Schmitz (11) broke its lines most often.",
    "Keep going late: its back line fell from 46 m in the first 15 minutes to 37 m in the last 15 of normal time, and the block narrowed from 40 m to 35 m."
   ],
@@ -237,6 +237,246 @@
    "Where the gaps open",
    "Line-breaking passes",
    "Shape over time"
+  ]
+ },
+ {
+  "slug": "boc-lev",
+  "team": "Bochum",
+  "headline": "The fewest free opponents of all 24 teams: narrow, well spaced and quick to break, though Wirtz still found a way through.",
+  "good": [
+   "Left about one Leverkusen player free inside its block at a time (0.95, the fewest of the 24), with 112 m² of holes (4th tightest) in a block 33 m wide (2nd narrowest).",
+   "Broke fast: 47 of its 116 ball wins were in or into the final third within 10 s (joint 2nd most of the 24), and 49 came in Leverkusen's half.",
+   "Kept a clean sheet against 11 shots, and only 3 of them came after Bochum lost the ball in open play."
+  ],
+  "exploit": [
+   "Get Wirtz on the ball: Leverkusen broke Bochum's lines 41 times, 23 of them received behind the back line, and Wirtz (10) and Palacios (8) played the most.",
+   "Attack its left: 19 of the 41 line-breaks arrived on Bochum's left side, 12 of them on the wing, more than any other channel.",
+   "Use restarts: 6 of the 11 shots Bochum faced came after a set piece, throw-in or goal kick."
+  ],
+  "views": [
+   "Where the gaps open",
+   "Line-breaking passes",
+   "Turnovers"
+  ]
+ },
+ {
+  "slug": "boc-lev",
+  "team": "Bayer Leverkusen",
+  "headline": "Deep and narrow, and it came apart as the game went on: a 25 m block early on was 36 m long by the end.",
+  "good": [
+   "The narrowest block of all 24 teams (33 m wide), and it let Bochum take only 10 shots.",
+   "Wirtz led the press from the front: 51 presses, 19 of them winning the ball back within 5 s. As a team, 37% of presses did (11th of 24).",
+   "Compact early: 25 m from front to back in the first 15 minutes."
+  ],
+  "exploit": [
+   "Go in behind: 26 of the 39 passes through its lines were received behind the back line (2nd highest share of the 24), and Bochum keeper Riemann (10) broke the lines more than anyone.",
+   "Win it in midfield: 5 of the 10 shots it faced came after Bochum won the ball in the middle third, and 49 of its 116 losses were in its own half. All three goals it conceded came from restarts.",
+   "Keep going late: the block stretched from 25 m to 36 m between the first and last 15 minutes, and about 1.8 Bochum players were free inside it on average (22nd of 24)."
+  ],
+  "views": [
+   "Line-breaking passes",
+   "Shape over time",
+   "Chances conceded"
+  ]
+ },
+ {
+  "slug": "dus-reg",
+  "team": "Düsseldorf",
+  "headline": "Hard to play through and dangerous on the turnover, but a long block with room inside it.",
+  "good": [
+   "The fewest line-breaking passes conceded of all 24 teams: Regensburg got through its lines only 22 times, about once every 55 s of defending.",
+   "Won 45% of its ball wins in Regensburg's half (4th of 24), and 9 of them led to a shot within 15 s (joint 3rd most).",
+   "Ginczek led the press with 60 presses, 19 of them winning the ball back within 5 s, and scored the opener."
+  ],
+  "exploit": [
+   "Stand between the lines: 171 m² of holes inside the block (joint 20th of 24) and about 1.7 Regensburg players free inside it, most often in the centre 8-16 m ahead of the back line.",
+   "Stretch it: at 33 m from front to back, the block was among the longest of the 24 (22nd).",
+   "Use restarts: 6 of the 12 shots it faced came after a set piece, throw-in or goal kick."
+  ],
+  "views": [
+   "Line-breaking passes",
+   "Where the gaps open",
+   "Turnovers"
+  ]
+ },
+ {
+  "slug": "dus-reg",
+  "team": "Jahn Regensburg",
+  "headline": "Kept the middle shut, but its block was long and open, and it gave the ball away in its own half too often.",
+  "good": [
+   "Shut the centre: only 2 of the 27 passes through its lines were received in the centre and 2 more in its left half-space. The rest went round the outside.",
+   "Mees (35 presses, 15 won back) and Shipnoski (31, 16) made its press work: 35% of presses won the ball within 5 s (13th of 24).",
+   "A fairly narrow block, 37 m wide (7th narrowest of 24)."
+  ],
+  "exploit": [
+   "Win it high: 9 of the 15 shots it faced came after losing the ball, 4 of them won by Düsseldorf in Regensburg's own third, and 44 of its 97 losses were in its own half.",
+   "Get between the lines: 172 m² of holes (22nd of 24) in a block 34 m long (23rd), with Düsseldorf players most often free just ahead of the back line.",
+   "Attack the wings: 19 of the 27 line-breaks arrived on a touchline, 10 on Regensburg's right. Hendrix (6) found them most."
+  ],
+  "views": [
+   "Turnovers",
+   "Where the gaps open",
+   "Line-breaking passes"
+  ]
+ },
+ {
+  "slug": "dus-hro",
+  "team": "Düsseldorf",
+  "headline": "Its best defensive game of the five: tight inside the block, with a press that won the ball back.",
+  "good": [
+   "About 1.2 Rostock players free inside the block (3rd fewest of 24) and 125 m² of holes, its tightest of the five Düsseldorf games.",
+   "Pressed well: 40% of presses won the ball within 5 s (joint 4th of 24). Klaus won it back 23 times from 51 presses.",
+   "Faced only 10 shots (joint 4th fewest of 24)."
+  ],
+  "exploit": [
+   "Go through the middle: 11 of the 34 passes through its lines were received in the centre, and 18 of the 34 behind the back line. Fröde and Neidhart (6 each) broke the lines most.",
+   "Keep going late: its back line dropped from 42 m in the first 15 minutes to 33 m in the last 15.",
+   "Win it in midfield: 5 of the 10 shots it faced came after losing the ball, and 49 of its 125 losses were in its own half."
+  ],
+  "views": [
+   "Where the gaps open",
+   "Pressing",
+   "Shape over time"
+  ]
+ },
+ {
+  "slug": "dus-hro",
+  "team": "Hansa Rostock",
+  "headline": "A press that won the ball back often, but a block that came apart as it chased the game.",
+  "good": [
+   "Pressed well: 41% of presses won the ball within 5 s (joint 2nd of 24), and 70 of its 164 counter-presses won it straight back.",
+   "Won the ball 125 times (4th most of 24) and broke quickly: 46 of those wins were in or into the final third within 10 s (4th).",
+   "Compact early: 26 m from front to back in the first 15 minutes."
+  ],
+  "exploit": [
+   "Wait for it to stretch: the block grew from 26 m to 37 m long between the first and last 15 minutes, as the back line pushed up from 37 m to 44 m.",
+   "Attack its left: 18 of the 32 passes through its lines arrived on that side (10 in the half-space), and 20 of the 32 were received behind the back line.",
+   "Press its build-up: 7 of the 12 shots it faced came after losing the ball, 4 of them won by Düsseldorf in Rostock's own third."
+  ],
+  "views": [
+   "Pressing",
+   "Shape over time",
+   "Line-breaking passes"
+  ]
+ },
+ {
+  "slug": "dus-fcn",
+  "team": "Düsseldorf",
+  "headline": "Had the ball and pressed hard, but lost to one counter: its block was long and the middle open.",
+  "good": [
+   "Had 63% of the ball (3rd most of 24) and pressed hard when it lost it: 11.1 presses per minute of defending, 3rd most of the 24.",
+   "Faced only 10 shots (joint 4th fewest of 24).",
+   "Narrowed quickly without the ball: from 44 m wide in possession to 37 m without it."
+  ],
+  "exploit": [
+   "Go through the middle: 20 of the 34 passes through its lines arrived in the centre or its right half-space, and 20 of the 34 were received behind the back line.",
+   "Counter it: 6 of the 10 shots it faced came after losing the ball, and the goal came 3 s after Nürnberg won it in Düsseldorf's third.",
+   "Stretch it: at 33 m from front to back the block was among the longest of the 24 (21st), and its back line sat 51 m from goal in the last 15 minutes as it chased the game."
+  ],
+  "views": [
+   "Pressing",
+   "Chances conceded",
+   "Line-breaking passes"
+  ]
+ },
+ {
+  "slug": "dus-fcn",
+  "team": "Nürnberg",
+  "headline": "Protected a lead with a compact block that dropped deeper and narrower, but gave Düsseldorf the wings and the set pieces.",
+  "good": [
+   "Compact: 114 m² of holes inside the block (5th tightest of 24) and 29 m from front to back (7th shortest).",
+   "Dropped deeper and narrower to protect the lead: its back line went from 37 m in the first 15 minutes to 25 m in the last 15, and the block narrowed from 41 m to 33 m.",
+   "Kept a clean sheet against 16 shots, and only 4 came after it lost the ball in open play."
+  ],
+  "exploit": [
+   "Win set pieces: 10 of the 16 shots it faced came after a restart.",
+   "Go wide and in behind: 22 of the 43 passes through its lines arrived on a wing, and 27 of the 43 were received behind the back line. Zimmermann and Karbownik (7 each) found them most.",
+   "Don't fear its press: only 27% of presses won the ball within 5 s (joint 22nd of 24), even with Daferner pressing 71 times."
+  ],
+  "views": [
+   "Shape over time",
+   "Chances conceded",
+   "Line-breaking passes"
+  ]
+ },
+ {
+  "slug": "dus-stp",
+  "team": "Düsseldorf",
+  "headline": "Won 1-0 with a clean sheet, but St. Pauli broke its lines more often than any other opponent in Düsseldorf's five games.",
+  "good": [
+   "Kept a clean sheet. Hennings scored and led the press: 60 presses, 19 of them winning the ball back within 5 s.",
+   "Kept the centre closed: only 4 of the 54 passes through its lines were received there.",
+   "Pressed in St. Pauli's half: 170 of its 291 presses came there."
+  ],
+  "exploit": [
+   "Attack its right side: St. Pauli broke its lines 54 times, the most in Düsseldorf's five games, and 31 arrived on its right (19 on the wing). Paqarada (14) broke them more than anyone.",
+   "Press it in its own third: 9 of the 14 shots it faced came after losing the ball, 5 of them lost in its own third, and 10 of its 109 losses led to a St. Pauli shot within 15 s.",
+   "Play through the first press: 31% of its presses won the ball within 5 s (18th of 24)."
+  ],
+  "views": [
+   "Line-breaking passes",
+   "Turnovers",
+   "Pressing"
+  ]
+ },
+ {
+  "slug": "dus-stp",
+  "team": "St. Pauli",
+  "headline": "A high line and an effective press, but a wide, open block behind them.",
+  "good": [
+   "Held a high line: 43 m from its own goal (5th highest of 24), and it stayed there late (46 m in the first 15 minutes, 47 m in the last 15).",
+   "Pressed well: 40% of presses won the ball within 5 s (joint 4th of 24), and 10 ball wins led to a shot within 15 s (2nd most).",
+   "Kept the centre shut: only 2 of the 29 passes through its lines were received in the centre."
+  ],
+  "exploit": [
+   "Get between the lines: 171 m² of holes (joint 20th of 24) and about 1.7 Düsseldorf players free inside the block (20th), most often 8-16 m ahead of the back line.",
+   "Go round it: the block was 40 m wide (22nd of 24), and 19 of the 29 line-breaks arrived on a wing. Appelkamp (9) found them most.",
+   "Be quick: 12 of the 13 shots it faced came within 10 s of the attack starting, 7 of them after it lost the ball."
+  ],
+  "views": [
+   "Where the gaps open",
+   "Pressing",
+   "Chances conceded"
+  ]
+ },
+ {
+  "slug": "dus-fck",
+  "team": "Düsseldorf",
+  "headline": "Gave Kaiserslautern 9 shots and nothing on the break, but lost 2-1: the longest, most open block of the 24.",
+  "good": [
+   "Faced only 9 shots (joint 2nd fewest of 24), and none came after losing the ball in open play. Just 9 of its 83 losses were in its own half.",
+   "Won the ball high: 51% of its ball wins came in Kaiserslautern's half (2nd of 24), with a back line 43 m from its own goal (4th highest).",
+   "Had 62% of the ball (4th most of 24)."
+  ],
+  "exploit": [
+   "Get between the lines: 204 m² of holes inside the block, the most of the 24, in a block 35 m from front to back, also the longest.",
+   "Win set pieces: 7 of the 9 shots it faced came after a restart, including the winning penalty in the 96th minute.",
+   "Go through the middle: 15 of the 28 passes through its lines arrived in the centre or its left half-space. Ritter and Zimmer (5 each) broke its lines most."
+  ],
+  "views": [
+   "Where the gaps open",
+   "Chances conceded",
+   "Turnovers"
+  ]
+ },
+ {
+  "slug": "dus-fck",
+  "team": "Kaiserslautern",
+  "headline": "Sat deep, let Düsseldorf have the ball and was the hardest team of the 24 to play through, then won 2-1 with 9 shots.",
+  "good": [
+   "The hardest of the 24 teams to play through: one line-breaking pass for every 59 s of defending, and only 7 of the 33 arrived in the centre.",
+   "Few free Düsseldorf players inside its block: about 1.3 at a time (4th fewest of 24), in a block 30 m from front to back (8th shortest).",
+   "Made its chances count: 2 goals from 9 shots, the winner a 96th-minute penalty."
+  ],
+  "exploit": [
+   "Win set pieces: 12 of the 18 shots it faced came after a restart, including Karbownik's opener.",
+   "Keep it pinned: just 11% of its ball wins came in Düsseldorf's half and only 19 led to a fast attack, both the lowest of the 24, so pressure rarely comes back at you.",
+   "Win it high: 43 of its 84 losses were in its own half, and its press won the ball within 5 s only 27% of the time (joint 22nd of 24)."
+  ],
+  "views": [
+   "Line-breaking passes",
+   "Chances conceded",
+   "Turnovers"
   ]
  }
 ]

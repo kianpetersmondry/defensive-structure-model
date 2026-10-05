@@ -7,7 +7,7 @@ Pages (all relative links, so the folder works on any static host or straight fr
     index.html          hero with a short clip of real tracking, match cards, analysis cards, a report, the method
     matches.html        every match with its chapter list
     analysis.html       the ten Analysis views for any match (?m=<slug>&v=<view>)
-    reports.html        the twelve scouting reports (?t=<slug>-<team>)
+    reports.html        the scouting reports (?t=<slug>-<team>)
     compare.html        the comparison board, sortable
     broadcast.html      the broadcast-footage pages
     method.html         how the model works, and the Behind the Model pages
@@ -117,6 +117,22 @@ def mini_pitch(m):
             '<circle cx="52.5" cy="25" r="9.15"/><rect x="2" y="4.8" width="16.5" height="40.3"/><rect x="86.5" y="4.8" width="16.5" height="40.3"/></g></svg>')
 
 
+def competition(m):
+    """'World Cup 2022', 'Bundesliga 2022/23', '2. Bundesliga 2022/23': the first part of the registry's competition."""
+    return m['competition'].split(' · ')[0].replace('FIFA ', '')
+
+
+def grouped(ms, render, wrap_cls):
+    """Matches in registry order, one labelled group per competition."""
+    groups = []
+    for m in ms:
+        if not groups or groups[-1][0] != competition(m):
+            groups.append((competition(m), []))
+        groups[-1][1].append(m)
+    return ''.join(f'<div class="mgroup"><h3 class="glabel">{e(name)} <span>{len(g)} match{"es" if len(g) > 1 else ""}</span></h3>'
+                   f'<div class="{wrap_cls}">{"".join(render(m) for m in g)}</div></div>' for name, g in groups)
+
+
 def match_card(m):
     note = f'<div class="note">{e(m["note"])}</div>' if m['note'] else ''
     return (f'<a class="match" href="matches/{m["folder"]}/chapter-01.html">{mini_pitch(m)}<div class="body"><div class="comp">{e(m["comp"])}</div>'
@@ -173,14 +189,14 @@ def home(ms, kinds, reports, clip, thumbs):
 <div class="pitch-caption"><span><b>{e(cm['homeTeam'])} vs {e(cm['awayTeam'])}</b> · {e(clip.get('caption', ''))}</span><a href="matches/{clip['folder']}/{clip.get('chapter', 'chapter-01.html')}" class="link">Watch this chapter →</a></div></div>
 </div></header>
 <div class="strip"><div class="wrap">
-<div class="stat"><div class="n">{len(ms)}</div><div class="l">full matches, World Cup and Bundesliga</div></div>
+<div class="stat"><div class="n">{len(ms)}</div><div class="l">full matches, World Cup and German league</div></div>
 <div class="stat"><div class="n">{n_ch}</div><div class="l">five-minute chapters of 2-D animation</div></div>
 <div class="stat"><div class="n">{len(kinds)}</div><div class="l">match-level analysis views</div></div>
 <div class="stat"><div class="n">{len(reports)}</div><div class="l">team scouting reports</div></div>
 </div></div>
 <section class="block" id="matches"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Watch the match</div><h2>Matches</h2>
 <p>Every match is rendered in full, split into five-minute chapters you can play straight through.</p></div><a class="link" href="matches.html">All chapters →</a></div>
-<div class="matches">{''.join(match_card(m) for m in ms)}</div></div></section>
+{grouped(ms, match_card, 'matches')}</div></section>
 <section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Analysis</div><h2>Ten ways to read a defence</h2>
 <p>The same views for every match, each team drawn attacking left to right.</p></div><a class="link" href="analysis.html">Open the analysis →</a></div>
 <div class="views">{''.join(view_card(k, thumbs[k['key']]) for k in kinds)}</div></div></section>
@@ -189,7 +205,7 @@ def home(ms, kinds, reports, clip, thumbs):
 <article class="report"><div class="left"><div class="who"><span class="dot lg" style="background:{rep['color']}"></span>{e(rep['team'])} · vs {e(rep['opp'])} · {e(rep['sub'].split(' · ')[0])}</div>
 <blockquote>{e(rep['headline'])}</blockquote><ul>{goods}</ul>
 <div class="views-links"><a class="btn small" href="reports.html?t=mar-esp-morocco">Read the full report →</a></div></div>
-<div class="right"><div class="eyebrow" style="margin-bottom:6px">Ranked against all {len(reports)} teams</div>{chips}</div></article></div></section>
+<div class="right"><div class="eyebrow" style="margin-bottom:6px">Ranked against all {rep['chips'][0].get('of', len(reports))} teams</div>{chips}</div></article></div></section>
 <section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Behind the model</div><h2>How it works</h2></div><a class="link" href="method.html">Read the methodology →</a></div>
 <div class="method">
 <a class="mcard" href="method.html#phase"><div class="num">01 · Phase</div><h3>Shape without the ball</h3><p>Back-line depth and team compactness classify every frame as high press, mid block, low block or transition.</p></a>
@@ -201,10 +217,15 @@ def home(ms, kinds, reports, clip, thumbs):
 
 
 def chip_html(c):
-    pos = (c['rank'] - 1) / 11 * 100
+    pos = (c['rank'] - 1) / max(1, c.get('of', 12) - 1) * 100
     label = c['label'][0].upper() + c['label'][1:]
     return (f'<div class="chip"><span class="k">{e(label)}</span><span class="v">{e(c["value"])}</span>'
             f'<span class="r"><span class="rankbar"><i style="left:{pos:.0f}%"></i></span>{e(c["rank_text"])}</span></div>')
+
+
+def jump(m):
+    return (f'<a class="mtab" href="#{m["slug"]}"><span class="dot" style="background:{m["hc"]}"></span>{e(m["hcode"])} '
+            f'<span class="sc">{score(m)}</span> {e(m["acode"])}<span class="dot" style="background:{m["ac"]}"></span></a>')
 
 
 def matches_page(ms):
@@ -219,7 +240,8 @@ def matches_page(ms):
     body = (f'<header class="page-head"><div class="wrap"><div class="eyebrow">Watch the match</div><h1>Matches</h1>'
             f'<p>Each match is split into chapters of about five minutes, aligned to the period breaks. Every chapter links to the next, so you can watch straight through. '
             f'The ball percentage is the share of a chapter’s frames with a tracked ball.</p></div></header>'
-            f'<section class="block" style="padding-top:28px"><div class="wrap">{"".join(blocks)}</div></section>')
+            f'<section class="block" style="padding-top:28px"><div class="wrap"><nav class="jumpnav" aria-label="Jump to a match">{grouped(ms, jump, "jumps")}</nav>'
+            f'{"".join(blocks)}</div></section>')
     return page('Matches · Defensive Structure Model', 'Matches', body)
 
 
@@ -237,13 +259,15 @@ def analysis_page(ms, kinds):
     return page('Analysis · Defensive Structure Model', 'Analysis', body, data)
 
 
-def reports_page(reports, kinds):
+def reports_page(reports, kinds, ms):
     body = ('<header class="page-head"><div class="wrap"><div class="eyebrow">Scouting reports</div><h1>What they did well, and how to get at them</h1>'
             '<p>One report per team per match, drawn from the Analysis views. The five stats are ranked against every team on the site.</p></div></header>'
-            '<section class="block" style="padding-top:28px"><div class="wrap"><div class="tabs" id="reportTabs" role="tablist" aria-label="Team"></div>'
+            '<section class="block" style="padding-top:28px"><div class="wrap"><div class="tabs" id="reportTabs" role="tablist" aria-label="Match"></div>'
+            '<div class="subtabs" id="reportTeams" role="tablist" aria-label="Team"></div>'
             '<article class="report" id="reportView" style="margin-top:18px"></article></div></section>')
     return page('Scouting reports · Defensive Structure Model', 'Reports', body,
-                {'reports': reports, 'kinds': [{'name': k['name'], 'key': k['key']} for k in kinds]})
+                {'reports': reports, 'kinds': [{'name': k['name'], 'key': k['key']} for k in kinds],
+                 'matches': [dict(slug=m['slug'], hcode=m['hcode'], acode=m['acode'], hc=m['hc'], ac=m['ac'], hs=m['hs'], **{'as': m['as_']}) for m in ms]})
 
 
 def compare_page(board):
@@ -316,6 +340,23 @@ def chapter_data(m, idx, src_dir):
     return s[a0:a1].strip(), s[h0:h1].strip()
 
 
+def match_tabs_js(ms):
+    """assets/match-tabs.js: the match strip on every chapter page, written from one list."""
+    data = [dict(f=m['folder'], h=m['hcode'], a=m['acode'], hc=m['hc'], ac=m['ac'], s=score(m)) for m in ms]
+    return ('/* Match strip for the chapter pages, generated by pipeline/build_web.py. */\n(function () {\n'
+            f'  var M = {json.dumps(data, ensure_ascii=False)};\n'
+            "  var box = document.getElementById('matchTabs'); if (!box) return;\n"
+            "  var cur = box.getAttribute('data-current');\n"
+            "  box.innerHTML = M.map(function (m) {\n"
+            "    return '<a class=\"mtab\" href=\"../' + m.f + '/chapter-01.html\"' + (m.f === cur ? ' aria-current=\"page\"' : '') + '>' +\n"
+            "      '<span class=\"dot\" style=\"background:' + m.hc + '\"></span>' + m.h + ' <span class=\"sc\">' + m.s + '</span> ' + m.a +\n"
+            "      '<span class=\"dot\" style=\"background:' + m.ac + '\"></span></a>';\n"
+            "  }).join('');\n"
+            "  var c = box.querySelector('[aria-current]');\n"
+            "  if (c && box.scrollWidth > box.clientWidth) box.scrollLeft = c.offsetLeft - box.offsetLeft - 16;\n"
+            "})();\n")
+
+
 def build_chapters(ms, src_dir, out_dir, only=None):
     head_t = open(root('templates', 'chapter_head.html'), encoding='utf-8').read()
     tail_t = open(root('templates', 'chapter_tail.html'), encoding='utf-8').read()
@@ -325,10 +366,11 @@ def build_chapters(ms, src_dir, out_dir, only=None):
         if only and m['mid'] != only:
             continue
         chs, n = m['chapters'], len(m['chapters'])
-        cur = ' aria-current="page"'
-        tabs = ''.join(f'<a class="mtab" href="{rootp}matches/{x["folder"]}/chapter-01.html"{cur if x is m else ""}>'
-                       f'<span class="dot" style="background:{x["hc"]}"></span>{x["hcode"]} <span class="sc">{score(x)}</span> {x["acode"]}'
-                       f'<span class="dot" style="background:{x["ac"]}"></span></a>' for x in ms)
+        # only this match is written into the page; assets/match-tabs.js fills in the rest, so adding a match
+        # does not change (or re-upload) every other chapter page
+        tabs = (f'<a class="mtab" href="chapter-01.html" aria-current="page"><span class="dot" style="background:{m["hc"]}"></span>'
+                f'{m["hcode"]} <span class="sc">{score(m)}</span> {m["acode"]}<span class="dot" style="background:{m["ac"]}"></span></a>'
+                f'<a class="mtab" href="{rootp}matches.html">All matches →</a>')
         os.makedirs(os.path.join(out_dir, 'matches', m['folder']), exist_ok=True)
         credit = CREDIT[m['provider']].format(id=m['mid'])
         for i, c in enumerate(chs):
@@ -349,7 +391,7 @@ def build_chapters(ms, src_dir, out_dir, only=None):
                          if next_c else f'<a class="chlink next" href="{rootp}matches.html">End of the match<b>All matches →</b></a>')
             comp = m['comp'] + (f" · {m['note']}" if m['note'] else '')
             fill = {'TITLE': f"{m['home']} {score(m)} {m['away']} · Chapter {idx} of {n} · Defensive Structure Model",
-                    'ROOT': rootp, 'HOME_COLOR': m['hc'], 'AWAY_COLOR': m['ac'], 'NAV': nav(rootp, 'Matches'), 'MATCH_TABS': tabs,
+                    'ROOT': rootp, 'FOLDER': m['folder'], 'HOME_COLOR': m['hc'], 'AWAY_COLOR': m['ac'], 'NAV': nav(rootp, 'Matches'), 'MATCH_TABS': tabs,
                     'HOME': e(m['home']), 'AWAY': e(m['away']), 'SCORE': score(m), 'COMP': e(comp), 'CHAPTER_OPTIONS': opts,
                     'PREV': prev, 'NEXT': nxt, 'FOOT_PREV': foot_prev, 'FOOT_NEXT': foot_next,
                     'HOME_CODE': m['hcode'], 'AWAY_CODE': m['acode'], 'FOOTER': footer(rootp, credit)}
@@ -397,10 +439,13 @@ def main():
     ap.add_argument('--extra', help='a previous site export holding behind-the-model/ and broadcast/')
     ap.add_argument('--out', default=os.path.join(OUT, 'web'))
     ap.add_argument('--only-match', help='build just this match’s chapter pages (into --out)')
+    ap.add_argument('--no-chapters', action='store_true', help='build the section pages only (then --only-match per match)')
     a = ap.parse_args()
     ms = matches()
     if a.only_match:
         done, missing = build_chapters(ms, a.chapters_from, a.out, a.only_match)
+        os.makedirs(os.path.join(a.out, 'assets'), exist_ok=True)
+        open(os.path.join(a.out, 'assets', 'match-tabs.js'), 'w', encoding='utf-8').write(match_tabs_js(ms))
         print(f'{done} chapter pages -> {a.out}' + (f'; missing: {missing}' if missing else ''))
         return
 
@@ -413,6 +458,7 @@ def main():
         assert [d['slug'] for d in k['data']] == order, f"{k['name']}: needs an image for every match"
     os.makedirs(a.out, exist_ok=True)
     shutil.copytree(root('templates', 'site', 'assets'), os.path.join(a.out, 'assets'), dirs_exist_ok=True)
+    open(os.path.join(a.out, 'assets', 'match-tabs.js'), 'w', encoding='utf-8').write(match_tabs_js(ms))
     for k in kinds:
         for d in k['data']:
             dst = os.path.join(a.out, d['src'])
@@ -421,7 +467,7 @@ def main():
     thumbs = make_thumbs(a.analysis, kinds, a.out)
     clip = json.load(open(root('templates', 'site', 'hero-clip.json'), encoding='utf-8'))
     pages = {'index.html': home(ms, kinds, reports, clip, thumbs), 'matches.html': matches_page(ms),
-             'analysis.html': analysis_page(ms, kinds), 'reports.html': reports_page(reports, kinds),
+             'analysis.html': analysis_page(ms, kinds), 'reports.html': reports_page(reports, kinds, ms),
              'compare.html': compare_page(board), 'broadcast.html': broadcast_page(), 'method.html': method_page()}
     for name, text in pages.items():
         open(os.path.join(a.out, name), 'w', encoding='utf-8').write(text)
@@ -429,7 +475,7 @@ def main():
         for d in ('behind-the-model', 'broadcast'):
             if os.path.isdir(os.path.join(a.extra, d)):
                 shutil.copytree(os.path.join(a.extra, d), os.path.join(a.out, d), dirs_exist_ok=True)
-    done, missing = build_chapters(ms, a.chapters_from, a.out)
+    done, missing = (0, []) if a.no_chapters else build_chapters(ms, a.chapters_from, a.out)
     print(f'site: {len(pages)} pages, {done} chapter pages, {sum(len(k["data"]) for k in kinds)} analysis images -> {a.out}')
     if missing:
         print(f'{len(missing)} chapters had no data:', ', '.join(missing[:6]), '...' if len(missing) > 6 else '')

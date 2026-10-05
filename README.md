@@ -27,6 +27,14 @@ All of it is rendered as an animated 2-D match, split into five-minute chapters,
 | Belgium vs Canada | World Cup 2022, Group stage | PFF FC |
 | Argentina vs France | World Cup 2022, Final | PFF FC |
 | Köln vs Bayern Munich | Bundesliga 2022/23, Matchday 34 | DFL open data |
+| Bochum vs Bayer Leverkusen | Bundesliga 2022/23, Matchday 34 | DFL open data |
+| Fortuna Düsseldorf vs Jahn Regensburg | 2. Bundesliga 2022/23, Matchday 6 | DFL open data |
+| Fortuna Düsseldorf vs Hansa Rostock | 2. Bundesliga 2022/23, Matchday 8 | DFL open data |
+| Fortuna Düsseldorf vs Nürnberg | 2. Bundesliga 2022/23, Matchday 12 | DFL open data |
+| Fortuna Düsseldorf vs St. Pauli | 2. Bundesliga 2022/23, Matchday 15 | DFL open data |
+| Fortuna Düsseldorf vs Kaiserslautern | 2. Bundesliga 2022/23, Matchday 17 | DFL open data |
+
+All seven matches in the DFL open dataset are in, so Fortuna Düsseldorf can be followed across five games.
 
 ## Example outputs
 
@@ -46,6 +54,7 @@ All of it is rendered as an animated 2-D match, split into five-minute chapters,
   - possession agreement 91%
   - pressure correlation 0.74
 - **Bundesliga converter vs DFL's own possession flag:** they agree on 87% of live frames, and all 21 shots and 3 goals come through.
+- **The six further DFL matches:** every final score, goal minute and per-team shot count matches the DFL record, and attacking directions agree with the shots, the start sides and the keepers.
 
 Full details: [docs/METHODOLOGY.md](docs/METHODOLOGY.md). Checks on the rebuilt analysis code: [docs/VERIFICATION.md](docs/VERIFICATION.md). Research basis: [docs/LITERATURE.md](docs/LITERATURE.md). The original write-up: [docs/WRITE-UP.md](docs/WRITE-UP.md).
 
@@ -72,7 +81,8 @@ examples/    sample outputs
 pip install -r requirements.txt
 python3 pipeline/run_match.py 3823          # raw files in data/3823/ -> chapters + the ten Analysis views
 python3 pipeline/run_match.py hub           # comparison board, scouting reports, hub page
-python3 pipeline/build_web.py --chapters-from <earlier site>   # the website: home, sections, every chapter
+python3 pipeline/merge_analysis.py --published <live set> --out <merged set>   # keep live numbers, add new matches
+python3 pipeline/build_web.py --analysis <merged set> --chapters-from <earlier site>   # the website
 ```
 
 Raw data goes in `data/<match id>/` and everything generated goes in `output/`; set `DSM_DATA` or `DSM_OUT`
@@ -88,7 +98,8 @@ No match data is included in this repository.
 ## Status
 
 The analysis code was rebuilt from the published outputs after the original working copy was lost; every
-view was checked against what is live, for all six matches ([docs/VERIFICATION.md](docs/VERIFICATION.md)).
+view was checked against what is live, for the first six matches ([docs/VERIFICATION.md](docs/VERIFICATION.md)).
+The six DFL matches added since were built with the rebuilt code from the start.
 
 Planned next: an Opta converter, and carrying PFF's "estimated position" flag into the animation.
 

@@ -47,3 +47,28 @@ Belgium vs Canada (3823), Argentina vs France (10517) and Köln vs Bayern Munich
   the originals.
 - The chances view counts the third a ball was won in from the shooting team's side, as the published
   captions do; `turnover_thirds_lost` gives the same turnovers from the defending team's side.
+
+## The six further DFL matches
+
+Bochum vs Bayer Leverkusen (182269) and Fortuna Düsseldorf's home games against Jahn Regensburg (182321),
+Hansa Rostock (182338), Nürnberg (182374), St. Pauli (182402) and Kaiserslautern (182421) were built with the
+rebuilt code from the start, so there is no published version to compare with. They were checked against
+the DFL record instead:
+
+| Check | Result |
+|---|---|
+| Final score | all six match DFL's result (3-0, 4-0, 3-1, 0-1, 1-0, 1-2) |
+| Goals | every goal found in the tracking at the right minute, 16 of 16 |
+| Shots per team | the chances view matches the DFL event feed for all twelve teams |
+| Attack directions | from the shots, agreeing with the start sides and the keepers; no keeper swaps |
+| Chapters | 18 or 19 per match, ball tracked in 100% of frames |
+| Engaged/passive threshold | pooled, 0.67 (DFL has no pressure tags) |
+| Heatmap ceiling | 5.72 to 6.29, computed by the new `ceiling` step; the same step gives 5.64 for Köln vs Bayern against its published 5.65 |
+
+Bochum's keeper standing 26 m off his line at kick-off is real: Bochum lined up across halfway and kicked
+long into Leverkusen's corner, and his match median sits 37 m from goal as normal.
+
+Adding them took the board from 12 to 24 teams. The ranking words in the twelve published reports were
+re-checked against all 24 and 26 of them changed (Köln's block is no longer the longest, Bayern no longer
+has the most open space, and so on); the published numbers themselves are unchanged.
+

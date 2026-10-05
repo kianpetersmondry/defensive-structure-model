@@ -1,0 +1,781 @@
+<meta charset="UTF-8">
+<title>Defensive Structure Monitor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ============================================================
+   Pressure Read -- defensive-structure monitor
+   Düsseldorf vs Kaiserslautern · 2. Bundesliga 2022/23 · Matchday 17 · Merkur Spiel-Arena (DFL Bundesliga open data, converted to the PFF layout)
+
+   Single deliberate dark theme: this mirrors the broadcast/coach's-
+   tactics-monitor convention (Opta/StatsBomb touchline tablets, TV
+   tactical-cam overlays) that this kind of tool is always presented
+   in -- a considered choice, not a default. Background and every
+   color are painted explicitly so the page holds on any host ground.
+   ============================================================ */
+
+:root {
+  --bg: #0c1512;
+  --panel: #131f1a;
+  --panel-raised: #17251f;
+  --border: #253830;
+  --ink: #eef3ee;
+  --ink-dim: #93a89c;
+  --ink-faint: #5e7268;
+
+  --pitch-a: #1f6b41;
+  --pitch-b: #226f44;
+  --pitch-line: rgba(240, 248, 240, 0.78);
+
+  --home: #ef4b4b;
+  --home-dim: #6e2020;
+  --away: #7fa7ff;
+  --away-dim: #26355e;
+
+  --amber: #ffb020;
+  --amber-dim: #6b4c17;
+
+  --marking: #5b8dee;
+  --marking-dim: #23375e;
+
+  --possession: #d7dedb;
+
+  --state-inpossession: #3c5148;
+  --state-transition: #b5563a;
+  --state-high: #e8323a;
+  --state-mid: #d99a2b;
+  --state-low: #3f8f5c;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  padding: 20px 20px 28px;
+}
+
+.wrap {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---------- header ---------- */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.masthead .title-block {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.masthead h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--ink);
+}
+
+.masthead .eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.masthead .matchup {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-dim);
+  text-align: right;
+  line-height: 1.5;
+}
+
+.masthead .matchup b.home { color: var(--home); }
+.masthead .matchup b.away { color: var(--away); }
+
+/* ---------- chapter bar ----------
+   Only present on the full-match chapter pages -- the whole match doesn't
+   fit in one page (see literature-and-data-foundations / methodology doc),
+   so it's split into ~5-minute chapters aligned to period breaks, each its
+   own page, linked prev/next/index like pages of a book. */
+
+.chapter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin-top: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+}
+
+.chapter-nav-btn {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--panel-raised);
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.chapter-nav-btn:hover { border-color: var(--amber); color: var(--amber); }
+.chapter-nav-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+.chapter-nav-btn.disabled {
+  color: var(--ink-faint);
+  border-color: var(--border);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.chapter-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  text-align: center;
+  color: var(--ink-dim);
+}
+.chapter-info .chapter-index { color: var(--ink); font-weight: 500; }
+.chapter-info .chapter-sep { color: var(--ink-faint); }
+.chapter-info a.chapter-index-link { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
+.chapter-info a.chapter-index-link:hover { color: var(--amber); border-color: var(--amber); }
+.chapter-info .chapter-coverage { color: var(--ink-faint); }
+.chapter-info .chapter-coverage.low { color: var(--state-mid); }
+
+/* ---------- main layout ---------- */
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 302px;
+  gap: 14px;
+  align-items: start;
+}
+
+.pitch-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  position: relative;
+}
+
+.pitch-stage {
+  position: relative;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--pitch-a);
+}
+
+canvas#pitch {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.clock-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(12, 21, 18, 0.78);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 4px 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.clock-badge span { color: var(--ink-faint); font-size: 11px; margin-left: 5px; }
+
+/* Shown whenever the current frame's ball position is genuinely missing
+   (broadcast tracking gap, not bridged by the smoothing/interpolation
+   pipeline) -- see artifact_tail.html's updatePanel(), which reads
+   frame.ball directly (the same raw per-frame field the pitch canvas
+   itself checks before drawing the ball) rather than any derived/smoothed
+   value, so this can never disagree with what's on screen. */
+.ball-lost-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(12, 21, 18, 0.85);
+  border: 1px solid var(--amber);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--amber);
+  pointer-events: none;
+}
+.ball-lost-badge[hidden] { display: none; }
+
+/* Shown when playback reaches the end of a chapter that has a real next
+   chapter to go to. A script can't reliably swap the whole page on its
+   own here (this artifact's content sits in a sandboxed frame under the
+   page's own title bar, and browsers only allow that kind of top-level
+   navigation from a genuine click) -- so instead of trying to jump
+   automatically, playback stops and this overlay's own real link is one
+   click away. See artifact_tail.html's tick()/showChapterEndOverlay(). */
+.chapter-end-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 15, 13, 0.82);
+  z-index: 6;
+}
+.chapter-end-overlay[hidden] { display: none; }
+.chapter-end-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 22px 30px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+}
+.chapter-end-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.chapter-end-next-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--amber);
+  background: var(--panel-raised);
+  color: var(--amber);
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.chapter-end-next-btn:hover { background: var(--amber); color: var(--panel); }
+.chapter-end-next-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.chapter-end-replay-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px;
+}
+.chapter-end-replay-btn:hover { color: var(--ink); }
+.chapter-end-replay-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(12, 21, 18, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink);
+  white-space: nowrap;
+  transform: translate(-50%, -130%);
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  z-index: 5;
+}
+@media (prefers-reduced-motion: reduce) { .tooltip { transition: none; } }
+
+/* ---------- transport ---------- */
+
+.transport {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button.transport-btn {
+  background: var(--panel-raised);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: none;
+}
+button.transport-btn:hover { border-color: var(--amber); }
+button.transport-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+button.transport-btn svg { width: 15px; height: 15px; fill: currentColor; }
+
+.speed-group {
+  display: flex;
+  gap: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+.speed-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+  border-radius: 4px;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.speed-btn.active { border-color: var(--amber); color: var(--amber); }
+.speed-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+.toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+.toggle-btn .toggle-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink-faint);
+  box-shadow: none;
+}
+.toggle-btn.active { border-color: var(--amber); color: var(--amber); }
+.toggle-btn.active .toggle-dot { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.toggle-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+/* Full-width row of its own, below the playback/toggle buttons -- previously
+   shared the single transport row with them (flex:1 on a leftover sliver of
+   space), which left it barely visible once a second toggle button was added
+   (round 15). flex-basis:100% forces a wrap onto its own line regardless of
+   how much width the buttons above leave, so it always gets the full pitch-
+   card width and stays easy to read/scrub. */
+.timeline-block { flex: 1 1 100%; min-width: 0; margin-top: 8px; }
+
+.timeline-strip {
+  position: relative;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--panel-raised);
+}
+.timeline-strip + .timeline-strip { margin-top: 3px; }
+.timeline-strip canvas { width: 100%; height: 100%; display: block; }
+.playhead {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--ink);
+  box-shadow: 0 0 4px rgba(238,243,238,0.8);
+  pointer-events: none;
+}
+.timeline-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
+.timeline-team-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  width: 40px;
+  flex: none;
+  text-transform: uppercase;
+}
+.timeline-row { display: flex; align-items: center; gap: 6px; }
+.timeline-row + .timeline-row { margin-top: 3px; }
+
+/* ---------- side rail ---------- */
+
+.rail { display: flex; flex-direction: column; gap: 10px; }
+
+.rail-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 14px;
+}
+
+.rail-card h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 10px;
+}
+
+.team-state-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.team-state-row + .team-state-row { margin-top: 8px; }
+
+.team-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  width: 84px;
+  flex: none;
+}
+.dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.dot.home { background: var(--home); }
+.dot.away { background: var(--away); }
+
+.state-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 4px 9px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.state-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* Idea #1 (engaged vs. passive defense): a small add-on tag next to the
+   phase pill, not a new phase of its own -- reuses the companion chart's
+   solid-vs-hatched convention (Engaged = solid fill, Passive = diagonal
+   hatch) so the animation, the companion chart, and the hub summary all
+   read the same way. Empty/hidden outside organized defense. */
+.engaged-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  color: var(--ink-dim);
+  display: none;
+}
+.engaged-tag.show { display: inline-block; }
+.engaged-tag.is-engaged {
+  color: var(--ink);
+  background: rgba(255, 176, 32, 0.14);
+  border-color: rgba(255, 176, 32, 0.4);
+}
+.engaged-tag.is-passive {
+  color: var(--ink-dim);
+  background-image: repeating-linear-gradient(45deg, rgba(147, 168, 156, 0.16) 0, rgba(147, 168, 156, 0.16) 3px, transparent 3px, transparent 6px);
+  border-color: var(--border);
+}
+
+/* Idea #3 (ball-proximal compactness): a second, independent add-on tag
+   next to the phase pill -- same solid-vs-hatched convention as the
+   engaged-tag, but its own hue (blue, not amber) and its own hatch angle
+   (135deg, not 45deg) so the two tags never look like restatements of each
+   other when both are showing at once. Descriptive only -- validated to be
+   a genuinely different signal from inter-line, but not accurate enough to
+   gate the phase classification itself (see the "Reading this" note). */
+.marking-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  color: var(--ink-dim);
+  display: none;
+}
+.marking-tag.show { display: inline-block; }
+.marking-tag.is-tight {
+  color: var(--ink);
+  background: rgba(91, 141, 238, 0.16);
+  border-color: rgba(91, 141, 238, 0.45);
+}
+.marking-tag.is-loose {
+  color: var(--ink-dim);
+  background-image: repeating-linear-gradient(135deg, rgba(147, 168, 156, 0.16) 0, rgba(147, 168, 156, 0.16) 3px, transparent 3px, transparent 6px);
+  border-color: var(--border);
+}
+
+.poss-line {
+  font-size: 12px;
+  color: var(--ink-dim);
+  margin-top: 10px;
+}
+.poss-line b { color: var(--ink); font-weight: 500; }
+
+table.shape-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+table.shape-table th {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  font-weight: 500;
+  text-align: right;
+  padding: 0 0 5px;
+}
+table.shape-table th:first-child { text-align: left; }
+table.shape-table td {
+  font-size: 13.5px;
+  color: var(--ink);
+  text-align: right;
+  padding: 5px 0;
+  border-top: 1px solid var(--border);
+}
+table.shape-table td:first-child {
+  text-align: left;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pressure-meter-shell {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--panel-raised);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.pressure-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber-dim), var(--amber));
+  width: 0%;
+}
+.pressure-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+.pressure-row .pct { color: var(--amber); font-size: 15px; }
+.presser-name {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.presser-name b { color: var(--ink); font-weight: 500; }
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.legend-item + .legend-item { margin-top: 7px; }
+.legend-swatch { width: 13px; height: 13px; border-radius: 3px; flex: none; }
+.legend-line { width: 16px; height: 0; border-top: 2px dashed var(--ink-dim); flex: none; }
+.legend-ring { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--amber); flex: none; }
+
+.about-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+.about-text b { color: var(--ink); }
+.about-text + .about-text { margin-top: 8px; }
+
+footer.credit {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  text-align: center;
+  padding-top: 6px;
+}
+
+@media (max-width: 880px) {
+  .main { grid-template-columns: 1fr; }
+}
+</style>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="title-block">
+      <h1>Defensive Structure Monitor</h1>
+    </div>
+    <div class="matchup">
+      2. Bundesliga 2022/23 &middot; Matchday 17 &middot; Merkur Spiel-Arena<br>
+      <b class="home">Düsseldorf</b> vs <b class="away">Kaiserslautern</b> &middot; <span id="matchupWindow">2nd half, 50:55&ndash;55:55</span>
+    </div>
+  </div>
+
+  <!--CHAPTER_BAR-->
+
+  <div class="main">
+    <div class="pitch-card">
+      <div class="pitch-stage">
+        <canvas id="pitch" width="1050" height="680"></canvas>
+        <div class="clock-badge" id="clockBadge">50:55<span>P2</span></div>
+        <div class="ball-lost-badge" id="ballLostBadge" hidden>&#9888; Ball not tracked</div>
+        <div class="chapter-end-overlay" id="chapterEndOverlay" hidden>
+          <div class="chapter-end-card">
+            <div class="chapter-end-label">Chapter finished</div>
+            <a class="chapter-end-next-btn" id="chapterEndNextBtn" href="#" target="_top">Continue to next chapter &rarr;</a>
+            <button class="chapter-end-replay-btn" id="chapterEndReplayBtn" type="button">Replay this chapter</button>
+          </div>
+        </div>
+        <div class="tooltip" id="tooltip"></div>
+      </div>
+
+      <div class="transport">
+        <button class="transport-btn" id="playBtn" aria-label="Play">
+          <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="speed-group" role="group" aria-label="Playback speed">
+          <button class="speed-btn" data-speed="0.5">0.5&times;</button>
+          <button class="speed-btn active" data-speed="1">1&times;</button>
+          <button class="speed-btn" data-speed="2">2&times;</button>
+          <button class="speed-btn" data-speed="4">4&times;</button>
+        </div>
+        <button class="toggle-btn active" id="heatBtn" aria-pressed="true" title="Dangerous accessible space for whichever team has the ball, live">
+          <span class="toggle-dot"></span>Danger heatmap
+        </button>
+        <button class="toggle-btn active" id="bandBtn" aria-pressed="true" title="Deepest defender to furthest attacker, tinted to the defending team">
+          <span class="toggle-dot"></span>Inter-line band
+        </button>
+        <div class="timeline-block">
+          <div class="timeline-row">
+            <span class="timeline-team-tag" style="color:var(--home)">DUS</span>
+            <div class="timeline-strip" id="tlHome"><canvas></canvas><div class="playhead" id="phHome"></div></div>
+          </div>
+          <div class="timeline-row">
+            <span class="timeline-team-tag" style="color:var(--away)">FCK</span>
+            <div class="timeline-strip" id="tlAway"><canvas></canvas><div class="playhead" id="phAway"></div></div>
+          </div>
+          <div class="timeline-labels"><span id="tlLabelStart">50:55</span><span id="tlLabelMid">53:25</span><span id="tlLabelEnd">55:55</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="rail-card">
+        <h2>Defensive phase</h2>
+        <div class="team-state-row">
+          <span class="team-tag"><span class="dot home"></span>DUS</span>
+          <span class="state-group"><span class="state-pill" id="pillHome">&mdash;</span><span class="engaged-tag" id="engHome"></span><span class="marking-tag" id="mrkHome"></span></span>
+        </div>
+        <div class="team-state-row">
+          <span class="team-tag"><span class="dot away"></span>FCK</span>
+          <span class="state-group"><span class="state-pill" id="pillAway">&mdash;</span><span class="engaged-tag" id="engAway"></span><span class="marking-tag" id="mrkAway"></span></span>
+        </div>
+        <div class="poss-line">On the ball: <b id="statPoss">&mdash;</b></div>
+        <table class="shape-table">
+          <thead><tr><th></th><th>Depth</th><th>Inter-line</th><th>Gap</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dot home"></span>DUS</td><td id="mDepth">&mdash;</td><td id="mIL">&mdash;</td><td id="mGap">&mdash;</td></tr>
+            <tr><td><span class="dot away"></span>FCK</td><td id="aDepth">&mdash;</td><td id="aIL">&mdash;</td><td id="aGap">&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rail-card">
+        <h2>Pressure on ball carrier</h2>
+        <div class="pressure-row"><span>Pressure</span><span class="pct" id="pressurePct">&mdash;</span></div>
+        <div class="pressure-meter-shell"><div class="pressure-meter-fill" id="pressureFill"></div></div>
+        <div class="presser-name" id="presserName">No sustained pressure right now.</div>
+      </div>
+
+      <div class="rail-card">
+        <h2>Legend</h2>
+        <div class="legend-item"><span class="legend-ring"></span>Pressure ring on carrier &mdash; radius/opacity = intensity</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:rgba(255,255,255,0.16);border:1px solid var(--ink-faint)"></span>Inter-line band: deepest defender to furthest attacker (tinted to the defending team, shown once the defense is organized)</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:radial-gradient(circle,rgba(232,50,58,0.85),rgba(232,50,58,0))"></span>Danger heatmap &mdash; dangerous accessible space (DAS) for whichever team has the ball, tinted to their color, live every frame</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:repeating-linear-gradient(45deg, rgba(147,168,156,0.5) 0, rgba(147,168,156,0.5) 3px, transparent 3px, transparent 6px);border:1px solid var(--ink-faint)"></span><span>Hatched timeline / <b>PASSIVE</b> tag &mdash; that phase is real (depth/compactness check out), but there's no genuine 1v1 pressure behind it right now</span></div>
+        <div class="legend-item"><span class="legend-swatch" style="background:rgba(91,141,238,0.35);border:1px solid var(--marking)"></span><span><b>TIGHT</b> tag &mdash; the 5 players nearest the ball are tightly grouped around it right now (ball-proximal compactness &le;23m)</span></div>
+        <div class="legend-item"><span class="legend-swatch" style="background:repeating-linear-gradient(135deg, rgba(147,168,156,0.5) 0, rgba(147,168,156,0.5) 3px, transparent 3px, transparent 6px);border:1px solid var(--ink-faint)"></span><span><b>LOOSE</b> tag &mdash; same ball-proximal group is spread out, even if the whole-team shape (inter-line band) looks compact</span></div>
+      </div>
+
+      <div class="rail-card">
+        <h2>Reading this</h2>
+        <p class="about-text">Each frame classifies the <b>out-of-possession</b> team into <b>Transition</b>, <b>High Press</b>, <b>Mid Block</b> or <b>Low Block</b>, from defensive-line depth and inter-line compactness (thresholds from published pressing-height benchmarks).</p>
+        <p class="about-text">The small <b>ENGAGED</b>/<b>PASSIVE</b> tag next to each phase is an add-on, not a new phase: a deep, compact line only means real pressure is being applied if someone is actually closing the ball down, so this reads the same pressure-on-ball-carrier signal (smoothed over 3s, like depth and inter-line already are) and flags whether that's genuinely happening right now. Its threshold was validated against PFF's analyst-tagged pressure events in the World Cup matches and is carried over here, since this Bundesliga data has no such tags; it isn't eyeballed &mdash; and it's descriptive, not a replacement for the phase label: every phase, for both teams, turns out to be a real mix of both (see the &ldquo;Engaged vs. Passive Defense&rdquo; companion analysis for the full breakdown).</p>
+        <p class="about-text">The <b>TIGHT</b>/<b>LOOSE</b> tag is a second, independent add-on: whole-team <b>inter-line</b> is the span from deepest defender to furthest attacker, but Forcher et al. found it's the compactness of just the 5 players nearest the ball &mdash; not the whole team &mdash; that actually predicts defensive success. This tag reads that ball-proximal group directly (max distance between any two of them, smoothed the same way), so it can flag a loosely-marked ball carrier even inside a phase whose whole-team shape looks compact, or vice versa. It's genuinely different information from inter-line (r&asymp;0.46, not a restatement) &mdash; but it turned out not to reliably predict winning the ball back sooner, so rather than fold it into the phase thresholds themselves (where a wrong cutoff would misclassify real phases), it's kept here as a descriptive read on ball-side marking quality, same treatment as Engaged/Passive.</p>
+        <p class="about-text">The pressure ring is a time-to-intercept estimate per nearby defender &mdash; reaction time, current velocity, max speed &mdash; combined into one 0&ndash;100% score on the carrier, in the spirit of Bekkers (2025).</p>
+        <p class="about-text">Team shape (depth, inter-line, gap) is tracked every frame regardless of who has the ball. Pressure and &ldquo;on the ball&rdquo; need a resolved carrier, so they briefly go blank during loose-ball moments &mdash; a real feature of broken play, not missing data.</p>
+        <p class="about-text">The danger heatmap is Dangerous Accessible Space (Bischofberger &amp; Baca, 2026) &mdash; a physics-based pass-completion simulation combined with a fitted distance-and-angle danger model &mdash; rasterized across the whole pitch and resampled at 5Hz, showing exactly where the team in possession could access dangerous space with one realistic pass right now. It's the same model behind the &ldquo;Space in Behind&rdquo; companion chart, just read spatially instead of as a time series.</p>
+        <p class="about-text">Brightness is <b>log-scaled</b>, not linear &mdash; raw danger values span several orders of magnitude between a tightly marked ball and a wide-open outlet pass, so a straight 0-to-max scale would make almost everything look either off or maxed-out. The glow is naturally strongest right around the ball and tapers outward, since danger here means reachable <em>right now</em> with one pass; it goes faint or disappears entirely when the carrier is closely marked in a crowd, which is a real reading (little safe, dangerous space to find), not a rendering gap.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="credit">DFL Bundesliga open data (&copy; DFL, CC-BY 4.0) &middot; game 182421 &middot; 25Hz optical tracking, resampled to 30Hz</footer>
+</div>
+<script id="match-data" type="application/json">

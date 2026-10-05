@@ -158,16 +158,24 @@
   if (rep && SITE.reports) {
     var RP = SITE.reports, ri = 0;
     RP.forEach(function (r, i) { if (r.slug + '-' + r.team.toLowerCase().replace(/\s+/g, '-') === qs('t')) ri = i; });
-    var tabs = document.getElementById('reportTabs');
+    var tabs = document.getElementById('reportTabs'), teamTabs = document.getElementById('reportTeams'), MI = {};
+    (SITE.matches || []).forEach(function (m) { MI[m.slug] = m; });
     var kindKey = {};
     (SITE.kinds || []).forEach(function (k) { kindKey[k.name] = k.key; });
     var renderReport = function () {
-      tabs.innerHTML = RP.map(function (r, i) {
-        return '<button type="button" class="tab" role="tab" aria-selected="' + (i === ri) + '" data-i="' + i + '"><span class="dot" style="background:' + r.color + '"></span>' + esc(r.team) + ' <span class="sc">v ' + esc(r.opp) + '</span></button>';
+      var r = RP[ri], seen = {}, firsts = [];
+      RP.forEach(function (x, i) { if (!(x.slug in seen)) { seen[x.slug] = i; firsts.push(i); } });
+      tabs.innerHTML = firsts.map(function (i) {
+        var m = MI[RP[i].slug] || {};
+        var label = m.hcode ? '<span class="dot" style="background:' + m.hc + '"></span>' + esc(m.hcode) + ' <span class="sc">' + esc(m.hs + '–' + m.as) + '</span> ' + esc(m.acode) + '<span class="dot" style="background:' + m.ac + '"></span>' : esc(RP[i].match);
+        return '<button type="button" class="tab" role="tab" aria-selected="' + (RP[i].slug === r.slug) + '" data-i="' + i + '" title="' + esc(RP[i].match) + '">' + label + '</button>';
       }).join('');
-      var r = RP[ri];
+      teamTabs.innerHTML = RP.map(function (x, i) {
+        if (x.slug !== r.slug) return '';
+        return '<button type="button" class="subtab" role="tab" aria-selected="' + (i === ri) + '" data-i="' + i + '"><span class="dot" style="background:' + x.color + '"></span> ' + esc(x.team) + ' defending</button>';
+      }).join('');
       var chips = r.chips.map(function (c) {
-        var pos = (c.rank - 1) / 11 * 100;
+        var pos = (c.rank - 1) / Math.max(1, (c.of || 12) - 1) * 100;
         return '<div class="chip"><span class="k">' + esc(c.label.charAt(0).toUpperCase() + c.label.slice(1)) + '</span><span class="v">' + esc(c.value) + '</span>' +
           '<span class="r"><span class="rankbar"><i style="left:' + pos + '%"></i></span>' + esc(c.rank_text) + '</span></div>';
       }).join('');
@@ -176,9 +184,11 @@
       rep.innerHTML = '<div class="left"><div class="who"><span class="dot lg" style="background:' + r.color + '"></span>' + esc(r.team) + ' · vs ' + esc(r.opp) + ' · ' + esc(r.sub) + '</div>' +
         '<blockquote>' + esc(r.headline) + '</blockquote>' +
         '<h3>What it did well</h3><ul>' + li(r.good) + '</ul><h3>How to get at it</h3><ul>' + li(r.exploit) + '</ul>' +
-        '<div class="views-links">' + views + '</div></div><div class="right"><div class="eyebrow" style="margin-bottom:6px">Ranked against all 12 teams</div>' + chips + '</div>';
-      Array.prototype.forEach.call(tabs.querySelectorAll('.tab'), function (b) { b.onclick = function () { ri = +b.dataset.i; renderReport(); }; });
+        '<div class="views-links">' + views + '</div></div><div class="right"><div class="eyebrow" style="margin-bottom:6px">Ranked against all ' + ((r.chips[0] && r.chips[0].of) || 12) + ' teams</div>' + chips + '</div>';
+      Array.prototype.forEach.call(tabs.querySelectorAll('.tab'), function (b) { b.onclick = function () { ri = +b.dataset.i; renderReport(); syncReport(); }; });
+      Array.prototype.forEach.call(teamTabs.querySelectorAll('.subtab'), function (b) { b.onclick = function () { ri = +b.dataset.i; renderReport(); syncReport(); }; });
     };
+    var syncReport = function () { var r = RP[ri]; history.replaceState(null, '', '?t=' + r.slug + '-' + r.team.toLowerCase().replace(/\s+/g, '-')); };
     renderReport();
   }
 

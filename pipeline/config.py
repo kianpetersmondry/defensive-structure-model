@@ -74,7 +74,17 @@ HEAD_TEMPLATE = _match['head_template']
 # brightness stays comparable chapter-to-chapter within a match, the
 # original round-17 design goal, just no longer borrowed from a different
 # match's calibration.
-HEATMAP_VMAX_LOG = _match.get('heatmap_vmax_log', 4.375829836329568)
+def _heat_ceiling():
+    """The registry's value; else the one heat_ceiling.py computed for this match; else the old shared constant."""
+    if _match.get('heatmap_vmax_log') is not None:
+        return _match['heatmap_vmax_log']
+    path = os.path.join(OUT_ROOT, 'derived', f'heat_ceiling_{MATCH_ID}.json')
+    if os.path.exists(path):
+        return json.load(open(path))['heatmap_vmax_log']
+    return 4.375829836329568
+
+
+HEATMAP_VMAX_LOG = _heat_ceiling()
 
 # The Match Library hub -- same URL for every match, so this is a plain
 # constant rather than per-match config. Used to make each chapter's own

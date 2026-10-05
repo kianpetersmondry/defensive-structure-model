@@ -288,6 +288,314 @@
    "hub_note": "The first match from outside the PFF World Cup set: DFL open data from the Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format. The tracking is real 25 Hz optical data, resampled to the pipeline's 29.97 fps. The events are the DFL feed, snapped to the tracked ball. DFL has no analyst \"under pressure\" tag, so the engaged/passive threshold is pooled from the World Cup matches instead of calibrated on this one. The final day of the season: Bayern won 2-1 with an 89th-minute goal.",
    "chapter_urls": "chapter_urls_182265.json",
    "site_folder": "koln-bayern"
+  },
+  {
+   "id": "182269",
+   "slug": "boc-lev",
+   "hub_id": "boc-lev-2023-bl",
+   "raw_dir": "data/182269",
+   "provider": "dfl",
+   "source": {
+    "dataset": "DFL/IDSSE open data (Bassek et al. 2025, Scientific Data), CC-BY 4.0, (c) DFL",
+    "dfl_match": "DFL-MAT-J03WN1",
+    "convert": "python3 providers/dfl_to_pff.py <dfl folder> DFL-MAT-J03WN1 182269 data/182269 --home-name \"Bochum\" --away-name \"Bayer Leverkusen\" --home-code BOC --away-code LEV"
+   },
+   "title": "Bochum vs Bayer Leverkusen",
+   "sub": "Bundesliga matchday 34 · Bochum won 3-0",
+   "competition": "Bundesliga 2022/23 · Matchday 34 · Vonovia Ruhrstadion",
+   "label": "Bochum vs Bayer Leverkusen (Bundesliga)",
+   "home": {
+    "id": 9000028,
+    "name": "Bochum",
+    "code": "BOC",
+    "color": "#4f8fe8",
+    "color_dim": "#1d3966"
+   },
+   "away": {
+    "id": 9000011,
+    "name": "Bayer Leverkusen",
+    "code": "LEV",
+    "color": "#ef4b4b",
+    "color_dim": "#6e2020"
+   },
+   "goals": [
+    [
+     "Bochum",
+     19,
+     ""
+    ],
+    [
+     "Bochum",
+     34,
+     ""
+    ],
+    [
+     "Bochum",
+     86,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_182269.html",
+   "heatmap_vmax_log": 5.9589,
+   "quirks": {},
+   "hub_note": "DFL open data from the Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+   "chapter_urls": "chapter_urls_182269.json",
+   "site_folder": "bochum-leverkusen"
+  },
+  {
+   "id": "182321",
+   "slug": "dus-reg",
+   "hub_id": "dus-reg-2022-bl2",
+   "raw_dir": "data/182321",
+   "provider": "dfl",
+   "source": {
+    "dataset": "DFL/IDSSE open data (Bassek et al. 2025, Scientific Data), CC-BY 4.0, (c) DFL",
+    "dfl_match": "DFL-MAT-J03WOH",
+    "convert": "python3 providers/dfl_to_pff.py <dfl folder> DFL-MAT-J03WOH 182321 data/182321 --home-name \"Düsseldorf\" --away-name \"Jahn Regensburg\" --home-code DUS --away-code REG"
+   },
+   "title": "Düsseldorf vs Jahn Regensburg",
+   "sub": "2. Bundesliga matchday 6 · Düsseldorf won 4-0",
+   "competition": "2. Bundesliga 2022/23 · Matchday 6 · Merkur Spiel-Arena",
+   "label": "Düsseldorf vs Jahn Regensburg (2. Bundesliga)",
+   "home": {
+    "id": 9000025,
+    "name": "Düsseldorf",
+    "code": "DUS",
+    "color": "#ef4b4b",
+    "color_dim": "#6e2020"
+   },
+   "away": {
+    "id": 9000037,
+    "name": "Jahn Regensburg",
+    "code": "REG",
+    "color": "#e9e9e4",
+    "color_dim": "#5c5c58"
+   },
+   "goals": [
+    [
+     "Düsseldorf",
+     59,
+     ""
+    ],
+    [
+     "Düsseldorf",
+     65,
+     "pen"
+    ],
+    [
+     "Düsseldorf",
+     78,
+     ""
+    ],
+    [
+     "Düsseldorf",
+     85,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_182321.html",
+   "heatmap_vmax_log": 6.0991,
+   "quirks": {},
+   "hub_note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+   "chapter_urls": "chapter_urls_182321.json",
+   "site_folder": "dusseldorf-regensburg"
+  },
+  {
+   "id": "182338",
+   "slug": "dus-hro",
+   "hub_id": "dus-hro-2022-bl2",
+   "raw_dir": "data/182338",
+   "provider": "dfl",
+   "source": {
+    "dataset": "DFL/IDSSE open data (Bassek et al. 2025, Scientific Data), CC-BY 4.0, (c) DFL",
+    "dfl_match": "DFL-MAT-J03WOY",
+    "convert": "python3 providers/dfl_to_pff.py <dfl folder> DFL-MAT-J03WOY 182338 data/182338 --home-name \"Düsseldorf\" --away-name \"Hansa Rostock\" --home-code DUS --away-code HRO"
+   },
+   "title": "Düsseldorf vs Hansa Rostock",
+   "sub": "2. Bundesliga matchday 8 · Düsseldorf won 3-1",
+   "competition": "2. Bundesliga 2022/23 · Matchday 8 · Merkur Spiel-Arena",
+   "label": "Düsseldorf vs Hansa Rostock (2. Bundesliga)",
+   "home": {
+    "id": 9000025,
+    "name": "Düsseldorf",
+    "code": "DUS",
+    "color": "#ef4b4b",
+    "color_dim": "#6e2020"
+   },
+   "away": {
+    "id": 9000026,
+    "name": "Hansa Rostock",
+    "code": "HRO",
+    "color": "#5aa9ff",
+    "color_dim": "#1f3d66"
+   },
+   "goals": [
+    [
+     "Düsseldorf",
+     10,
+     ""
+    ],
+    [
+     "Düsseldorf",
+     27,
+     ""
+    ],
+    [
+     "Hansa Rostock",
+     61,
+     ""
+    ],
+    [
+     "Düsseldorf",
+     77,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_182338.html",
+   "heatmap_vmax_log": 5.7297,
+   "quirks": {},
+   "hub_note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+   "chapter_urls": "chapter_urls_182338.json",
+   "site_folder": "dusseldorf-rostock"
+  },
+  {
+   "id": "182374",
+   "slug": "dus-fcn",
+   "hub_id": "dus-fcn-2022-bl2",
+   "raw_dir": "data/182374",
+   "provider": "dfl",
+   "source": {
+    "dataset": "DFL/IDSSE open data (Bassek et al. 2025, Scientific Data), CC-BY 4.0, (c) DFL",
+    "dfl_match": "DFL-MAT-J03WPY",
+    "convert": "python3 providers/dfl_to_pff.py <dfl folder> DFL-MAT-J03WPY 182374 data/182374 --home-name \"Düsseldorf\" --away-name \"Nürnberg\" --home-code DUS --away-code FCN"
+   },
+   "title": "Düsseldorf vs Nürnberg",
+   "sub": "2. Bundesliga matchday 12 · Nürnberg won 1-0",
+   "competition": "2. Bundesliga 2022/23 · Matchday 12 · Merkur Spiel-Arena",
+   "label": "Düsseldorf vs Nürnberg (2. Bundesliga)",
+   "home": {
+    "id": 9000025,
+    "name": "Düsseldorf",
+    "code": "DUS",
+    "color": "#ef4b4b",
+    "color_dim": "#6e2020"
+   },
+   "away": {
+    "id": 9000005,
+    "name": "Nürnberg",
+    "code": "FCN",
+    "color": "#e9e9e4",
+    "color_dim": "#5c5c58"
+   },
+   "goals": [
+    [
+     "Nürnberg",
+     47,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_182374.html",
+   "heatmap_vmax_log": 5.8042,
+   "quirks": {},
+   "hub_note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+   "chapter_urls": "chapter_urls_182374.json",
+   "site_folder": "dusseldorf-nurnberg"
+  },
+  {
+   "id": "182402",
+   "slug": "dus-stp",
+   "hub_id": "dus-stp-2022-bl2",
+   "raw_dir": "data/182402",
+   "provider": "dfl",
+   "source": {
+    "dataset": "DFL/IDSSE open data (Bassek et al. 2025, Scientific Data), CC-BY 4.0, (c) DFL",
+    "dfl_match": "DFL-MAT-J03WQQ",
+    "convert": "python3 providers/dfl_to_pff.py <dfl folder> DFL-MAT-J03WQQ 182402 data/182402 --home-name \"Düsseldorf\" --away-name \"St. Pauli\" --home-code DUS --away-code STP"
+   },
+   "title": "Düsseldorf vs St. Pauli",
+   "sub": "2. Bundesliga matchday 15 · Düsseldorf won 1-0",
+   "competition": "2. Bundesliga 2022/23 · Matchday 15 · Merkur Spiel-Arena",
+   "label": "Düsseldorf vs St. Pauli (2. Bundesliga)",
+   "home": {
+    "id": 9000025,
+    "name": "Düsseldorf",
+    "code": "DUS",
+    "color": "#ef4b4b",
+    "color_dim": "#6e2020"
+   },
+   "away": {
+    "id": 9000017,
+    "name": "St. Pauli",
+    "code": "STP",
+    "color": "#c99a63",
+    "color_dim": "#5e4528"
+   },
+   "goals": [
+    [
+     "Düsseldorf",
+     22,
+     ""
+    ]
+   ],
+   "head_template": "templates/artifact_head_182402.html",
+   "heatmap_vmax_log": 5.7223,
+   "quirks": {},
+   "hub_note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+   "chapter_urls": "chapter_urls_182402.json",
+   "site_folder": "dusseldorf-st-pauli"
+  },
+  {
+   "id": "182421",
+   "slug": "dus-fck",
+   "hub_id": "dus-fck-2022-bl2",
+   "raw_dir": "data/182421",
+   "provider": "dfl",
+   "source": {
+    "dataset": "DFL/IDSSE open data (Bassek et al. 2025, Scientific Data), CC-BY 4.0, (c) DFL",
+    "dfl_match": "DFL-MAT-J03WR9",
+    "convert": "python3 providers/dfl_to_pff.py <dfl folder> DFL-MAT-J03WR9 182421 data/182421 --home-name \"Düsseldorf\" --away-name \"Kaiserslautern\" --home-code DUS --away-code FCK"
+   },
+   "title": "Düsseldorf vs Kaiserslautern",
+   "sub": "2. Bundesliga matchday 17 · Kaiserslautern won 2-1",
+   "competition": "2. Bundesliga 2022/23 · Matchday 17 · Merkur Spiel-Arena",
+   "label": "Düsseldorf vs Kaiserslautern (2. Bundesliga)",
+   "home": {
+    "id": 9000025,
+    "name": "Düsseldorf",
+    "code": "DUS",
+    "color": "#ef4b4b",
+    "color_dim": "#6e2020"
+   },
+   "away": {
+    "id": 9000018,
+    "name": "Kaiserslautern",
+    "code": "FCK",
+    "color": "#7fa7ff",
+    "color_dim": "#26355e"
+   },
+   "goals": [
+    [
+     "Düsseldorf",
+     14,
+     ""
+    ],
+    [
+     "Kaiserslautern",
+     50,
+     ""
+    ],
+    [
+     "Kaiserslautern",
+     96,
+     "pen"
+    ]
+   ],
+   "head_template": "templates/artifact_head_182421.html",
+   "heatmap_vmax_log": 6.2864,
+   "quirks": {},
+   "hub_note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+   "chapter_urls": "chapter_urls_182421.json",
+   "site_folder": "dusseldorf-kaiserslautern"
   }
  ]
 }

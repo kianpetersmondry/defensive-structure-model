@@ -92,6 +92,14 @@ section.block { padding: 56px 0 8px; }
 
 /* ---------- match cards ---------- */
 .matches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.mgroup + .mgroup { margin-top: 28px; }
+.glabel { font: 600 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin: 0 0 12px; display: flex; align-items: baseline; gap: 10px; }
+.glabel span { color: var(--faint); letter-spacing: .04em; text-transform: none; font-weight: 400; }
+.jumpnav { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px 28px; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.jumpnav .mgroup + .mgroup { margin-top: 0; }
+.jumpnav .glabel { margin-bottom: 8px; }
+.jumps { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.match-block { scroll-margin-top: 80px; }
 .match { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: border-color .15s, transform .15s; }
 .match:hover { border-color: var(--line-strong); transform: translateY(-2px); }
 .match .mini { display: block; width: 100%; aspect-ratio: 105 / 50; }
@@ -200,7 +208,8 @@ footer.site a:hover { color: var(--ink); }
 
 /* ---------- chapter page ---------- */
 .mstrip { border-bottom: 1px solid var(--line); background: var(--surface); }
-.mstrip .wrap { display: flex; gap: 6px; overflow-x: auto; padding-top: 10px; padding-bottom: 10px; scrollbar-width: none; }
+.mstrip .wrap { display: flex; flex-wrap: wrap; gap: 4px 6px; padding-top: 10px; padding-bottom: 10px; }
+@media (max-width: 760px) { .mstrip .wrap { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } }
 .mtab { flex: none; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid transparent; font: 500 13px var(--mono); color: var(--dim); white-space: nowrap; }
 .mtab:hover { background: var(--raised); color: var(--ink); }
 .mtab[aria-current="page"] { background: var(--raised); border-color: var(--line-strong); color: var(--ink); }

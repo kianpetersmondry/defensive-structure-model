@@ -40,6 +40,7 @@ STEPS = [
     ('compactness', PIPE, 'analysis_ball_proximal_compactness.py', [], 'spread of the five players nearest the ball'),
     ('marking', PIPE, 'compactness_tag.py', [], 'TIGHT/LOOSE tag'),
     ('export_marked', PIPE, 'full_match_export.py', [], 'export again so the chapters carry the TIGHT/LOOSE tag'),
+    ('ceiling', PIPE, 'heat_ceiling.py', [], 'danger heatmap brightness ceiling for this match (if the registry has none)'),
     ('heatmap', PIPE, 'full_match_heatmap.py', [], 'danger heatmap (DAS) per chapter at 5 Hz'),
     ('head', PIPE, 'make_head.py', ['{mid}'], 'chapter-page head template for this match'),
     ('build', PIPE, 'full_match_build.py', [], 'assemble the chapter pages'),

@@ -1039,5 +1039,892 @@
     ]
    }
   ]
+ },
+ {
+  "id": "boc-lev-2023-bl",
+  "home": "Bochum",
+  "away": "Bayer Leverkusen",
+  "label": "Bochum vs Bayer Leverkusen",
+  "competition": "Bundesliga 2022/23 · Matchday 34 · Vonovia Ruhrstadion",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "DFL open data from the Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:08",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-01.html"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:08–10:16",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-02.html"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:16–15:24",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-03.html"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:24–20:32",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-04.html"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:32–25:40",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-05.html"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:40–30:48",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-06.html"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:48–35:56",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-07.html"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "35:56–41:04",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-08.html"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "41:04–46:11",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-09.html"
+     },
+     {
+      "idx": 10,
+      "period": "2nd half",
+      "clock": "0:00–4:49",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-10.html"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "4:49–9:38",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-11.html"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "9:38–14:27",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-12.html"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "14:27–19:16",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-13.html"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "19:16–24:05",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-14.html"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "24:05–28:55",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-15.html"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "28:55–33:44",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-16.html"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "33:44–38:33",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-17.html"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "38:33–43:22",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-18.html"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "43:22–48:11",
+      "coverage": 100,
+      "url": "matches/bochum-leverkusen/chapter-19.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "dus-reg-2022-bl2",
+  "home": "Düsseldorf",
+  "away": "Jahn Regensburg",
+  "label": "Düsseldorf vs Jahn Regensburg",
+  "competition": "2. Bundesliga 2022/23 · Matchday 6 · Merkur Spiel-Arena",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:09",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-01.html"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:09–10:17",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-02.html"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:17–15:26",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-03.html"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:26–20:34",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-04.html"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:34–25:43",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-05.html"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:43–30:51",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-06.html"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:51–36:00",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-07.html"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "36:00–41:08",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-08.html"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "41:08–46:17",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-09.html"
+     },
+     {
+      "idx": 10,
+      "period": "2nd half",
+      "clock": "0:00–5:01",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-10.html"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "5:01–10:03",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-11.html"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "10:03–15:04",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-12.html"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "15:04–20:05",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-13.html"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "20:05–25:06",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-14.html"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "25:06–30:08",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-15.html"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "30:08–35:09",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-16.html"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "35:09–40:10",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-17.html"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "40:10–45:12",
+      "coverage": 100,
+      "url": "matches/dusseldorf-regensburg/chapter-18.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "dus-hro-2022-bl2",
+  "home": "Düsseldorf",
+  "away": "Hansa Rostock",
+  "label": "Düsseldorf vs Hansa Rostock",
+  "competition": "2. Bundesliga 2022/23 · Matchday 8 · Merkur Spiel-Arena",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:07",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-01.html"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:07–10:14",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-02.html"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:14–15:21",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-03.html"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:21–20:29",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-04.html"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:29–25:36",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-05.html"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:36–30:43",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-06.html"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:43–35:50",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-07.html"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "35:50–40:57",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-08.html"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "40:57–46:04",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-09.html"
+     },
+     {
+      "idx": 10,
+      "period": "2nd half",
+      "clock": "0:00–4:54",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-10.html"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "4:54–9:47",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-11.html"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "9:47–14:41",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-12.html"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "14:41–19:35",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-13.html"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "19:35–24:28",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-14.html"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "24:29–29:22",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-15.html"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "29:22–34:16",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-16.html"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "34:16–39:10",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-17.html"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "39:10–44:03",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-18.html"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "44:03–48:57",
+      "coverage": 100,
+      "url": "matches/dusseldorf-rostock/chapter-19.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "dus-fcn-2022-bl2",
+  "home": "Düsseldorf",
+  "away": "Nürnberg",
+  "label": "Düsseldorf vs Nürnberg",
+  "competition": "2. Bundesliga 2022/23 · Matchday 12 · Merkur Spiel-Arena",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:07",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-01.html"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:07–10:14",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-02.html"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:15–15:22",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-03.html"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:22–20:29",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-04.html"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:29–25:36",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-05.html"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:36–30:43",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-06.html"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:44–35:51",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-07.html"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "35:51–40:58",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-08.html"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "40:58–46:05",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-09.html"
+     },
+     {
+      "idx": 10,
+      "period": "2nd half",
+      "clock": "0:00–5:08",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-10.html"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "5:08–10:17",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-11.html"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "10:17–15:25",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-12.html"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "15:25–20:33",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-13.html"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "20:33–25:42",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-14.html"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "25:42–30:50",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-15.html"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "30:50–35:58",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-16.html"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "35:58–41:07",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-17.html"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "41:07–46:15",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-18.html"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "46:15–51:23",
+      "coverage": 100,
+      "url": "matches/dusseldorf-nurnberg/chapter-19.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "dus-stp-2022-bl2",
+  "home": "Düsseldorf",
+  "away": "St. Pauli",
+  "label": "Düsseldorf vs St. Pauli",
+  "competition": "2. Bundesliga 2022/23 · Matchday 15 · Merkur Spiel-Arena",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:08",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-01.html"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:08–10:15",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-02.html"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:15–15:23",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-03.html"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:23–20:30",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-04.html"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:30–25:38",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-05.html"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:38–30:45",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-06.html"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:45–35:53",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-07.html"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "35:53–41:01",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-08.html"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "41:01–46:08",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-09.html"
+     },
+     {
+      "idx": 10,
+      "period": "2nd half",
+      "clock": "0:00–4:53",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-10.html"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "4:53–9:45",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-11.html"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "9:45–14:38",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-12.html"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "14:38–19:30",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-13.html"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "19:30–24:23",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-14.html"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "24:23–29:15",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-15.html"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "29:15–34:08",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-16.html"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "34:08–39:00",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-17.html"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "39:01–43:53",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-18.html"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "43:53–48:46",
+      "coverage": 100,
+      "url": "matches/dusseldorf-st-pauli/chapter-19.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "dus-fck-2022-bl2",
+  "home": "Düsseldorf",
+  "away": "Kaiserslautern",
+  "label": "Düsseldorf vs Kaiserslautern",
+  "competition": "2. Bundesliga 2022/23 · Matchday 17 · Merkur Spiel-Arena",
+  "versions": [
+   {
+    "id": "v1-depth-interline",
+    "label": "Baseline — depth + inter-line",
+    "note": "DFL open data from the 2. Bundesliga (CC-BY 4.0, © DFL), converted to the pipeline's format: real 25 Hz optical tracking resampled to 29.97 fps, with the DFL event feed snapped to the tracked ball. The engaged/passive threshold is pooled from the World Cup matches, as DFL has no analyst pressure tag.",
+    "chapters": [
+     {
+      "idx": 1,
+      "period": "1st half",
+      "clock": "0:00–5:04",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-01.html"
+     },
+     {
+      "idx": 2,
+      "period": "1st half",
+      "clock": "5:04–10:08",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-02.html"
+     },
+     {
+      "idx": 3,
+      "period": "1st half",
+      "clock": "10:08–15:11",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-03.html"
+     },
+     {
+      "idx": 4,
+      "period": "1st half",
+      "clock": "15:11–20:15",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-04.html"
+     },
+     {
+      "idx": 5,
+      "period": "1st half",
+      "clock": "20:15–25:19",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-05.html"
+     },
+     {
+      "idx": 6,
+      "period": "1st half",
+      "clock": "25:19–30:23",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-06.html"
+     },
+     {
+      "idx": 7,
+      "period": "1st half",
+      "clock": "30:23–35:27",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-07.html"
+     },
+     {
+      "idx": 8,
+      "period": "1st half",
+      "clock": "35:27–40:30",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-08.html"
+     },
+     {
+      "idx": 9,
+      "period": "1st half",
+      "clock": "40:30–45:34",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-09.html"
+     },
+     {
+      "idx": 10,
+      "period": "2nd half",
+      "clock": "0:00–5:14",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-10.html"
+     },
+     {
+      "idx": 11,
+      "period": "2nd half",
+      "clock": "5:14–10:28",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-11.html"
+     },
+     {
+      "idx": 12,
+      "period": "2nd half",
+      "clock": "10:28–15:41",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-12.html"
+     },
+     {
+      "idx": 13,
+      "period": "2nd half",
+      "clock": "15:42–20:55",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-13.html"
+     },
+     {
+      "idx": 14,
+      "period": "2nd half",
+      "clock": "20:55–26:09",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-14.html"
+     },
+     {
+      "idx": 15,
+      "period": "2nd half",
+      "clock": "26:09–31:23",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-15.html"
+     },
+     {
+      "idx": 16,
+      "period": "2nd half",
+      "clock": "31:23–36:37",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-16.html"
+     },
+     {
+      "idx": 17,
+      "period": "2nd half",
+      "clock": "36:37–41:51",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-17.html"
+     },
+     {
+      "idx": 18,
+      "period": "2nd half",
+      "clock": "41:51–47:04",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-18.html"
+     },
+     {
+      "idx": 19,
+      "period": "2nd half",
+      "clock": "47:04–52:18",
+      "coverage": 100,
+      "url": "matches/dusseldorf-kaiserslautern/chapter-19.html"
+     }
+    ]
+   }
+  ]
  }
 ]
