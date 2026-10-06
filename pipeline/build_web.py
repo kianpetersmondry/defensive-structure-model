@@ -6,6 +6,7 @@ Pages (all relative links, so the folder works on any static host or straight fr
 
     index.html          hero with a short clip of real tracking, match cards, analysis cards, a report, the method
     matches.html        every match with its chapter list
+    game-state.html     the game-state study (when the analysis set has game_state.json)
     analysis.html       the ten Analysis views for any match (?m=<slug>&v=<view>)
     reports.html        the scouting reports (?t=<slug>-<team>)
     compare.html        the comparison board, sortable
@@ -212,7 +213,7 @@ BROADCAST = [
 
 
 # ---------------------------------------------------------------- pages
-def home(ms, kinds, reports, clip, thumbs):
+def home(ms, kinds, reports, clip, thumbs, has_study=False):
     n_ch = sum(len(m['chapters']) for m in ms)
     rep = next(r for r in reports if r['slug'] == 'mar-esp' and r['team'] == 'Morocco')
     chips = ''.join(chip_html(c) for c in rep['chips'][:3])
@@ -238,7 +239,8 @@ def home(ms, kinds, reports, clip, thumbs):
 {grouped(ms, match_card, 'matches')}</div></section>
 <section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Analysis</div><h2>Ten ways to read a defence</h2>
 <p>The same views for every match, each team drawn attacking left to right.</p></div><a class="link" href="analysis.html">Open the analysis →</a></div>
-<div class="views">{''.join(view_card(k, thumbs[k['key']]) for k in kinds)}</div></div></section>
+<div class="views">{''.join(view_card(k, thumbs[k['key']]) for k in kinds)}</div>
+{('<div class="gs-home"><div class="eyebrow" style="margin-bottom:10px">New study</div><div class="method gs-cards">' + study_card() + '</div></div>') if has_study else ''}</div></section>
 <section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Scouting reports</div><h2>What they did well, and how to get at them</h2></div>
 <a class="link" href="reports.html">All {len(reports)} reports →</a></div>
 <article class="report"><div class="left"><div class="who"><span class="dot lg" style="background:{rep['color']}"></span>{e(rep['team'])} · vs {e(rep['opp'])} · {e(rep['sub'].split(' · ')[0])}</div>
@@ -287,9 +289,10 @@ def matches_page(ms):
     return page('Matches · Defensive Structure Model', 'Matches', body)
 
 
-def analysis_page(ms, kinds):
+def analysis_page(ms, kinds, has_study=False):
     body = ('<header class="page-head"><div class="wrap"><div class="eyebrow">Analysis</div><h1>Ten ways to read a defence</h1>'
             '<p>Pick a match, then a view. Every team is drawn attacking left to right, and only live play counts.</p></div></header>'
+            + (f'<section class="block" style="padding:22px 0 0"><div class="wrap"><div class="method gs-cards">{study_card()}</div></div></section>' if has_study else '') +
             '<section class="block" style="padding-top:28px" id="viewer"><div class="wrap">'
             '<div class="tabs" id="viewerMatches" role="tablist" aria-label="Match"></div>'
             '<div class="subtabs" id="viewerKinds" role="tablist" aria-label="View"></div>'
@@ -331,6 +334,53 @@ def compare_page(board):
             'Free opponents: attackers inside the block with no defender within 5 m. Fast attacks: ball wins where the team was in or into the final third within 10 s. '
             'Medians or totals over live play; shots from the event feed, extra time included for the two 120-minute matches.</p></div></section>')
     return page('Compare · Defensive Structure Model', 'Compare', body, {'board': board})
+
+
+def game_state_page(gs):
+    """game-state.html: the study of how defending changes when a team is leading, level or trailing."""
+    dot = lambda c: f'<i class="gs-dot" style="background:var(--gs-{c})"></i>'
+    body = f'''<header class="page-head"><div class="wrap"><div class="eyebrow">Study · game state</div><h1>Defending the scoreline</h1>
+<p>Do teams defend differently when they are winning, drawing or losing? Comparing every team only with itself, at the same stage of the game: <span class="gs-k-lead">leading teams sit a little deeper and give up the ball</span>, while <span class="gs-k-trail">trailing teams press more but get stretched, leaving more attackers free inside their block</span>.</p>
+<p class="gs-sample" id="gsSample"></p></div></header>
+<section class="block" style="padding-top:30px"><div class="wrap"><div class="gs-findings">
+<div><h3>{dot('lead')}When leading</h3><p>The back line drops about <b id="gsLeadLine"></b> deeper than when the same team is level at the same stage of the game (<b id="gsLeadSame"></b> teams). They also have about <b id="gsLeadPoss"></b> points less of the ball.</p></div>
+<div><h3>{dot('trail')}When trailing</h3><p>They press more (<b id="gsTrPress"></b> presses a minute of defending), but the block gets <b id="gsTrLen"></b> longer and <b id="gsTrWid"></b> narrower, with about <b id="gsTrFree"></b> more attackers free inside it (<b id="gsTrSame"></b> teams).</p></div>
+<div><h3>{dot('level')}Most of the drop is the clock</h3><p>Leads mostly happen late, when every team drops deeper. Leading teams' back line is <b id="gsRaw"></b> lower than when they were level, but only <b id="gsAdj"></b> of that is the lead itself once the minute of the match is taken into account.</p></div>
+</div></div></section>
+<section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Results</div><h2>Every measure, compared with being level</h2>
+<p>The change from being level, for the same team in the same match at the same stage of the game. The bar is the 95% interval from resampling whole matches; a filled dot means it stays on one side of zero.</p></div></div>
+<div class="gs-forest"><div id="gsLead"><h3>{dot('lead')}Leading vs level</h3></div><div id="gsTrail"><h3>{dot('trail')}Trailing vs level</h3></div></div>
+<p class="gs-note">Each row has its own scale, centred on zero. “8 of 9 teams”: teams whose own difference points the same way as the estimate.</p></div></section>
+<section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Team by team</div><h2>Who did what</h2>
+<p>Each team's average when leading (or trailing) minus its average when level, before the time adjustment. Hover a dot for the team.</p></div></div>
+<div class="gs-strips" id="gsStrips"></div></div></section>
+<section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">The catch</div><h2>Why the clock matters</h2>
+<p>Every team's back line drops as a game goes on, and most leads happen in the second half (<span id="gsLateLead"></span> of leading time, against <span id="gsLateLevel"></span> of level time). Without accounting for the minute, a tired late-game block would look like a team protecting a lead.</p></div></div>
+<div class="gs-two"><div><h3 class="gs-h">When each state happens</h3><div class="gs-sub">minutes of live defending, all 24 teams, by match minute</div><svg id="gsTiming" viewBox="0 0 480 250" role="img" aria-label="Defending minutes by game state in each 15-minute band"></svg>
+<div class="gs-legend"><span>{dot('lead')}Leading</span><span>{dot('level')}Level</span><span>{dot('trail')}Trailing</span></div></div>
+<div><h3 class="gs-h">Back-line height through a match</h3><div class="gs-sub">metres from own goal, median of all live defending</div><svg id="gsLine" viewBox="0 0 480 250" role="img" aria-label="Back-line height falling across the match"></svg></div></div></div></section>
+<section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">An example</div><h2>Nürnberg at Düsseldorf</h2>
+<p>Nürnberg won 1-0 with a goal straight after half-time. Their back line sat around <b id="gsExFirst"></b> from goal in the first 15 minutes and dropped to <b id="gsExLast"></b> in the last 15, while Düsseldorf had 63% of the ball. Part of that is the clock, as with every team. <a href="matches/dusseldorf-nurnberg/chapter-10.html">Watch the goal’s chapter →</a></p></div></div>
+<div class="gs-sub">Nürnberg's back line, metres from own goal · 10-minute rolling median of live defending</div><svg id="gsEx" viewBox="0 0 960 240" role="img" aria-label="Nürnberg back-line height over the match"></svg></div></section>
+<section class="block"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Checks</div><h2>Does it hold up?</h2>
+<p>The headline effects re-estimated four ways. Small subsets give wide intervals, so what to look for is whether the direction holds. The German league games have the cleanest tracking; the World Cup games' ball-tracking gaps affect possession, not the shape measures.</p></div></div>
+<div class="gs-tscroll"><table class="gs-table"><thead><tr><th>Effect</th><th>All 12 matches</th><th>German league only</th><th>World Cup only</th><th>Leaving out one match</th><th>No time adjustment</th></tr></thead><tbody id="gsRobust"></tbody></table></div></div></section>
+<section class="block"><div class="wrap"><div class="prose gs-method">
+<h2 id="method">How it was measured</h2>
+<p><b>Score state.</b> Every goal is placed at its frame in the tracking (all {gs["counts"]["goals"]} goals in the 12 matches); from then on each team is leading, level or trailing. Penalty shoot-outs are left out.</p>
+<p><b>Measures.</b> The site's own definitions, at about five samples a second of live play. Without the ball: back-line height, block length and width, holes inside the block, opponents free inside it, phase (high press, mid block, low block) and presses. With it: share of live play on the ball.</p>
+<p><b>Model.</b> Samples are grouped into 5-minute bins per team and state. Each measure is regressed on the state, a smooth curve of the match minute and a separate baseline for every team in every match, weighted by seconds of defending, so each team is only compared with itself at the same stage of a game. Teams need at least 3 minutes of live defending in both states (9 to 12 teams per comparison). Intervals come from resampling whole matches 2,000 times; a cluster-robust regression gives nearly the same.</p>
+<p><b>Caveats.</b> Twelve matches is a small sample and 18 comparisons were made, so one or two “clear” results could be chance; trust the ones that also point the same way in most teams and in both data sources. A leading team's possession is the mirror of its trailing opponent's. A lead changes the opponent too, so these are effects of the game state as a whole.</p>
+<p><b>Context.</b> Earlier studies found teams have more of the ball when losing and less when winning (<a href="https://revista-apunts.com/en/the-influence-of-match-location-the-quality-of-opposition-and-match-status-on-possessionin-professional-football/">Lago and colleagues</a>), and score-line effects on work rate (<a href="https://pure.cardiffmet.ac.uk/en/publications/score-line-effect-on-work-rate-in-english-fa-premier-league-socce/">Bloomfield, Polman &amp; O'Donoghue</a>). Tracking adds where the block sits and what it leaves open. Code: <a href="{GITHUB}/blob/main/analysis/game_state.py">analysis/game_state.py</a>.</p>
+</div></div></section>
+<script src="assets/game-state.js" defer></script>'''
+    return page('Defending the scoreline · Defensive Structure Model', 'Analysis', body, {'gs': gs},
+                'How football teams defend when leading, level or trailing: a tracking-data study of 12 matches.')
+
+
+def study_card():
+    return ('<a class="mcard gs-card" href="game-state.html"><div class="num">Study · game state</div><h3>Defending the scoreline</h3>'
+            '<p>How teams change shape when they are winning or losing: leading teams sit deeper, trailing teams press harder and get stretched.</p></a>')
 
 
 def broadcast_page():
@@ -530,9 +580,13 @@ def main():
             shutil.copyfile(os.path.join(a.analysis, d['src']), dst)
     thumbs = make_thumbs(a.analysis, kinds, a.out)
     clip = json.load(open(root('templates', 'site', 'hero-clip.json'), encoding='utf-8'))
-    pages = {'index.html': home(ms, kinds, reports, clip, thumbs), 'matches.html': matches_page(ms),
-             'analysis.html': analysis_page(ms, kinds), 'reports.html': reports_page(reports, kinds, ms),
+    gs_path = os.path.join(a.analysis, 'game_state.json')
+    gs = json.load(open(gs_path, encoding='utf-8')) if os.path.exists(gs_path) else None
+    pages = {'index.html': home(ms, kinds, reports, clip, thumbs, has_study=bool(gs)), 'matches.html': matches_page(ms),
+             'analysis.html': analysis_page(ms, kinds, has_study=bool(gs)), 'reports.html': reports_page(reports, kinds, ms),
              'compare.html': compare_page(board), 'broadcast.html': broadcast_page(), 'method.html': method_page(ms)}
+    if gs:
+        pages['game-state.html'] = game_state_page(gs)
     for name, text in pages.items():
         open(os.path.join(a.out, name), 'w', encoding='utf-8').write(text)
     if a.extra:

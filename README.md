@@ -40,6 +40,10 @@ All seven matches in the DFL open dataset are in, so Fortuna Düsseldorf can be 
 
 **Tracking quality.** The DFL games are optical tracking from the league's camera system: every player and the ball at 25 Hz, with the ball tracked in 100% of frames. The World Cup games are PFF FC's broadcast-based tracking: players throughout, but the ball is tracked in only 60-72% of frames on average (under half in some chapters), so the ball, the pressure ring and the danger heatmap drop out in places. The site lists the ball coverage of every chapter.
 
+## Studies
+
+- **[Defending the scoreline](https://defensive-structure-model.netlify.app/game-state.html)**: how teams defend when leading, level or trailing, comparing each team only with itself at the same stage of the game. Leading teams drop their back line about 1.8 m and give up the ball; trailing teams press more but their block gets longer and narrower, with more attackers free inside it. Most of the apparent late-game "sitting deeper" turns out to be the clock rather than the lead. Code: `analysis/game_state.py`.
+
 ## Example outputs
 
 | Where the gaps open (Morocco vs Spain) | Shape over time (Germany vs Japan) |

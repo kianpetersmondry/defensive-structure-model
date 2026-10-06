@@ -87,6 +87,11 @@ def main():
                         views=rep['views'], chips=REP.chips(row, board)))
     save(out, os.path.join(dst, 'reports.json'))
 
+    # the game-state study's page data (analysis/game_state.py site), when it has been built
+    gs = out_path('analysis', 'game_state', 'site.json')
+    if os.path.exists(gs):
+        shutil.copy2(gs, os.path.join(dst, 'game_state.json'))
+
     print(f"{len(kinds)} views x {len(kinds[0]['data'])} matches ({len(added)} new: {', '.join(sorted(added)) or '-'}); "
           f"{len(board)} board rows; {len(out)} reports -> {dst}")
     if missing:

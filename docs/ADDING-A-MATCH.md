@@ -89,6 +89,9 @@ without it the player order inside the chapter data changes between runs (same c
    python3 pipeline/build_web.py --analysis <merged set> --chapters-from <current site> --extra <current site> --out <new site>
    ```
 
+   Before merging, refresh the game-state study so it includes the new match:
+   `cd analysis && python3 game_state.py build <id> && python3 game_state.py stats && python3 game_state.py site`.
+
    `merge_analysis.py` keeps the live images and numbers for the matches already published and adds the new
    ones from `output/analysis/`, then ranks every report's chips against the merged board. `build_web.py`
    builds the site; chapters come from `output/chapters_<id>/` when they are there, otherwise from the

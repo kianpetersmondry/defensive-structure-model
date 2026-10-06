@@ -2,6 +2,7 @@
 
     python3 analysis/game_state.py build [<match id> ...]    # per-sample table (cached per match)
     python3 analysis/game_state.py stats                      # effects, uncertainty, JSON for the write-up
+    python3 analysis/game_state.py site                       # the data the website's game-state page draws
 
 Score state
 - Goals come from the chances view (every registry goal is found there, at its shot frame). A team's goal
@@ -261,6 +262,53 @@ def stats():
     return res
 
 
+def site_data():
+    """Everything the site's game-state page draws, written to output/analysis/game_state/site.json."""
+    B = pd.read_pickle(os.path.join(DIR, 'bins.pkl'))
+    st = json.load(open(os.path.join(DIR, 'stats.json')))
+    meta = {m['key']: m for m in st['metrics']}
+    out = {'effects': [], 'per_team': {}, 'robust': {}}
+    for e in st['effects']:
+        k, c = e['key'], e['compare']
+        out['effects'].append(dict(key=k, compare=c, est=round(e['estimate'], 2), lo=round(e['ci'][0], 2), hi=round(e['ci'][1], 2),
+                                   n=e['n_teams'], same=e['same_direction'], label=meta[k]['label'], unit=meta[k]['unit']))
+        out['per_team'][f'{c}|{k}'] = [dict(team=p['tm'].split('|')[1], slug=p['tm'].split('|')[0], diff=round(p['diff'], 2),
+                                           mc=round(p['min_compare'], 1), ml=round(p['min_level'], 1)) for p in e['per_team']]
+    head = [('leading', 'line'), ('leading', 'possession'), ('leading', 'free'), ('trailing', 'press_rate'), ('trailing', 'length'),
+            ('trailing', 'width'), ('trailing', 'free'), ('trailing', 'possession'), ('trailing', 'holes')]
+    for c, k in head:
+        r = {}
+        for lab, Bx in (('dfl', B[B.provider == 'dfl']), ('pff', B[B.provider != 'dfl'])):
+            e = effect(Bx, k, c, reps=1000)
+            r[lab] = None if e is None else dict(est=round(e['estimate'], 2), lo=round(e['ci'][0], 2), hi=round(e['ci'][1], 2), n=e['n_teams'])
+        full = effect(B, k, c, reps=10)
+        r['raw'] = round(float(np.mean([p['diff'] for p in full['per_team']])), 2)
+        loo = [effect(B[B.mid != m], k, c, reps=10) for m in B.mid.unique()]
+        loo = [x['estimate'] for x in loo if x]
+        r['loo'] = [round(min(loo), 2), round(max(loo), 2)]
+        out['robust'][f'{c}|{k}'] = r
+    S = pd.concat([pd.read_pickle(os.path.join(DIR, f'samples_{m}.pkl')) for m in R.ids()])
+    d = S[S.defending & (S.clock < 95)].copy()          # normal time with stoppage
+    d['band'] = np.minimum((d.clock // 15).astype(int), 5)
+    tb = d.groupby(['band', 'state']).size().unstack(fill_value=0) * 0.2 / 60
+    lb = d.groupby('band').line.median()
+    out['timing'] = [dict(band=int(b), label="75'+" if b == 5 else f"{15 * b}–{15 * b + 15}'",
+                          **{s: round(float(tb.loc[b].get(s, 0)), 1) for s in ('leading', 'level', 'trailing')},
+                          line=round(float(lb.loc[b]), 1)) for b in tb.index]
+    out['late_share'] = {s: round(100 * float((d[d.state == s].clock >= 45).mean())) for s in ('leading', 'level', 'trailing')}
+    allS = S[S.defending]
+    out['counts'] = dict(matches=len(R.ids()), teams=2 * len(R.ids()), goals=sum(len(R.get(m)['goals']) for m in R.ids()),
+                         def_minutes={s: round(float(n * 0.2 / 60)) for s, n in allS.groupby('state').size().items()})
+    T = json.load(open(out_path('analysis', 'time', 'dus-fcn.json'), encoding='utf-8'))['Nürnberg']
+    pts = [[round(mnt, 1), round(v, 1)] for ser in T['series'].values() for mnt, v in zip(ser['minute'], ser['line'])
+           if v is not None and v == v]
+    out['example'] = dict(team='Nürnberg', opp='Düsseldorf', goal=46.4, goal_label="47'", points=pts,
+                          first15=T['first15']['line'], last15=T['last15']['line'])
+    path = os.path.join(DIR, 'site.json')
+    json.dump(out, open(path, 'w'), ensure_ascii=False)
+    print(f'site data -> {path}')
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'build'
     if cmd == 'build':
@@ -268,3 +316,5 @@ if __name__ == '__main__':
             build(mid)
     elif cmd == 'stats':
         stats()
+    elif cmd == 'site':
+        site_data()
